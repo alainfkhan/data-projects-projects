@@ -1,1 +1,20 @@
 .DS_Store
+
+main/
+playground/
+github/
+.hidden
+.trash
+
+# *
+!portfolio/
+
+**/data/raw
+**/data/interim
+# **/data/processed
+**/data/external
+
+# *.csv
+# *-copy.csv
+# *.xls*
+# */*/data/*
