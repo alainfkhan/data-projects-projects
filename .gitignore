@@ -9,10 +9,10 @@
 # *
 # !portfolio/
 
-**/data/raw
-**/data/interim
+# **/data/raw
+# **/data/interim
 # **/data/processed
-**/data/external
+# **/data/external
 
 # *.csv
 # *-copy.csv
