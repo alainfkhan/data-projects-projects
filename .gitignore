@@ -1,13 +1,13 @@
 .DS_Store
 
-main/
-playground/
-github/
-.hidden
-.trash
+# main/
+# playground/
+# github/
+# .hidden
+# .trash
 
 # *
-!portfolio/
+# !portfolio/
 
 **/data/raw
 **/data/interim
