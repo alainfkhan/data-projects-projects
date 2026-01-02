@@ -1,0 +1,22 @@
+power query transformation order
+delete columns (whenever you can)
+
+start
+
+split columns
+add columns
+rename columns
+change type
+replace errors
+reorder columns
+sorted rows
+
+end
+
+h, w = 720, 1280
+h/12 = 60
+
+w/16 = 80
+
+
+
