@@ -1,0 +1,8 @@
+name: dpp
+channels:
+  - defaults
+dependencies:
+  - python=3.13
+  - jupyter
+  - ruff
+prefix: C:\Users\alain\miniconda3\envs\dpp

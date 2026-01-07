@@ -1,0 +1,30 @@
+issues:
+
+makefile on windows
+
+this works:
+.PHONY: test
+test:
+    conda list --export
+
+this does not work:
+.PHONY: test
+test:
+    conda list --export > test.txt
+
+$ make test
+conda list --export > test.txt
+/usr/bin/sh: line 1: conda: command not found
+make: *** [Makefile:5: test] Error 127
+
+$ which conda
+which: no conda in (...)
+
+$ where conda
+C:\Users\<user>\miniconda3\condabin\conda.bat
+
+quick fix:
+remember to:
+conda list --export > requirements.txt
+conda env export --from-history > environment.yml
+before commit
