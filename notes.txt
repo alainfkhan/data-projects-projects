@@ -28,3 +28,5 @@ remember to:
 conda list --export > requirements.txt
 conda env export --from-history > environment.yml
 before commit
+
+note: make with conda works on macos
