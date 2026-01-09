@@ -1,1 +1,2 @@
 This dataset is only for 2020. It's possible to scrape data from other years.
+installed vscode extention to make sqlite3 queries output in vscode: SQLit by alexcvzz

@@ -1,8 +1,9 @@
 name: dpp
 channels:
+  - conda-forge
   - defaults
 dependencies:
-  - python=3.13
   - jupyter
   - ruff
-prefix: C:\Users\alain\miniconda3\envs\dpp
+  - python=3.13
+prefix: /Users/alainkhan/miniconda3/envs/dpp
