@@ -129,7 +129,7 @@ CREATE TABLE IF NOT EXISTS Top250 (
     Units INTEGER,
     YOYUnits REAL,
     HQCity TEXT,
-    HQRegion TEXT,
+    HQState TEXT,
     Segment TEXT,
     MenuCategory TEXT
 );
@@ -143,7 +143,7 @@ insert or replace into Top250 (
     Units,
     YOYUnits,
     HQCity,
-    HQRegion,
+    HQState,
     Segment,
     MenuCategory
 )
@@ -162,7 +162,7 @@ select
         when instr(t.Headquarters, ', ') = 0 then NULL
         else substr(t.Headquarters, 1, instr(t.Headquarters, ', ') - 1)
     end as HQCity,
-    case    -- HQRegion
+    case    -- HQState
         when t.Headquarters = 'NA' then NULL
         else substr(t.Headquarters, instr(t.Headquarters, ', ') + 2)
     end as HQRegion,

@@ -25,13 +25,4 @@ select
 from usps_raw ps
 left join usgpo_raw gpo
     on ps.STUSAB = gpo.STUSAB;
-
-
--- ====================
--- Canadian Regions 
--- ====================
-/*
-ID integer primary key,
-PoT text,
-Abbr text,
-*/
+    

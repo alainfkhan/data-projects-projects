@@ -11,6 +11,8 @@ drop table if exists independence100_raw;
 drop table if exists top250_raw;
 drop table if exists usps_raw;
 drop table if exists usgpo_raw;
+drop table if exists CARegions;
+
 
 -- import fact tables
 .mode csv
@@ -24,5 +26,4 @@ drop table if exists usgpo_raw;
 .separator ,
 
 .import data/external/usgpo.csv usgpo_raw
-
--- .import data/external/
+.import data/external/ca-regions.csv CARegions

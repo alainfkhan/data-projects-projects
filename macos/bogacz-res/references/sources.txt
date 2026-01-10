@@ -3,8 +3,11 @@ https://www.kaggle.com/datasets/michau96/restaurant-business-rankings-2020
 usps state abbreviations:
     https://www.census.gov/library/reference/code-lists/ansi/ansi-codes-for-states.html#accordion-455dd4b1cd-item-88e83e2ca2
     https://www2.census.gov/geo/docs/reference/state.txt
-    https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations#ANSI_standard_INCITS_38:2009
 
+usgpo state abbreviations:
+    asked ai to generate csv from:
+        https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations#ANSI_standard_INCITS_38:2009
 
-
-https://en.wikipedia.org/wiki/Canadian_postal_abbreviations_for_provinces_and_territories
+ca regions:
+    https://open.canada.ca/data/en/dataset/cd8fad92-b276-4250-972f-2d6c40ca04fa/resource/4cb827a6-a313-4d97-a66b-26fe23984931
+    https://en.wikipedia.org/wiki/Canadian_postal_abbreviations_for_provinces_and_territories
