@@ -1,1 +1,10 @@
 https://www.kaggle.com/datasets/michau96/restaurant-business-rankings-2020
+-
+usps state abbreviations:
+    https://www.census.gov/library/reference/code-lists/ansi/ansi-codes-for-states.html#accordion-455dd4b1cd-item-88e83e2ca2
+    https://www2.census.gov/geo/docs/reference/state.txt
+    https://en.wikipedia.org/wiki/List_of_U.S._state_and_territory_abbreviations#ANSI_standard_INCITS_38:2009
+
+
+
+https://en.wikipedia.org/wiki/Canadian_postal_abbreviations_for_provinces_and_territories

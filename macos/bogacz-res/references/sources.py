@@ -1,6 +1,8 @@
 """
 The tables in this kaggle dataset are from https://www.restaurantbusinessonline.com
 from the year 2020.
+
+It's possible to webscrape other years.
 """
 
 from datetime import datetime

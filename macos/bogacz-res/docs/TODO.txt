@@ -1,0 +1,11 @@
+
+
+
+create dim tables
+    usgpo-state-abbr.csv a table with GPO state abbrs
+    canada provinces or territories csv i dont know columns
+    segments and menu categories
+
+make references from fact tables
+
+ 

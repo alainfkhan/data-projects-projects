@@ -1,2 +1,48 @@
 This dataset is only for 2020. It's possible to scrape data from other years.
 installed vscode extention to make sqlite3 queries output in vscode: SQLit by alexcvzz
+
+
+Future50.csv:
+    from: https://www.restaurantbusinessonline.com/future-50-2020?year=2020#data-table 
+    Description:
+        This year’s class of America’s up-and-coming chains faces an uncertain future.
+        But as the coronavirus hit, these small and innovative concepts were characteristically quick to adapt,
+        repacking menu items into meal kits, creating pop-up drive-thrus and more.
+        Here’s a look at how they got here, and where they plan to go next.
+    How the research works:
+        The Future 50 is a measure of the fastest-growing restaurant concepts
+        with annual sales between $20 million and $50 million.
+        Data is compiled by Technomic. 
+        Rankings are based on percent change in systemwide sales from 2018 to 2019;
+        chains must have also opened new units in 2019 to qualify.
+        Unit counts are as of Dec. 31, 2019.
+        When data was not provided, Technomic estimated sales based on public information, comparable concepts, market and other factors.
+        Visit Technomic Ignite Company Data for more information. 
+
+
+Independence100.csv:
+    from: https://www.restaurantbusinessonline.com/top-100-independents-2020?year=2020#data-table
+    Description:
+        While the COVID-19 pandemic has transformed the restaurant world, especially for independents, 2019 was a good year for many,
+        and still worth recognizing. Restaurants in the Top 100 grossed nearly $1.8 billion in a tight labor market amid increased competition,
+        outearning the prior year’s total. But 2020 has presented even greater challenges,
+        and RB takes a look at how indies are weathering those as well.
+    Methodology:
+        RB’s Top 100 Independents ranking is a measure of the highest-grossing independent restaurants.
+        Only restaurant concepts with no more than five locations are considered “independents”
+        for the purpose of this list (although it’s possible a restaurant that shares a name with a chain
+        but is owned and operated separately would qualify, such as Smith & Wollensky in New York City).
+        Rankings are based on gross 2019 food and beverage sales. Information was gathered through surveys.
+        When data wasn’t provided, sales were estimated based on public information, similar concepts and other factors. 
+
+Top250.csv:
+    from: https://www.restaurantbusinessonline.com/top-500-2020?year=2020&page=0#data-table
+    Top 500 Chains
+        The Top 500 highest-grossing restaurant chains recorded their best overall performance in five years in 2019.
+        Chicken had a moment, tech made another leap and the biggest chains got bigger.
+        This annual report, in partnership with Technomic, highlights the data, trends and brands that defined the year.
+
+
+I asked claude to generate us-states.csv cols: ID, ANSI, USPS, GPO, Name
+Going to the original source would be better
+
