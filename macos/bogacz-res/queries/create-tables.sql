@@ -6,7 +6,7 @@ Assume all column datatypes are consistent
 Convert column names to 'SomeColumn':
     'Some Column', 'Some_Column'
 
-All tables are 2020
+All tables are from the 2020 data
 */
 
 -- ==================================================
@@ -20,7 +20,7 @@ All tables are 2020
 State           -- USGPO (US Government Printing Office)
 Sales           -- 2019 Systemwide Sales (in millions USD)
 YOYSales        -- YOY Sales Change
-Units           -- 2019 US Units (?)
+Units           -- 2019 US Units
 YOYUnits        -- YOY Unit Change
 UnitVolume      -- 2019 Average Unit Volume (in thousands USD)
 Franchising
@@ -67,6 +67,20 @@ select
         else NULL
     end
 from future50_raw f;
+
+/*
+Single errors
+select * from Future50 where State like ' %';
+select * from Future50 where Rank in (6, 9);
+*/
+
+update Future50
+set State = 'N.J.'
+where Rank = 6
+
+update Future50
+set State = 'Calif.'
+where Rank = 9
 
 /*
 select * from Future50;

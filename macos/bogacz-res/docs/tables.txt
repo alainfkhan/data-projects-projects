@@ -1,0 +1,34 @@
+==================================================
+Future50:
+==================================================
+State           -- USGPO (US Government Printing Office)
+Sales           -- 2019 Systemwide Sales (in millions USD)
+YOYSales        -- YOY Sales Change
+Units           -- 2019 US Units (?)
+YOYUnits        -- YOY Unit Change
+UnitVolume      -- 2019 Average Unit Volume (in thousands USD)
+Franchising
+
+
+
+==================================================
+Independent100:
+==================================================
+
+
+
+
+
+
+
+
+==================================================
+Top250:
+==================================================
+Cols:
+    Sales
+        ($000,000) = millions USD
+    Units
+        suppose (000,000) = millions
+    YOYSales
+    
