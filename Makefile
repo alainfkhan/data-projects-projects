@@ -5,6 +5,7 @@ test:
 	conda list --export > test.txt
 
 REQ_TXT=requirements.txt
+PIPL_TXT=piplist.txt
 ENV_YML=environment.yml
 ENV_NAME=dpp
 
@@ -33,14 +34,19 @@ setup:
 # ==================================================
 .PHONY: save
 save:
-	conda list --export > $(REQ_TXT)
+# 	conda list --export > $(REQ_TXT)
 	conda env export --from-history > $(ENV_YML)
-	@echo "Saved dependencies to $(REQ_TXT) and $(ENV_YML)."
+	pip list --not-required --format=freeze > $(PIPL_TXT)
+# 	need to append piplist to environment.yml
 
 .PHONY: install
 install:
 	conda install --file $(REQ_TXT)
 
+.PHONY: sync
+sync:
+# 	conda env update -f $(ENV_YML) --prune
+	conda-lock install -n dpp
 
 # ==================================================
 # Linting
@@ -52,3 +58,7 @@ format:
 .PHONY: lint
 lint:
 	ruff check .
+
+#
+# conda-lock -f environment.yml -p win-64 -p osx-arm64
+#
