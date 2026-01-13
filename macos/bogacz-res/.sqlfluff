@@ -1,0 +1,58 @@
+[sqlfluff]
+dialect = sqlite
+; templater = jinga
+; indent_unit = space
+exclude_rules = RF03, ST06
+
+[sqlfluff:indentation]
+tab_width = 4   
+indent_unit = space
+
+[sqlfluff:rules]
+
+; capitalisations
+[sqlfluff:rules:capitalisation.keywords]
+capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.functions]
+extended_capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.identifiers]
+extended_capitalisation_policy = pascal
+unquoted_identifiers_policy = column_aliases
+
+
+[sqlfluff:rules:capitalisation.literals]
+capitalisation_policy = upper
+
+[sqlfluff:rules:capitalisation.types]
+extended_capitalisation_policy = upper
+
+; aliasing
+[sqlfluff:rules:aliasing.table]
+aliasing = explicit
+
+[sqlfluff:rules:aliasing.column]
+aliasing = explicit
+
+
+; layout
+[sqlfluff:rules:layout.long_lines]
+ignore_comment_lines = True
+line_length = 100
+
+[sqlfluff:rules:layout.commas]
+line_position = trailing
+
+; references
+[sqlfluff:rules:references.keywords]
+unquoted_identifiers_policy = all
+
+[sqlfluff:rules:references.consistent]
+single_table_references = unqualified
+
+; ambiguous
+[sqlfluff:rules:ambiguous.order_by]     ; not working
+
+; structure
+

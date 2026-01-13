@@ -3,35 +3,35 @@ CREATE TABLE IF NOT EXISTS T (
     abc TEXT,
     tf INTEGER,
     num INTEGER
-)
+);
 
 INSERT INTO T (abc, tf, num)
 VALUES
-    ('x', 1, 10),
-    ('y', 1, 40),
-    ('x', 0, 30),
-    ('y', 0, 20),
-    ('x', 1, NULL);
+('x', 1, 10),
+('y', 1, 40),
+('x', 0, 30),
+('y', 0, 20),
+('x', 1, NULL);
 
 
 SELECT t.*
 FROM T AS t;
 
-pragma table_info(T)
+PRAGMA table_info (T);
 
 
-select
+SELECT
     f.YOY_Sales,
-    typeof(f.YOY_Sales) as type,
-    replace(f.YOY_Sales, '%', '') as rmpc,                                  -- remove percent sign
-    typeof(replace(f.YOY_Sales, '%', '')) as type,
-    replace(f.YOY_Sales, '%', '')/100 as rmpc_dint,                         -- divide by an integer
-    typeof(replace(f.YOY_Sales, '%', '')/100) as type,
-    replace(f.YOY_Sales, '%', '')/100.0 as rmpc_dreal,                      -- divide by a float
-    typeof(replace(f.YOY_Sales, '%', '')/100.0) as type,
-    cast(replace(f.YOY_Sales, '%', '')/100.0 as real) rmpc_dreal_cast,      -- change type
-    typeof(cast(replace(f.YOY_Sales, '%', '')/100.0 as real)) as type
-from future50_raw f
+    TYPEOF(f.YOY_Sales) AS Type,
+    REPLACE(f.YOY_Sales, '%', '') AS Rmpc,                                      -- remove percent sign
+    TYPEOF(REPLACE(f.YOY_Sales, '%', '')) AS Type,
+    REPLACE(f.YOY_Sales, '%', '') / 100 AS Rmpc_Dint,                           -- divide by an integer
+    TYPEOF(REPLACE(f.YOY_Sales, '%', '') / 100) AS Type,
+    REPLACE(f.YOY_Sales, '%', '') / 100.0 AS Rmpc_Dreal,                        -- divide by a float
+    TYPEOF(REPLACE(f.YOY_Sales, '%', '') / 100.0) AS Type,
+    CAST(REPLACE(f.YOY_Sales, '%', '') / 100.0 AS REAL) AS Rmpc_Dreal_Cast,     -- change type
+    TYPEOF(CAST(REPLACE(f.YOY_Sales, '%', '') / 100.0 AS REAL)) AS Type
+FROM future50_raw AS f;
 
 /*
 Stage dividing by integer was sufficient to turn some into real

@@ -1,15 +1,11 @@
 brotlicffi==1.2.0.0
-conda_lock==4.0.0
+conda_lock==3.0.4
 html5lib==1.1
-importlib_metadata==8.7.0
 jupyter==1.1.1
 pip==25.3
 PySocks==1.7.1
-pywin32==311
 qtconsole==5.7.0
-ruff==0.14.10
+ruff==0.12.0
 sqlfluff==3.5.0
 tinycss2==1.4.0
-tomli==2.2.1
 wheel==0.45.1
-win_inet_pton==1.1.0

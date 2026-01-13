@@ -39,7 +39,7 @@ CREATE TABLE IF NOT EXISTS Future50 (
     Franchising INTEGER
 );
 
-insert or replace into Future50(
+INSERT OR REPLACE INTO Future50 (
     Rank,
     Restaurant,
     City,
@@ -51,22 +51,22 @@ insert or replace into Future50(
     UnitVolume,
     Franchising
 )
-select
-    cast(f.Rank as integer),
+SELECT
+    CAST(f.Rank AS INTEGER),
     f.Restaurant,
-    substr(f.Location, 1, instr(f.Location, ', ') - 1),
-    substr(f.Location, instr(f.Location, ', ') + 2),
-    cast(f.Sales as integer),                           -- prev. year Systemwide Sales (millions USD)
-    cast(replace(f.YOY_Sales, '%', '')/100.0 as real),  -- YOY Sales Change
-    cast(f.Units as integer),                           -- prev. year US Units
-    cast(replace(f.YOY_Units, '%', '')/100.0 as real),  -- YOY Unit Change
-    cast(f.Unit_Volume as integer),                     -- prev. year Average Unit Volume (thousands USD)
-    case
-        when f.Franchising = 'Yes' then 1
-        when f.Franchising = 'No' then 0
-        else NULL
-    end
-from future50_raw f;
+    SUBSTR(f.Location, 1, INSTR(f.Location, ', ') - 1),
+    SUBSTR(f.Location, INSTR(f.Location, ', ') + 2),
+    CAST(f.Sales AS INTEGER),                           -- prev. year Systemwide Sales (millions USD)
+    CAST(REPLACE(f.YOY_Sales, '%', '') / 100.0 AS REAL),  -- YOY Sales Change
+    CAST(f.Units AS INTEGER),                           -- prev. year US Units
+    CAST(REPLACE(f.YOY_Units, '%', '') / 100.0 AS REAL),  -- YOY Unit Change
+    CAST(f.Unit_Volume AS INTEGER),                     -- prev. year Average Unit Volume (thousands USD)
+    CASE
+        WHEN f.Franchising = 'Yes' THEN 1
+        WHEN f.Franchising = 'No' THEN 0
+        ELSE NULL
+    END
+FROM future50_raw f;
 
 /*
 Single errors
@@ -74,13 +74,13 @@ select * from Future50 where State like ' %';
 select * from Future50 where Rank in (6, 9);
 */
 
-update Future50
-set State = 'N.J.'
-where Rank = 6
+UPDATE Future50
+SET State = 'N.J.'
+WHERE Rank = 6;
 
-update Future50
-set State = 'Calif.'
-where Rank = 9
+UPDATE Future50
+SET State = 'Calif.'
+WHERE Rank = 9;
 
 /*
 select * from Future50;
@@ -105,7 +105,7 @@ CREATE TABLE IF NOT EXISTS Independent100 (
     MealsServed INTEGER
 );
 
-insert or replace into Independent100 (
+INSERT OR REPLACE INTO Independent100 (
     Rank,
     Restaurant,
     Sales,
@@ -114,15 +114,15 @@ insert or replace into Independent100 (
     State,
     MealsServed
 )
-select
-    cast(i.Rank as integer),
+SELECT
+    CAST(i.Rank AS INTEGER),
     i.Restaurant,
-    cast(i.Sales as integer),               -- Annual Sales (USD)
-    cast(i.[Average Check] as integer),     -- 
+    CAST(i.Sales AS INTEGER),
+    CAST(i."Average Check" AS INTEGER),
     i.City,
     i.State,
-    cast(i.[Meals Served] as integer)
-from independence100_raw i;
+    CAST(i."Meals Served" AS INTEGER)
+FROM independence100_raw i;
 
 /*
 select * from Independent100;
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS Top250 (
     MenuCategory TEXT
 );
 
-insert or replace into Top250 (
+INSERT OR REPLACE INTO Top250 (
     Rank,
     Restaurant,
     Content,
@@ -161,34 +161,34 @@ insert or replace into Top250 (
     Segment,
     MenuCategory
 )
-select
-    cast(t.Rank as integer) as Rank,
+SELECT
+    CAST(t.Rank AS INTEGER) AS Rank,
     t.Restaurant,
-    case    -- Content
-        when t.Content = 'NA' then NULL
-        else t.Content
-    end as Content,
-    cast(t.Sales as integer) as Sales,
-    cast(replace(t.YOY_Sales, '%', '')/100.0 as real) as YOYSales,
-    cast(t.Units as integer) as Units,
-    cast(replace(t.YOY_Units, '%', '')/100.0 as real) as YOYUnits,
-    case    -- HQCity
-        when instr(t.Headquarters, ', ') = 0 then NULL
-        else substr(t.Headquarters, 1, instr(t.Headquarters, ', ') - 1)
-    end as HQCity,
-    case    -- HQState
-        when t.Headquarters = 'NA' then NULL
-        else substr(t.Headquarters, instr(t.Headquarters, ', ') + 2)
-    end as HQRegion,
-    case    -- Segment
-        when instr(t.Segment_Category, ' & ') = 0 then NULL
-        else substr(t.Segment_Category, 1, instr(t.Segment_Category, ' & ') - 1)
-    end as Segment,
-    case    -- MenuCategory
-        when instr(t.Segment_Category, ' & ') = 0 then t.Segment_Category
-        else substr(t.Segment_Category, instr(t.Segment_Category, ' & ') + 3)
-    end as MenuCategory
-from top250_raw as t;
+    CASE    -- Content
+        WHEN t.Content = 'NA' THEN NULL
+        ELSE t.Content
+    END AS Content,
+    CAST(t.Sales AS INTEGER) AS Sales,
+    CAST(REPLACE(t.YOY_Sales, '%', '') / 100.0 AS REAL) AS YOYSales,
+    CAST(t.Units AS INTEGER) AS Units,
+    CAST(REPLACE(t.YOY_Units, '%', '') / 100.0 AS REAL) AS YOYUnits,
+    CASE    -- HQCity
+        WHEN INSTR(t.Headquarters, ', ') = 0 THEN NULL
+        ELSE SUBSTR(t.Headquarters, 1, INSTR(t.Headquarters, ', ') - 1)
+    END AS HQCity,
+    CASE    -- HQState
+        WHEN t.Headquarters = 'NA' THEN NULL
+        ELSE SUBSTR(t.Headquarters, INSTR(t.Headquarters, ', ') + 2)
+    END AS HQRegion,
+    CASE    -- Segment
+        WHEN INSTR(t.Segment_Category, ' & ') = 0 THEN NULL
+        ELSE SUBSTR(t.Segment_Category, 1, INSTR(t.Segment_Category, ' & ') - 1)
+    END AS Segment,
+    CASE    -- MenuCategory
+        WHEN INSTR(t.Segment_Category, ' & ') = 0 THEN t.Segment_Category
+        ELSE SUBSTR(t.Segment_Category, INSTR(t.Segment_Category, ' & ') + 3)
+    END AS MenuCategory
+FROM top250_raw AS t;
 
 /*
 select * from Top250;

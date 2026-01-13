@@ -6,13 +6,14 @@ sqlite> .shell sqlite3 data/db/data.db < queries/import.sql
 */
 
 -- drop tables
-drop table if exists future50_raw;
-drop table if exists independence100_raw;
-drop table if exists top250_raw;
-drop table if exists usps_raw;
-drop table if exists usgpo_raw;
-drop table if exists CARegions;
+DROP TABLE IF EXISTS future50_raw;
+DROP TABLE IF EXISTS independence100_raw;
+DROP TABLE IF EXISTS top250_raw;
+DROP TABLE IF EXISTS usps_raw;
+DROP TABLE IF EXISTS usgpo_raw;
+DROP TABLE IF EXISTS CARegions;
 
+-- noqa:disable=all
 
 -- import fact tables
 .mode csv

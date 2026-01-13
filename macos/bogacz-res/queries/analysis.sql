@@ -12,34 +12,29 @@ https://claude.ai/share/91c86757-2746-4081-9835-9aaf86b5b981
 -- and should we invest more heavily in them?
 -- ==========
 
-select
+SELECT
     t.Rank,
     t.Restaurant,
     t.Sales,
     t.Segment
-from Top250 t;
+FROM Top250 AS t;
 
-select * from Top250;
+SELECT * FROM Top250;
 
 -- Segment Analysis
-select
-    sub.*
-from (
+SELECT
+    t.Segment,
+    COUNT(*) AS Count,
+    SUM(t.Sales) AS TotalSales,
+    SUM(t.Units) AS TotalUnits,
+    CAST(ROUND(AVG(t.Sales)) AS INTEGER) AS AvgSales,
+    CAST(ROUND(AVG(t.Units)) AS INTEGER) AS AvgUnits,
+    ROUND(SUM(t.Sales) * 1.0 / SUM(t.Units), 2) AS AvgPricePerUnit
+FROM Top250 AS t
+WHERE t.Segment IS NOT NULL
+GROUP BY t.Segment
+ORDER BY COUNT(*) DESC;
 
-    select
-        t.Segment,
-        count(*) as Count,
-        sum(t.Sales) as TotalSales,
-        sum(t.Units) as TotalUnits,
-        cast(round(avg(t.Sales)) as integer) as AvgSales,
-        cast(round(avg(t.Units)) as integer) as AvgUnits,
-        round(sum(t.Sales)*1.0 / sum(t.Units), 2) as AvgPricePerUnit
-    from Top250 t
-    group by t.Segment
-
-) sub
-where sub.Segment is not null
-order by Count desc;
 
 /* Notes
 profit = sales - cost
@@ -60,7 +55,7 @@ avgpriceperunit: 1.3 usd
 
 TODO:
 Q: should we invest more heavily?
-A: 
+A:
 */
 
 
@@ -76,48 +71,42 @@ A:
 -- ==========
 
 -- view tables
-select
+SELECT
     f.Rank,
     f.Restaurant,
     f.YOYSales
-from Future50 f
-order by f.YOYSales desc;
+FROM Future50 AS f
+ORDER BY f.YOYSales DESC;
 
-select
+SELECT
     t.Rank,
     t.Restaurant,
-    t.YOYSales,
-from Top250 t
-order by t.YOYSales desc;
+    t.YOYSales
+FROM Top250 AS t
+ORDER BY t.YOYSales DESC;
 
 -- verify no overlap
-select
-    f.*
-from Future50 f
-inner join Top250 t
-    on f.Restaurant = t.Restaurant;
+SELECT f.*
+FROM Future50 AS f
+INNER JOIN Top250 AS t
+    ON f.Restaurant = t.Restaurant;
 -- does not print => no overlap
 -- can use union all
 
 -- union tables
-select
-    uni.*
-from (
+SELECT
+    'F' || f.Rank AS Rank,
+    f.Restaurant,
+    f.YOYSales
+FROM Future50 AS f
+UNION ALL
+SELECT
+    'T' || t.Rank AS Rank,
+    t.Restaurant,
+    t.YOYSales
+FROM Top250 AS t
+ORDER BY t.YOYSales DESC;
 
-    select
-        'F' || f.Rank as Rank,
-        f.Restaurant,
-        f.YOYSales
-    from Future50 f
-    union all
-    select
-        'T' || t.Rank as Rank,
-        t.Restaurant,
-        t.YOYSales
-    from Top250 t
-
-) uni
-order by YOYSales desc;
 
 /* Notes
 yoy = (cur - prev)/prev = cur/prev - 1
@@ -145,7 +134,7 @@ McCormick & Schmick's, -0.156
 Friendly's, -0.153
 
 Q: what patterns emerge?
-A: 
+A:
 Top250:
 Rank, Restaurant, YOYSales
 1, McDonald's, 0.049
@@ -178,101 +167,91 @@ Whats the optimal number of units for maximising revenue per unit?
 -- ==========
 
 -- view schemas
+/*
+
 .schema Future50
-.schema Independent100 
-.schema Top250 
+.schema Independent100
+.schema Top250
+
+*/
 -- choose union Future50, Independent100
 
 -- view tables
-select
+SELECT
     f.Rank,
     f.Restaurant,
     f.City,
     f.State,
     f.Sales
-from Future50 f;
+FROM Future50 AS f;
 
-select
+SELECT
     i.Rank,
     i.Restaurant,
     i.City,
     i.State,
     i.Sales
-from Independent100 i;
+FROM Independent100 AS i;
 
 -- verify no overlap
-select
-    f.*
-from Future50 f
-inner join Independent100 i
-    on f.Restaurant = i.Restaurant
+SELECT f.*
+FROM Future50 AS f
+INNER JOIN Independent100 AS i
+    ON f.Restaurant = i.Restaurant;
 -- no overlap
 -- therefore can use union all
 
 -- union
-create view if not exists v_fi as
-select
-    'F' || f.Rank as Rank,
+CREATE VIEW IF NOT EXISTS v_fi AS
+SELECT
+    'F' || f.Rank AS Rank,
     f.Restaurant,
     f.City,
     f.State,
-    f.Sales * 1000000 as Sales
-from Future50 f
-union all
-select
-    'I' || i.Rank as Rank,
+    f.Sales * 1000000 AS Sales
+FROM Future50 AS f
+UNION ALL
+SELECT
+    'I' || i.Rank AS Rank,
     i.Restaurant,
     i.City,
     i.State,
     i.Sales
-from Independent100 i
+FROM Independent100 AS i;
 
 -- view view
-select
-    v.*
-from v_fi v;
+SELECT v.*
+FROM v_fi AS v;
 
 
 -- grain: City-State
-select
-    sub.*
-from (
-
-    select distinct 
-        v.City,
-        v.State,
-        count(*) as Count,
-        sum(v.Sales) as TotalSales
-    from v_fi v
-    group by
-        v.City,
-        v.State
-
-) as sub
-where Count > 1
-order by
-    sub.Count desc,
-    sub.TotalSales desc
+SELECT DISTINCT
+    v.City,
+    v.State,
+    COUNT(*) AS Count,
+    SUM(v.Sales) AS TotalSales
+FROM v_fi AS v
+GROUP BY
+    v.City,
+    v.State
+HAVING COUNT(*) > 1
+ORDER BY
+    COUNT(*) DESC,
+    SUM(v.Sales) DESC;
 
 
 -- grain: State
-select
-    sub.*
-from (
-
-    select distinct 
-        v.State,
-        count(*) as Count,
-        sum(v.Sales) as TotalSales
-    from v_fi v
-    group by
-        v.State
-
-) as sub
-where Count > 1
-order by
-    sub.Count desc,
-    sub.TotalSales desc
+SELECT DISTINCT
+    v.State,
+    COUNT(*) AS Count,
+    SUM(v.Sales) AS Totalsales
+FROM v_fi AS v
+GROUP BY
+    v.State
+HAVING COUNT(*) > 1
+ORDER BY
+    COUNT(*) DESC,
+    SUM(v.sales) DESC;
 
 
 /* Notes
@@ -329,4 +308,3 @@ Which restaurants punch above their weight (high sales with fewer units)?
 /*
 If we could only invest in 5 restaurant chains, which should they be and why?
 */
-

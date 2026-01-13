@@ -1,4 +1,4 @@
-pragma foreign_keys = ON;
+PRAGMA foreign_keys = ON;
 
 -- ==================================================
 -- Create dim tables
@@ -13,16 +13,15 @@ CREATE TABLE IF NOT EXISTS USStates (
     Name TEXT
 );
 
-insert or replace into USStates (
+INSERT OR REPLACE INTO USStates (
     USPS,
     USGPO,
     Name
 )
-select
+SELECT
     ps.STUSAB,
     gpo.STUSGPOAB,
     ps.STATE_NAME
-from usps_raw ps
-left join usgpo_raw gpo
-    on ps.STUSAB = gpo.STUSAB;
-    
+FROM usps_raw AS ps
+LEFT JOIN usgpo_raw AS gpo
+    ON ps.STUSAB = gpo.STUSAB;
