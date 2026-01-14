@@ -1,0 +1,18 @@
+business.retailsales.csv: ProductTypeSales
+Product Type,Net Quantity,Gross Sales,Discounts,Returns,Total Net Sales
+Art & Sculpture,34,14935,-594,-1609,12732
+Basket,13,3744,-316.8,0,3427.2
+Basket,12,3825,-201.6,-288,3335.4
+
+business.retailsales2.csv: MonthlySales
+Month,Year,Total Orders,Gross Sales,Discounts,Returns,Net Sales,Shipping,Total Sales
+January,2017,73,8861.5,-129.4,-448.45,8283.65,1088.3,9371.95
+February,2017,56,6908.5,-104.7,-416.2,6387.6,892.45,7280.05
+March,2017,60,5778.5,-172.2,-1017.2,4589.1,707.43,5296.53
+
+Net Sales = Gross Sales + Discounts + Returns
+Total Sales = Net Sales + Shipping
+
+
+
+
