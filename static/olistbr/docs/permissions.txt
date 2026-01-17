@@ -1,0 +1,24 @@
+total 125516
+-rw-r--r-- 1 alain 197609   171352 Jan 16 13:13 olist_closed_deals_dataset.csv
+-rw-r--r-- 1 alain 197609  9133399 Dec 15 18:36 olist_customers_dataset.csv
+-rw-r--r-- 1 alain 197609 62274047 Dec 15 18:36 olist_geolocation_dataset.csv
+-rw-r--r-- 1 alain 197609   703836 Jan 16 13:13 olist_marketing_qualified_leads_dataset.csv
+-rw-r--r-- 1 alain 197609 15551322 Dec 15 18:36 olist_order_items_dataset.csv
+-rw-r--r-- 1 alain 197609  5881025 Dec 15 18:36 olist_order_payments_dataset.csv
+-rw-r--r-- 1 alain 197609 14451670 Dec 15 18:36 olist_order_reviews_dataset.csv
+-rw-r--r-- 1 alain 197609 17754356 Dec 15 18:36 olist_orders_dataset.csv
+-rw-r--r-- 1 alain 197609  2412398 Dec 15 18:36 olist_products_dataset.csv
+-rw-r--r-- 1 alain 197609   177799 Dec 15 18:36 olist_sellers_dataset.csv
+-rw-r--r-- 1 alain 197609     2613 Dec 15 18:36 product_category_name_translation.csv
+total 125516
+-r--r--r-- 1 alain 197609   171352 Jan 16 13:13 olist_closed_deals_dataset.csv
+-r--r--r-- 1 alain 197609  9133399 Dec 15 18:36 olist_customers_dataset.csv
+-r--r--r-- 1 alain 197609 62274047 Dec 15 18:36 olist_geolocation_dataset.csv
+-r--r--r-- 1 alain 197609   703836 Jan 16 13:13 olist_marketing_qualified_leads_dataset.csv
+-r--r--r-- 1 alain 197609 15551322 Dec 15 18:36 olist_order_items_dataset.csv
+-r--r--r-- 1 alain 197609  5881025 Dec 15 18:36 olist_order_payments_dataset.csv
+-r--r--r-- 1 alain 197609 14451670 Dec 15 18:36 olist_order_reviews_dataset.csv
+-r--r--r-- 1 alain 197609 17754356 Dec 15 18:36 olist_orders_dataset.csv
+-r--r--r-- 1 alain 197609  2412398 Dec 15 18:36 olist_products_dataset.csv
+-r--r--r-- 1 alain 197609   177799 Dec 15 18:36 olist_sellers_dataset.csv
+-r--r--r-- 1 alain 197609     2613 Dec 15 18:36 product_category_name_translation.csv

@@ -1,0 +1,16 @@
+sales
+    customers
+    orders
+    order_items
+    order_payments
+    order_reviews
+    products
+    sellers
+    product_category_name_translation
+
+marketing
+    marketing_qualified_leads
+    closed_deals
+
+logistics
+    geolocation

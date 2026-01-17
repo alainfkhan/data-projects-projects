@@ -1,0 +1,13 @@
+USE master;
+GO
+
+IF DB_ID('olist') IS NOT NULL
+    DROP DATABASE olist;
+GO
+
+CREATE DATABASE olist;
+GO
+
+ALTER DATABASE olist
+SET RECOVERY SIMPLE;
+GO

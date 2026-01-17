@@ -3,9 +3,11 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - jupyter
-  - ruff
   - python=3.13
   - conda-lock
-  - pip
-prefix: /Users/alainkhan/miniconda3/envs/dpp
+  - icecream
+  - jupyter
+  - pandas
+  - ruff
+  - pip:
+    - sqlfluff

@@ -1,0 +1,11 @@
+TODO:
+    get vpn, view kaggle.com data model erd
+    find table relationships: 1-1, 1-many
+    finish table datatype investigation for .csv insert to db
+    start analysis
+
+orinal file permissions of all .csv files in data/raw:
+    -rw-r--r--
+    changed to:
+    -r--r--r--
+    

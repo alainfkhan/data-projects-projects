@@ -7,9 +7,11 @@ test:
 REQ_TXT=requirements.txt
 PIPL_TXT=piplist.txt
 ENV_YML=environment.yml
+ENV_MAN_YML=environment-man.yml
 ENV_NAME=dpp
 
 # Conda is the package manager for this projects
+# environment-man.yml deps manually inputted
 
 # ==================================================
 # Clean
@@ -33,20 +35,15 @@ setup:
 # Dependencies
 # ==================================================
 .PHONY: save
-save:
-# 	conda list --export > $(REQ_TXT)
-	conda env export --from-history > $(ENV_YML)
+save:  
+	conda-lock -f $(ENV_MAN_YML) -p win-64 -p osx-arm64
 	pip list --not-required --format=freeze > $(PIPL_TXT)
-# 	need to append piplist to environment.yml
-
-.PHONY: install
-install:
-	conda install --file $(REQ_TXT)
 
 .PHONY: sync
 sync:
 # 	conda env update -f $(ENV_YML) --prune
-	conda-lock install -n dpp
+	conda-lock install -n $(ENV_NAME) conda-lock.yml
+
 
 # ==================================================
 # Linting
@@ -58,7 +55,3 @@ format:
 .PHONY: lint
 lint:
 	ruff check .
-
-#
-# conda-lock -f environment.yml -p win-64 -p osx-arm64
-#

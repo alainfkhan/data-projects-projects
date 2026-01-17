@@ -1,0 +1,16 @@
+TODO
+    verify table data types
+    finish build-db.sh
+    want to download sqlcmd
+    docstring list order -> ordered
+        eg: asdf.sql, qwer.sql -> 01_asdf.sql, 02_qwer.sql
+        so change docstring file orders -> shell scripts run order
+        
+    complete rest of files
+        quries/build-db/
+            bootstrap.sql       <-- builds db
+            schema.sql          <-- tables, types, constraints
+            procs.sql           <-- ingestion logic
+            views.sql
+            permissions.sql
+            load_all.sql        <-- loads data

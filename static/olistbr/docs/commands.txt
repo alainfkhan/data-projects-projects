@@ -1,0 +1,2 @@
+ls -l data/raw > data/permissions.txt
+chmod a-w data/raw/*.csv

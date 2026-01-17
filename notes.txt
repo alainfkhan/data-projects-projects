@@ -30,3 +30,12 @@ conda env export --from-history > environment.yml
 before commit
 
 note: make with conda works on macos
+
+==================================================
+common commands
+==================================================
+conda list --export > requirements.txt
+conda env export --from-history > environment.yml
+pip list --not-required --format=freeze > piplist.txt
+
+conda install --file requirements.txt
