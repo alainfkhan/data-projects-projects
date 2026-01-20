@@ -49,8 +49,9 @@ Therefore, in this iteration, any projects anticipating a tool connection, must 
 > - Future iterations of groups will not bind data projects to an OS.
 
 A data project usually has stages:
-    - Data-cleaning
-    - Reporting
+
+- Data-cleaning
+- Reporting
 
 |                   | Data-cleaning | Reporting |
 | ----------------- | ------------- | --------- |
@@ -58,11 +59,13 @@ A data project usually has stages:
 | Non-windows stack | other         | other     |
 
 Any project requiring any windows stack for data-cleaning such as:
-    - SQL Server Management Studio
-    - PowerBI
-    - Excel[^1]
-    - PowerQuery
-    - PowerPivot
+
+- SQL Server Management Studio
+- PowerBI
+- Excel[^1]
+- PowerQuery
+- PowerPivot
+
 is a project that ought to be in group: `static`.
 
 Any project where data-cleaning was not done on a windows stack but requires reporting on a windows stack can be in any non-exclusive OS group.
