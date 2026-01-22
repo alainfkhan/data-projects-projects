@@ -1,8 +1,52 @@
 import os
+import pandas as pd
+from enum import Enum
+from pathlib import Path
+from pandas import DataFrame
+
+THIS_FILE_PATH = Path(__file__)
+THIS_PROJECT_PATH = THIS_FILE_PATH.parent.parent
+
+DATA_PATH = THIS_PROJECT_PATH / "data"
+RAW_PATH = DATA_PATH / "raw"
+
+"""
+want to know:
+
+has null
+unique values
+max length
+unique lengths
+is fixed length
+
+chars '1234567890' -> int
+chars '1234567890.' -> decimal
+chars ascii -> char
+chars above ascii -> nchar
+
+
+"""
+
+
+def classify_col() -> str:
+    pass
+
+
+def infer_dtype(col) -> str:
+    col_cat = classify_col(col)
+    pass
 
 
 def main() -> None:
-    print(os.getcwd())
+    raw_filenames: list[str] = os.listdir(RAW_PATH)
+    raw_filepaths = [RAW_PATH / f for f in raw_filenames]
+
+    # put all tables in one dict
+    dfs: dict[str, DataFrame] = {f.name: pd.read_csv(f) for f in raw_filepaths}
+
+    print(dfs)
+
+    pass
 
 
 if __name__ == "__main__":
