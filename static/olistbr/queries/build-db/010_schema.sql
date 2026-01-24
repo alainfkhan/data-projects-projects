@@ -42,7 +42,7 @@ CREATE TABLE sales.orders (
     order_approved_at DATETIME2,
     order_delivered_carrier_date DATETIME2,
     order_delivered_customer_date DATETIME2,
-    order_estimated_delivery_date DATETIME2,
+    order_estimated_delivery_date DATE,
     CONSTRAINT pk_orders PRIMARY KEY (order_id),
     CONSTRAINT fk_orders_customers FOREIGN KEY (customer_id)
         REFERENCES sales.customers (customer_id)
@@ -144,7 +144,7 @@ CREATE TABLE marketing.closed_deals (
     average_stock VARCHAR(10),                  -- max 7
     business_type VARCHAR(20),                  -- max 12
     declared_product_catalog_size SMALLINT,     -- [1, 2000]
-    declared_monthly_revenue SMALLMONEY,        -- [0.00,50000000.00]
+    declared_monthly_revenue MONEY,             -- [0.00,50000000.00]
     CONSTRAINT pk_closed_deals PRIMARY KEY (mql_id)
 );
 
