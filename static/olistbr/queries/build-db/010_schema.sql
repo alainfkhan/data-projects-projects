@@ -27,7 +27,7 @@ GO
 -- Dimension tables ==========
 
 -- olist_customers_dataset.csv
-CREATE TABLE sales.dim_customers (                -- no nulls
+CREATE TABLE sales.dim_customers (              -- no nulls
     customer_id CHAR(32) NOT NULL,
     customer_unique_id CHAR(32) NOT NULL,
     customer_zip_code_prefix CHAR(5) NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE sales.dim_customers (                -- no nulls
         PRIMARY KEY (customer_id)
 );
 
-CREATE TABLE sales.dim_sellers (                  -- no nulls
+CREATE TABLE sales.dim_sellers (                -- no nulls
     seller_id CHAR(32) NOT NULL,
     seller_zip_code_prefix CHAR(5) NOT NULL,
     seller_city NVARCHAR(50) NOT NULL,          -- max 40
@@ -49,7 +49,7 @@ CREATE TABLE sales.dim_sellers (                  -- no nulls
 );
 
 -- product_category_name_translation.csv
-CREATE TABLE sales.dim_product_category_name_translation (                    -- no nulls
+CREATE TABLE sales.dim_product_category_name_translation (  -- no nulls
     product_category_name VARCHAR(50) NOT NULL,             -- max 46
     product_category_name_english VARCHAR(50) NOT NULL,     -- max 39
 
@@ -161,7 +161,7 @@ CREATE TABLE sales.fact_order_reviews (     -- nulls: title, message
 -- ==========
 
 -- olist_marketing_qualified_leads_dataset.csv
-CREATE TABLE marketing.fact_marketing_qualified_leads (     -- nulls: origin
+CREATE TABLE marketing.fact_marketing_qualified_leads ( -- nulls: origin
     mql_id CHAR(32) NOT NULL,
     first_contact_date DATE NOT NULL,   -- actual date
     landing_page_id CHAR(32) NOT NULL,
