@@ -1,4 +1,8 @@
 TODO
+    add sks to tables with composite pks 
+        eg order_reviews has pk: (review_id, order_id)
+        then make: pk, sk (review_sk)
+        review_sk INT IDENTITY PRIMARY KEY
     verify table data types
     finish build-db.sh
     want to download sqlcmd

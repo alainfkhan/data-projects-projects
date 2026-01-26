@@ -1,0 +1,16 @@
+order_reviews
+    row review_id not unique, order_id not unique => pk (review_id, order_id) unique
+    
+order_payments
+    row order_id not unique, payment_sequential not unique => pk (order_id, payment_sequential) unique
+
+order_items
+    row order_id not unique, order_item_id not unique => pk (order_id, order_item_id) unique
+
+closed_deals
+    row mql_id 1-1 marketing_qualified_leads mql_id
+
+geolocation
+    no candidate key exists
+    created sk geolocation_id
+    relations to customers and sellers zip_code_prefix
