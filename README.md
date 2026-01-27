@@ -44,7 +44,7 @@ Therefore, in this iteration, any projects anticipating a tool connection, must 
 > [!IMPORTANT]
 >
 > - Groups: `static`, and `macos` were unfortunately intended to bind a data project to an OS.
->   - This means a data project created in group: `macos` requiring reporting in PowerBi, necessitates a group change to maintain consistency in group definitions.
+>   - This means a data project created in group: `macos` requiring reporting in PowerBI, necessitates a group change to maintain consistency in group definitions.
 >   - But changing a project's group after creation is discouraged.
 > - Future iterations of groups will not bind data projects to an OS.
 
