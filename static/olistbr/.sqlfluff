@@ -2,7 +2,7 @@
 dialect = tsql
 ; templater = jinga
 ; indent_unit = space
-exclude_rules = RF03, ST06, LT02
+exclude_rules = RF03, RF04, ST06, LT02
 
 [sqlfluff:indentation]
 tab_width = 4   

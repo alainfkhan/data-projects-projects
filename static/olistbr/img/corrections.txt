@@ -1,0 +1,2 @@
+geolocation_lng DECIMAL(9, 6)
+geolocation_lat DECIMAL(9, 6)

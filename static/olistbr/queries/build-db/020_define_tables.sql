@@ -1,18 +1,3 @@
-USE olist;
-GO
-
--- ==================================================
--- Create Schemas
--- ==================================================
-
-CREATE SCHEMA sales;
-GO
-
-CREATE SCHEMA marketing;
-GO
-
-CREATE SCHEMA logistics;
-GO
 -- ==================================================
 -- Create Tables
 -- dim_<table> or fact_<table>
@@ -200,11 +185,13 @@ CREATE TABLE marketing.fact_closed_deals (      -- not null: ids, won_date, rev
 -- ==========
 
 -- olist_geolocation_dataset.csv
+-- lat/lng is max 17sf
+-- lat/lng at decimal(9,6) has error ~11cm sufficient
 CREATE TABLE logistics.dim_geolocation (
     geolocation_sk INT IDENTITY (1, 1) NOT NULL,
     geolocation_zip_code_prefix CHAR(5) NOT NULL,
-    geolocation_lat DECIMAL(28, 21),    -- max decimal(21,20)
-    geolocation_lng DECIMAL(28, 21),    -- max decimal(17,16)
+    geolocation_lat DECIMAL(9, 6),    -- max decimal(21,20)
+    geolocation_lng DECIMAL(9, 6),    -- max decimal(17,16)
     geolocation_city NVARCHAR(40),      -- max 38
     geolocation_state CHAR(2),
 

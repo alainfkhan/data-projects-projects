@@ -1,0 +1,18 @@
+
+execution plan
+.csv -> db
+
+build order:
+
+recreate_db
+    drops and creates db
+define_schemas
+define_tables
+    define table row dtypes and keys
+define_sp
+    stored procedures
+define_views
+alter_permissions
+insert_data
+    bulk insert csv data into defined tables
+

@@ -1,8 +1,8 @@
 SHELL := /bin/bash
 
-.PHONY: test
-test:
-	conda list --export > test.txt
+# .PHONY: test
+# test:
+# 	conda list --export > test.txt
 
 REQ_TXT=requirements.txt
 PIPL_TXT=piplist.txt
@@ -26,9 +26,9 @@ clean:
 # ==================================================
 # Environment
 # ==================================================
-.PHONY: setup
-setup:
-	conda env create -f $(ENV_YML)
+# .PHONY: setup
+# setup:
+# 	conda env create -f $(ENV_YML)
 
 
 # ==================================================
