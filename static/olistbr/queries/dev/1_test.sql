@@ -1,1 +1,1 @@
-select db_name()
+SELECT DB_NAME()

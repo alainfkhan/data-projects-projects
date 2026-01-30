@@ -1,5 +1,29 @@
 
+context:
+project/
+    data/
+        raw/
+    queries/
+        build-db/
+            000_recreate_db.sql
+            010_define_schemas.sql
+            020_define_tables.sql
+            030_define_stored_procedures.sql
+            040_define_views.sql
+            050_alter_permissions.sql
+            060_insert_data.sql
+        scratch.sql
+    build-db.sh
+
+
 execution plan
+read all .csv files in data/raw
+execute 000_recreate_db.sql in db master
+execute the rest in db olist_stg
+
+
+
+
 .csv -> db
 
 build order:

@@ -1,4 +1,3 @@
-
 sales.dim_customers
 sales.dim_sellers
 sales.dim_product_category_name_translation

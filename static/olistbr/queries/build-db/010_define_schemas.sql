@@ -1,6 +1,8 @@
 -- ==================================================
 -- Create Schemas
 -- ==================================================
+CREATE SCHEMA staging;
+GO
 
 CREATE SCHEMA sales;
 GO

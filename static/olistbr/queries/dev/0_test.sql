@@ -1,2 +1,2 @@
-use olist_stg
-go
+USE olist_stg
+GO

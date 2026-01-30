@@ -1,0 +1,16 @@
+[project]
+name = "rebuild-db"
+version = "0.1.0"
+description = "Drops and rebuilds a staging db."
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pandas>=3.0.0",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
