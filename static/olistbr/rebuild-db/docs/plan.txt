@@ -1,0 +1,21 @@
+
+need
+tables config
+    db
+        from file path
+        schema name
+        table name
+            row1
+                dtype
+            row2
+                dtype
+        constraints
+            pk
+                row/rows
+            fk
+                row
+                references
+            check
+                row
+            unique
+                row

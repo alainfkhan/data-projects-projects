@@ -23,6 +23,7 @@ CREATE TABLE sales.dim_customers (              -- no nulls
         PRIMARY KEY (customer_id)
 );
 
+-- olist_sellers_dataset.csv
 CREATE TABLE sales.dim_sellers (                -- no nulls
     seller_id CHAR(32) NOT NULL,
     seller_zip_code_prefix CHAR(5) NOT NULL,
