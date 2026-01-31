@@ -206,6 +206,9 @@ olist_stg:
         geolocation_sk:
           dtype: INT
           nullable: false
+          sk:
+            start: 1
+            increment: 1
         geolocation_zip_code_prefix:
           dtype: CHAR(5)
           nullable: false
