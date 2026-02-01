@@ -1,3 +1,13 @@
+execution plan:
+use master
+drop olist_stg
+create database olist_stg
+use olist_stg
+create schemas
+create tables
+insert data into tables
+
+
 
 need
 tables config

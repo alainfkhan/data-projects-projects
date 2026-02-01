@@ -1,7 +1,5 @@
-database:
-  name: olist_stg
-
 # what i want the tables to look like
+# can be generated
 olist_stg:
 
   sales:
@@ -207,7 +205,7 @@ olist_stg:
           dtype: INT
           nullable: false
           sk:
-            start: 1
+            seed: 1
             increment: 1
         geolocation_zip_code_prefix:
           dtype: CHAR(5)

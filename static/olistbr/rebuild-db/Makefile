@@ -2,6 +2,10 @@
 run:
 	python -m src
 
+.PHONY: paths
+paths:
+	python -m src.utils.paths
+
 .PHONY: format
 format:
 	ruff format .

@@ -1,18 +1,11 @@
-import os
-
-import yaml
-import pandas as pd
-from icecream import ic
-from typing import Dict
-
-from src.utils.paths import RAW_PATH
-
 """
 rebuilds the staging db
 
 will have:
 olist
 olist_stg
+
+olist attained from copying olist_stg
 
 csv -> pd -> sqlserver
 
@@ -25,114 +18,102 @@ nullable
 pk
 """
 
+import os
+from pathlib import Path
 
-def map_constraint(constraint: str) -> str:
-    match constraint:
-        case "pk":
-            return "PRIMARY KEY"
-        case "fk":
-            return "FOREIGN KEY"
-        case "unique":
-            return "UNIQUE"
-        case _:
-            return ""
+import yaml
+import pyodbc
+import pandas as pd
+from icecream import ic
+from pyodbc import Row, Connection, Cursor
 
-
-# type constraint_tree = Dict[str, constraint_tree | list[str]]
-# type constraint_tree = Dict[str, str | list[constraint_tree]]
-
-type constraint_tree = Dict[str, str | list[str] | list[Dict[str, str]]]
-
-
-def handle_constraint(constraint: str, constraint_attributes: constraint_tree) -> str:
-    # TODO: fix types
-    constraint_name = constraint_attributes["name"]
-    return_str: str = f"CONSTRAINT {constraint_name}\n"
-
-    match constraint:
-        case "pk":
-            pk_columns = constraint_attributes["columns"]
-            return_str += f"PRIMARY KEY ({', '.join(pk_columns)})"
-
-        case "fk":
-            fk_col: str = str(constraint_attributes["column"])
-
-            references_attributes = constraint_attributes["references"]
-
-            references = [list(r.keys())[0] for r in references_attributes]
-
-            return_str += f"FOREIGN KEY ({fk_col})\n"
-            return_str += "REFERENCES\n"
-
-            references_list = []
-            for i, reference in enumerate(references):
-                schema = constraint_attributes["references"][i][reference]["schema"]
-                ref_col = constraint_attributes["references"][i][reference]["column"]
-
-                references_list.append(f"{schema}.{reference} ({ref_col})")
-
-            return_str += ", ".join(references_list)
-
-        case "unique":
-            unique_cols: list[str] = list(constraint_attributes["columns"])
-            return_str += f"UNIQUE ({', '.join(unique_cols)})"
-
-        case _:
-            pass
-
-    return return_str
+from src.utils.paths import RAW_PATH, CONFIGS_PATH
+from src.utils.db_manager import DBManager
 
 
 def main() -> None:
     print("rebuilding-db")
-    print("")
 
-    config_path: str = "src/config.yml"
-    with open(config_path, "r") as f:
-        config = yaml.safe_load(f)
+    # get configs
+    tables_config_path: Path = CONFIGS_PATH / "tables.yml"
+    with open(tables_config_path, "r") as f:
+        tables_config = yaml.safe_load(f)
 
-    db_final_name = "olist"
-    db_stg_name = f"{db_final_name}_stg"
-    db = db_stg_name
+    connection_config_path: Path = CONFIGS_PATH / "connection.yml"
+    with open(connection_config_path, "r") as f:
+        connection_config = yaml.safe_load(f)
 
-    print(f"USE {db};")
-    print("GO")
-    print("")
+    # define variables from config
+    driver = connection_config["driver"]
+    server = connection_config["server"]
+    db_stg = connection_config["database"]
+    default_db = "master"
 
-    schemas: list[str] = list(config[db].keys())
-    for schema in schemas:
-        tables: list[str] = list(config[db][schema].keys())
-        for table in tables:
-            print(f"CREATE TABLE {schema}.{table} (")
+    # connect to default db
+    dbm = DBManager(driver=driver, server=server, database=default_db)
+    conn: Connection = dbm.connect()
+    cursor: Cursor = conn.cursor()
+    # cursor defined here has to exist
 
-            columns: list[str] = list(config[db][schema][table]["columns"].keys())
-            for column in columns:
-                dtype: str = config[db][schema][table]["columns"][column]["dtype"]
-                nullable: str = config[db][schema][table]["columns"][column]["nullable"]
+    dbm.wipe_db(db_stg)
 
-                print(f"\t{column} {dtype}{'' if nullable else ' NOT NULL'},")
+    # dbm.drop_db('deletesoon')
+    # print(dbm.list_all_dbs())
 
-            print("")
+    # print(dbm.list_all_dbs())
+    # print(dbm.create_db('deletesoon'))
 
-            constraints: list[str] = list(
-                config[db][schema][table]["constraints"].keys()
-            )
-            # TODO: add commas for list, formatting
-            for constraint in constraints:
-                constraints_attributes = config[db][schema][table]["constraints"][
-                    constraint
-                ]
-                constraint_str = handle_constraint(constraint, constraints_attributes)
+    # print(dbm.list_tables())
 
-                print(f"{constraint_str}")
+    # print(dbm.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'"))
 
-            print(");")
-            print("")
+    # dbmanager.rebuild_db()
 
-    # table_name = 'dim_customers'
+    # dbmanager.query()
 
-    # filename = config[db_name][schema][table_name]['filename']
-    # file_path = RAW_PATH / filename
+    # dbmanager.use()
+    # dbmanager.current_db()
+    # dbmanager.create_schema()
+    # dbmanager.create_table()
+    # dbmanager.insert_into_table()
+
+    # default_db = "master"
+    # print(f"Connecting to database: '{default_db}'...")
+    # conn = pyodbc.connect(f"""
+    #                       DRIVER={{{driver}}};
+    #                       SERVER={server};
+    #                       DATABASE={default_db};
+    #                       Trusted_Connection=yes;
+    #                       """)
+    # cursor = conn.cursor()
+    # cursor.fast_executemany = True
+    # print(f"Connected to database: {default_db}.")
+
+    # cursor.execute("select @@servername")
+    # row: Row | None = cursor.fetchone()
+
+    # print(row)
+    # if row:
+    #     print(row[0])
+
+    # closing
+    cursor.close()
+    print("Cursor closed.")
+
+    conn.close()
+    print("Connection closed.")
+
+    # schema = "sales"
+    # table = "dim_customers"
+
+    # filename: str = tables_config[db][schema][table]["filename"]
+    # filepath = RAW_PATH / filename
+
+    # if not filepath.exists():
+    #     raise FileNotFoundError(f"Filepath: '{filepath}' does not exist.")
+
+    # df = pd.read_csv(filepath)
+    # print(df)
 
 
 if __name__ == "__main__":
