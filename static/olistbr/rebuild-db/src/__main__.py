@@ -55,7 +55,21 @@ def main() -> None:
     cursor: Cursor = conn.cursor()
     # cursor defined here has to exist
 
+    # wipe db
     dbm.wipe_db(db_stg)
+
+    dbm.change_db(db_stg)
+
+    schemas: list[str] = tables_config[db_stg].keys()
+    for schema in schemas:
+        dbm.create_schema(schema)
+
+    # closing
+    cursor.close()
+    print("Cursor closed.")
+
+    conn.close()
+    print("Connection closed.")
 
     # dbm.drop_db('deletesoon')
     # print(dbm.list_all_dbs())
@@ -95,13 +109,6 @@ def main() -> None:
     # print(row)
     # if row:
     #     print(row[0])
-
-    # closing
-    cursor.close()
-    print("Cursor closed.")
-
-    conn.close()
-    print("Connection closed.")
 
     # schema = "sales"
     # table = "dim_customers"

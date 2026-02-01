@@ -149,6 +149,19 @@ class DBManager:
             """)
         self.conn.autocommit = False
 
+    def list_schemas(self) -> list[str]:
+        self.cursor.execute("""
+            select name
+            from sys.schemas
+            where schema_id between 5 and 16383
+            """)
+        pass
+
+    def create_schema(self, schema: str) -> None:
+        self.conn.autocommit = True
+        self.cursor.execute(f"create schema {schema};")
+        self.conn.autocommit = False
+
 
 if __name__ == "__main__":
     pass
