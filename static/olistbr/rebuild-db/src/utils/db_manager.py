@@ -165,6 +165,7 @@ class DBManager:
 
         self.create_db(database)
 
+        # alter db logs
         self.conn.autocommit = True
         self.cursor.execute(f"""
             alter database {database}

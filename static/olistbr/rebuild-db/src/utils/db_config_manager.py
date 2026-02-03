@@ -2,7 +2,7 @@
 
 from icecream import ic
 from pathlib import Path
-from typing import Any, Generic, TypeVar, Dict
+from typing import Any, Generic, TypeVar, Dict, NamedTuple, TypedDict
 
 import yaml
 from pydantic import BaseModel, RootModel
@@ -17,6 +17,27 @@ T = TypeVar("T")
 # class DBConfig(RootModel[Any]):
 #     root: Dict
 #     pass
+
+
+class DBCoord(NamedTuple):
+    db: int
+    schema: int
+    table: int
+    column: int
+
+
+class DBInfo(NamedTuple):
+    db: str
+    schema: str
+    table: str
+    column: str
+
+
+class TableComp(NamedTuple):
+    db: tuple[int]
+    schema: tuple[int, int]
+    table: tuple[int, int, int]
+    column: tuple[int, int, int, int]
 
 
 def dict_keys_to_list(dict_keys) -> list[str]:
@@ -37,50 +58,89 @@ class DBConfigManager:
 
         (db, schema, table) ie.
 
-        (1,1,1) = (olist_stg, sales, dim_customers)
+        (0,0,0) = (olist_stg, sales, dim_customers)
 
-        (1,1,2) = (olist_stg, sales, dim_sellers)
+        (0,0,1) = (olist_stg, sales, dim_sellers)
 
-        (1,1,3) = (olist_stg, sales, dim_product_category_name_translation)
+        (0,0,2) = (olist_stg, sales, dim_product_category_name_translation)
 
-        (1,2,1) = (olist_stg, marketing, fact_marketing_qualified_leads)
+        (0,1,0) = (olist_stg, marketing, fact_marketing_qualified_leads)
 
-        (1,3,1) = (olist_stg, logistics, geolocation)
+        (0,2,0) = (olist_stg, logistics, dim_geolocation)
 
         """
         self.db_config = db_config
 
         # make index
         # TODO: redo with more appropriate data structure
-        coord_to_table_info: dict[tuple[int, int, int], tuple[str, str, str]] = dict()
-        hierarchy_to_index: dict[Any, Any] = {"db": {}, "schema": {}, "table": {}}
+        coord_to_info: dict[DBCoord, DBInfo] = dict()
+        # cood_to_info: dict[tuple[int, int, int], tuple[str, str, str]] = dict()
+        hierarchy_to_comp: dict[
+            str,
+            dict[
+                str,
+                tuple[int]
+                | tuple[int, int]
+                | tuple[int, int, int]
+                | tuple[int, int, int, int],
+            ],
+        ] = {
+            "dbs": {},
+            "schemas": {},
+            "tables": {},
+            "columns": {},
+        }
 
         for db_id, db_name in enumerate(self.db_config):
-            hierarchy_to_index["db"][db_name] = db_id
+            hierarchy_to_comp["dbs"][db_name] = (db_id,)
 
             for schema_id, schema in enumerate(self.db_config[db_name]):
                 schema_name = list(schema.keys())[0]
+
+                hierarchy_to_comp["schemas"][schema_name] = (
+                    db_id,
+                    schema_id,
+                )
+
                 tables = list(schema.values())[0]
-
-                hierarchy_to_index["schema"][schema_name] = (db_id, schema_id)
-
                 for table_id, table in enumerate(tables):
                     table_name = list(table.keys())[0]
 
-                    idx = (db_id, schema_id, table_id)
-                    loc = (db_name, schema_name, table_name)
-                    coord_to_table_info[idx] = loc
-
-                    hierarchy_to_index["table"][table_name] = (
+                    hierarchy_to_comp["tables"][table_name] = (
                         db_id,
                         schema_id,
                         table_id,
                     )
 
-        ic(coord_to_table_info)
-        ic(hierarchy_to_index)
-        self.coord_to_table_info = coord_to_table_info
-        self.hierarchy_to_index = hierarchy_to_index
+                    columns = list(table.values())[0]
+                    for column_id, column in enumerate(columns["columns"]):
+                        column_name = list(column.keys())[0]
+
+                        hierarchy_to_comp["columns"][column_name] = (
+                            db_id,
+                            schema_id,
+                            table_id,
+                            column_id,
+                        )
+
+                        coord: DBCoord = DBCoord(
+                            db_id,
+                            schema_id,
+                            table_id,
+                            column_id,
+                        )
+                        info: DBInfo = DBInfo(
+                            db_name,
+                            schema_name,
+                            table_name,
+                            column_name,
+                        )
+                        coord_to_info[coord] = info
+
+        ic(coord_to_info)
+        ic(hierarchy_to_comp)
+        self.coord_to_info = coord_to_info
+        self.hierarchy_to_comp = hierarchy_to_comp
 
     # TODO: rename after revision
     def get_table_info_from_coord(self, coord: tuple[int]) -> tuple[str]:

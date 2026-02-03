@@ -1,162 +1,166 @@
 # what i want the tables to look like
 # can be generated
+# keep spaces: 2
+# do not change, keep format, live with it
 olist_stg:
 
-  - sales:
+- sales:
 
-      - dim_customers:
-            filename: olist_customers_dataset.csv
-            type: dim
-            columns:
-              - customer_id:
-                    dtype: CHAR(32)
-                    nullable: false
-              - customer_unique_id:
-                    dtype: CHAR(32)
-                    nullable: false
-              - customer_zip_code_prefix:
-                    dtype: CHAR(5)
-                    nullable: false
-              - customer_city:
-                    dtype: VARCHAR(50)
-                    nullable: true
-              - customer_state:
-                    dtype: CHAR(2)
-                    nullable: true
-            constraints:
-              - pk:
-                    name: pk_dim_customers
-                    columns:
-                      - customer_id
+  - dim_customers:
+      filename: olist_customers_dataset.csv
+      type: dim
+      columns:
+      - customer_id:
+          dtype: CHAR(32)
+          nullable: false
+      - customer_unique_id:
+          dtype: CHAR(32)
+          nullable: false
+      - customer_zip_code_prefix:
+          dtype: CHAR(5)
+          nullable: false
+      - customer_city:
+          dtype: VARCHAR(50)
+          nullable: true
+      - customer_state:
+          dtype: CHAR(2)
+          nullable: true
+      constraints:
+      - pk:
+          name: pk_dim_customers
+          columns:
+          - customer_id
 
-      - dim_sellers:
-            filename: olist_sellers_dataset.csv
-            type: dim
-            columns:
-              - seller_id:
-                    dtype: CHAR(32)
-                    nullable: false
-              - seller_zip_code_prefix:
-                    dtype: CHAR(5)
-                    nullable: false
-              - seller_city:
-                    dtype: NVARCHAR(50)
-                    nullable: false
-              - seller_state:
-                    dtype: CHAR(2)
-                    nullable: false
-            constraints:
-              - pk:
-                    name: pk_dim_sellers
-                    columns:
-                      - seller_id
+  - dim_sellers:
+      filename: olist_sellers_dataset.csv
+      type: dim
+      columns:
+      - seller_id:
+          dtype: CHAR(32)
+          nullable: false
+      - seller_zip_code_prefix:
+          dtype: CHAR(5)
+          nullable: false
+      - seller_city:
+          dtype: NVARCHAR(50)
+          nullable: false
+      - seller_state:
+          dtype: CHAR(2)
+          nullable: false
+      constraints:
+      - pk:
+          name: pk_dim_sellers
+          columns:
+          - seller_id
 
-      - dim_product_category_name_translation:
-            filename: product_category_name_translation
-            type: dim
-            columns:
-              - product_category_name:
-                    dtype: VARCHAR(50)
-                    nullable: false
-              - product_category_name_english:
-                    dtype: VARCHAR(50)
-                    nullable: false
-            constraints:
-              - pk:
-                    name: pk_dim_product_category_name_translation
-                    columns:
-                      - product_category_name
+  - dim_product_category_name_translation:
+      filename: product_category_name_translation
+      type: dim
+      columns:
+      - product_category_name:
+          dtype: VARCHAR(50)
+          nullable: false
+      - product_category_name_english:
+          dtype: VARCHAR(50)
+          nullable: false
+      constraints:
+      - pk:
+          name: pk_dim_product_category_name_translation
+          columns:
+          - product_category_name
 
-      - dim_products:
-            filename: olist_products_dataset.csv
-            type: dim
-            columns:
-              - product_id:
-                    dtype: CHAR(32)
-                    nullable: false
-              - product_category_name:
-                    dtype: VARCHAR(50)
-                    nullable: true
-              - product_name_lenght:
-                    dtype: TINYINT
-                    nullable: true
-              - product_description_lenght:
-                    dtype: SMALLINT
-                    nullable: true
-              - product_photos_qty:
-                    dtype: TINYINT
-                    nullable: true
-              - product_weight_g:
-                    dtype: INT
-                    nullable: true
-              - product_length_cm:
-                    dtype: TINYINT
-                    nullable: true
-              - product_height_cm:
-                    dtype: TINYINT
-                    nullable: true
-              - product_width_cm:
-                    dtype: TINYINT
-                    nullable: true
-            constraints:
-              - pk:
-                    name: pk_dim_products
-                    columns:
-                      - product_id
-              - fk:
-                    name: fk_dim_products_dim_product_category_name_translation__product_category_name
-                    column: product_category_name
-                    references:
-                      - dim_product_category_name_translation:
-                            schema: sales
-                            column: product_category_name
+  - dim_products:
+      filename: olist_products_dataset.csv
+      type: dim
+      columns:
+      - product_id:
+          dtype: CHAR(32)
+          nullable: false
+      - product_category_name:
+          dtype: VARCHAR(50)
+          nullable: true
+      - product_name_lenght:
+          dtype: TINYINT
+          nullable: true
+      - product_description_lenght:
+          dtype: SMALLINT
+          nullable: true
+      - product_photos_qty:
+          dtype: TINYINT
+          nullable: true
+      - product_weight_g:
+          dtype: INT
+          nullable: true
+      - product_length_cm:
+          dtype: TINYINT
+          nullable: true
+      - product_height_cm:
+          dtype: TINYINT
+          nullable: true
+      - product_width_cm:
+          dtype: TINYINT
+          nullable: true
+      constraints:
+      - pk:
+          name: pk_dim_products
+          columns:
+          - product_id
+      - fk:
+          name: fk_dim_products_dim_product_category_name_translation__product_category_name
+          column: product_category_name
+          references:
+          - dim_product_category_name_translation:
+              schema: sales
+              column: product_category_name
 
-  - marketing:
+- marketing:
 
-      - fact_marketing_qualified_leads:
-            filename: olist_marketing_qualified_leads_dataset.csv
-            type: fact
-            columns:
-              - mql_id:
-                    dtype: CHAR(32)
-                    nullable: false
-              - first_contact_date:
-                    dtype: DATE
-                    nullable: false
-              - langing_page_id:
-                    dtype: CHAR(32)
-                    nullable: false
-              - origin:
-                    dtype: VARCHAR(20)
-                    nullable: true
-            constraints:
-              - pk:
-                    name: pk_fact_marketing_qualified_leads
-                    columns:
-                      - mql_id
+  - fact_marketing_qualified_leads:
+      filename: olist_marketing_qualified_leads_dataset.csv
+      type: fact
+      columns:
+      - mql_id:
+          dtype: CHAR(32)
+          nullable: false
+      - first_contact_date:
+          dtype: DATE
+          nullable: false
+      - langing_page_id:
+          dtype: CHAR(32)
+          nullable: false
+      - origin:
+          dtype: VARCHAR(20)
+          nullable: true
+      constraints:
+      - pk:
+          name: pk_fact_marketing_qualified_leads
+          columns:
+          - mql_id
 
-  - logistics:
+- logistics:
 
-      - dim_geolocation:
-          - dim_geolocation:
-                filename: olist_geolocation_dataset.csv
-                type: dim
-                columns:
-                  - geolocation_sk:
-                        dtype: INT
-                        nullable: flase
-                  - geolocation_zip_code_prefix:
-                        dtype: CHAR(5)
-                        nullable: false
-                  - geolocation_lat:
-                        dtype: DECIMAL(9, 6)
-                        nullable: true
-                  - geolocation_lng:
-                        dtype: DECIMAL(9, 6)
-                        nullable: true
-                  - geolocation_city:
-                        dtype: NVARCHAR(40)
-                        nullable: true
-                  - geolocation_state:
-                        dtype: CHAR(2)
-                        nullable: true
+  - dim_geolocation:
+      filename: olist_geolocation_dataset.csv
+      type: dim
+      columns:
+      - geolocation_sk:
+          dtype: INT
+          nullable: flase
+          sk:
+            seed: 1
+            increment: 1
+      - geolocation_zip_code_prefix:
+          dtype: CHAR(5)
+          nullable: false
+      - geolocation_lat:
+          dtype: DECIMAL(9, 6)
+          nullable: true
+      - geolocation_lng:
+          dtype: DECIMAL(9, 6)
+          nullable: true
+      - geolocation_city:
+          dtype: NVARCHAR(40)
+          nullable: true
+      - geolocation_state:
+          dtype: CHAR(2)
+          nullable: true
