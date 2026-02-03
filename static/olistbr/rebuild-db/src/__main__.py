@@ -19,6 +19,7 @@ pk
 """
 
 import os
+import time
 from pathlib import Path
 
 import yaml
@@ -54,12 +55,18 @@ def main() -> None:
     dbm = DBManager(driver=driver, server=server, database=default_db)
     dbcm = DBConfigManager(db_config=db_config)
 
-    # ic(dbcm.get_db(db))
-    # ic(dbcm.list_schema_names(db))
+    # ic(dbcm.get_db())
+    # ic(dbcm.list_db_names())
+    # ic(dbcm.list_schema_names())
     # ic(dbcm.get_schema("sales", db))
     # ic(dbcm.get_table("marketing.fact_marketing_qualified_leads"))
     # ic(dbcm.get_column("marketing.fact_marketing_qualified_leads.landing_page_id"))
     # ic(dbcm.get_column('logistics.dim_geolocation.geolocation_sk'))
+    # ic(dbcm.list_table_names())
+
+    ic(dbcm.list_schema_names())
+    ic(dbcm.list_table_names())
+    ic(dbcm.list_column_names())
 
     return
 

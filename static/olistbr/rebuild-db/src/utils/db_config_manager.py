@@ -4,6 +4,7 @@ from icecream import ic
 from pathlib import Path
 from typing import Any, Generic, TypeVar, Dict, NamedTuple, TypedDict
 
+import pandas as pd
 import yaml
 from pydantic import BaseModel, RootModel
 
@@ -57,6 +58,7 @@ class DBConfigManager:
     def __init__(self, db_config: dict[Any, Any]) -> None:
         """ """
         self.db_config = db_config
+        self.db_name = list(db_config.keys())[0]
 
         # make index
         coord_to_info: dict[DBCoord, DBInfo] = dict()
@@ -140,6 +142,9 @@ class DBConfigManager:
         self.hierarchy_to_id = hierarchy_to_id
         self.hierarchy_to_comp = hierarchy_to_comp
 
+        df_db_info = pd.DataFrame(coord_to_info.values())
+        self.df_db_info = df_db_info
+
     def _get_id(self, db_attr: str, value: str) -> int:
         db_attrs: list[str] = ["db", "schema", "table", "column"]
         singular_to_plural_map: dict[str, str] = {
@@ -158,21 +163,38 @@ class DBConfigManager:
     def list_db_names(self) -> list[str]:
         return dict_keys_to_list(self.db_config.keys())
 
-    def list_schema_names(self, db: str) -> list[str]:
-        """Lists all schema names."""
-        schema_names: list[str] = [list(s.keys())[0] for s in self.db_config[db]]
+    # def list_schema_names_2(self) -> list[str]:
+    #     """Lists all schema names. Slower"""
+    #     df = self.df_db_info
+    #     df_schemas = df['schema'].drop_duplicates()
+    #     schema_names = df_schemas.tolist()
+    #     return schema_names
+
+    def list_schema_names(self) -> list[str]:
+        """List all schema names."""
+        schema_names: list[str] = [
+            list(s.keys())[0] for s in self.db_config[self.db_name]
+        ]
         return schema_names
 
     def list_table_names(self) -> list[str]:
-        """Lists all table names in the form: schema.table_name"""
-        pass
+        """Lists all table names in the form: schema_name.table_name"""
+        df = self.df_db_info
+        df_tables = df[["schema", "table"]].drop_duplicates()
+        table_names = [f"{row.schema}.{row.table}" for row in df_tables.itertuples()]
+        return table_names
 
     def list_column_names(self) -> list[str]:
-        pass
+        df = self.df_db_info
+        df_columns = df[["schema", "table", "column"]]
+        column_names = [
+            f"{row.schema}.{row.table}.{row.column}" for row in df_columns.itertuples()
+        ]
+        return column_names
 
-    def get_db(self, db: str) -> dict[Any, Any]:
+    def get_db(self) -> dict[Any, Any]:
         """Returns the database configuration."""
-        return self.db_config[db]
+        return self.db_config[self.db_name]
 
     def get_schema(self, schema_name: str) -> dict[Any, Any]:
         """Returns the schema configuration."""
