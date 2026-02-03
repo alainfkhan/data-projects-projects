@@ -1,0 +1,52 @@
+type:
+
+
+
+
+structure:
+<> indicate customisable fields
+
+<type>, table type = dim, fact
+<dtype>, any valid sqlserver data type = CHAR(5), DECIMAL(9, 4), etc.
+<nullable>, able to have null = true, false
+<sk>, option to be sk, must have dtype INT, IDENTITY(<seed>, <increment>)
+<seed>, value of first row added = 1, 2, ...
+<increment>, how much to increment for each new row = 1
+
+<pk_name>, has format: pk_<table1>
+<pk_cols>, must be any existing col in table
+
+schemas, tables, and columns must be ordered => as a list
+
+<fk> add fk on existing col
+<fk_name>, has format: fk_<child>_<parent>__<col>
+
+
+<db>
+    - <schema1>
+        - <table1>
+            filename: <table1.csv>
+            type: <type>
+            columns:
+                - col1:
+                    dtype: <dtype>
+                    nullable: <nullable>
+                    <sk>:
+                        seed: <seed>
+                        increment: <increment>
+                - col2:
+                    dtype: <dtype>
+                    nullable: <nullable>
+                - ...
+            constraints:
+                pk:
+                    name: <pk_name>
+                    columns:
+                        - <pk_cols>
+                <fk>:
+                    name: <fk_name>
+                    column: <col>
+                    references:
+                        <other table>: 
+                            schema: <schema>
+                            column: <col>

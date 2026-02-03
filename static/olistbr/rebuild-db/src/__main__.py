@@ -25,102 +25,52 @@ import yaml
 import pyodbc
 import pandas as pd
 from icecream import ic
-from pyodbc import Row, Connection, Cursor
+# from pyodbc import Row, Connection, Cursor
 
 from src.utils.paths import RAW_PATH, CONFIGS_PATH
 from src.utils.db_manager import DBManager
+from src.utils.db_config_manager import DBConfigManager
+
+# get configs
+connection_config_path: Path = CONFIGS_PATH / "connection.yml"
+with open(connection_config_path, "r") as f:
+    connection_config = yaml.safe_load(f)
+
+db_config_path: Path = CONFIGS_PATH / "db_config.yml"
+with open(db_config_path, "r") as f:
+    db_config = yaml.safe_load(f)
+
+# define variables from config
+driver = connection_config["driver"]
+server = connection_config["server"]
+db = connection_config["database"]
+
+default_db = "master"
+test_db = "deletesoon"
 
 
 def main() -> None:
-    print("rebuilding-db")
-
-    # get configs
-    tables_config_path: Path = CONFIGS_PATH / "tables.yml"
-    with open(tables_config_path, "r") as f:
-        tables_config = yaml.safe_load(f)
-
-    connection_config_path: Path = CONFIGS_PATH / "connection.yml"
-    with open(connection_config_path, "r") as f:
-        connection_config = yaml.safe_load(f)
-
-    # define variables from config
-    driver = connection_config["driver"]
-    server = connection_config["server"]
-    db_stg = connection_config["database"]
-    default_db = "master"
-
     # connect to default db
     dbm = DBManager(driver=driver, server=server, database=default_db)
-    conn: Connection = dbm.connect()
-    cursor: Cursor = conn.cursor()
-    # cursor defined here has to exist
+    dbcm = DBConfigManager(db_config=db_config)
 
-    # wipe db
-    dbm.wipe_db(db_stg)
+    # ic(dbcm.get_db(db))
+    # ic(dbcm.list_schema_names(db))
+    ic(dbcm.get_schema("sales", db))
 
-    dbm.change_db(db_stg)
+    return
 
-    schemas: list[str] = tables_config[db_stg].keys()
-    for schema in schemas:
-        dbm.create_schema(schema)
+    with dbm.connect():
+        # wipe db
+        # dbm.wipe_db(db)
+        # print(f"Wiped {db}")
 
-    # closing
-    cursor.close()
-    print("Cursor closed.")
+        print(dbm.get_current_db())
+        dbm.change_db(db)
+        print(dbm.get_current_db())
+        print(dbm.list_dbs())
 
-    conn.close()
-    print("Connection closed.")
-
-    # dbm.drop_db('deletesoon')
-    # print(dbm.list_all_dbs())
-
-    # print(dbm.list_all_dbs())
-    # print(dbm.create_db('deletesoon'))
-
-    # print(dbm.list_tables())
-
-    # print(dbm.query("SELECT * FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'"))
-
-    # dbmanager.rebuild_db()
-
-    # dbmanager.query()
-
-    # dbmanager.use()
-    # dbmanager.current_db()
-    # dbmanager.create_schema()
-    # dbmanager.create_table()
-    # dbmanager.insert_into_table()
-
-    # default_db = "master"
-    # print(f"Connecting to database: '{default_db}'...")
-    # conn = pyodbc.connect(f"""
-    #                       DRIVER={{{driver}}};
-    #                       SERVER={server};
-    #                       DATABASE={default_db};
-    #                       Trusted_Connection=yes;
-    #                       """)
-    # cursor = conn.cursor()
-    # cursor.fast_executemany = True
-    # print(f"Connected to database: {default_db}.")
-
-    # cursor.execute("select @@servername")
-    # row: Row | None = cursor.fetchone()
-
-    # print(row)
-    # if row:
-    #     print(row[0])
-
-    # schema = "sales"
-    # table = "dim_customers"
-
-    # filename: str = tables_config[db][schema][table]["filename"]
-    # filepath = RAW_PATH / filename
-
-    # if not filepath.exists():
-    #     raise FileNotFoundError(f"Filepath: '{filepath}' does not exist.")
-
-    # df = pd.read_csv(filepath)
-    # print(df)
+        print(isinstance(db_config, dict))
 
 
 if __name__ == "__main__":

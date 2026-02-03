@@ -2,6 +2,10 @@
 run:
 	python -m src
 
+.PHONY: test
+test:
+	python -m src.utils.db_config_manager
+
 .PHONY: paths
 paths:
 	python -m src.utils.paths
