@@ -125,7 +125,7 @@ olist_stg:
       - first_contact_date:
           dtype: DATE
           nullable: false
-      - langing_page_id:
+      - landing_page_id:
           dtype: CHAR(32)
           nullable: false
       - origin:

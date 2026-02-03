@@ -33,6 +33,7 @@ class DBInfo(NamedTuple):
     column: str
 
 
+# attempt
 class TableComp(NamedTuple):
     db: tuple[int]
     schema: tuple[int, int]
@@ -54,27 +55,18 @@ class DBConfigManager:
     """
 
     def __init__(self, db_config: dict[Any, Any]) -> None:
-        """Need to make a map:
-
-        (db, schema, table) ie.
-
-        (0,0,0) = (olist_stg, sales, dim_customers)
-
-        (0,0,1) = (olist_stg, sales, dim_sellers)
-
-        (0,0,2) = (olist_stg, sales, dim_product_category_name_translation)
-
-        (0,1,0) = (olist_stg, marketing, fact_marketing_qualified_leads)
-
-        (0,2,0) = (olist_stg, logistics, dim_geolocation)
-
-        """
+        """ """
         self.db_config = db_config
 
         # make index
-        # TODO: redo with more appropriate data structure
         coord_to_info: dict[DBCoord, DBInfo] = dict()
         # cood_to_info: dict[tuple[int, int, int], tuple[str, str, str]] = dict()
+        hierarchy_to_id: dict[str, dict[str, int]] = {
+            "dbs": {},
+            "schemas": {},
+            "tables": {},
+            "columns": {},
+        }
         hierarchy_to_comp: dict[
             str,
             dict[
@@ -92,11 +84,13 @@ class DBConfigManager:
         }
 
         for db_id, db_name in enumerate(self.db_config):
+            hierarchy_to_id["dbs"][db_name] = db_id
             hierarchy_to_comp["dbs"][db_name] = (db_id,)
 
             for schema_id, schema in enumerate(self.db_config[db_name]):
                 schema_name = list(schema.keys())[0]
 
+                hierarchy_to_id["schemas"][schema_name] = schema_id
                 hierarchy_to_comp["schemas"][schema_name] = (
                     db_id,
                     schema_id,
@@ -106,6 +100,7 @@ class DBConfigManager:
                 for table_id, table in enumerate(tables):
                     table_name = list(table.keys())[0]
 
+                    hierarchy_to_id["tables"][table_name] = table_id
                     hierarchy_to_comp["tables"][table_name] = (
                         db_id,
                         schema_id,
@@ -116,6 +111,7 @@ class DBConfigManager:
                     for column_id, column in enumerate(columns["columns"]):
                         column_name = list(column.keys())[0]
 
+                        hierarchy_to_id["columns"][column_name] = column_id
                         hierarchy_to_comp["columns"][column_name] = (
                             db_id,
                             schema_id,
@@ -137,35 +133,27 @@ class DBConfigManager:
                         )
                         coord_to_info[coord] = info
 
-        ic(coord_to_info)
-        ic(hierarchy_to_comp)
+        # ic(coord_to_info)
+        # ic(hierarchy_to_id)
+        # ic(hierarchy_to_comp)
         self.coord_to_info = coord_to_info
+        self.hierarchy_to_id = hierarchy_to_id
         self.hierarchy_to_comp = hierarchy_to_comp
 
-    # TODO: rename after revision
-    def get_table_info_from_coord(self, coord: tuple[int]) -> tuple[str]:
-        pass
+    def _get_id(self, db_attr: str, value: str) -> int:
+        db_attrs: list[str] = ["db", "schema", "table", "column"]
+        singular_to_plural_map: dict[str, str] = {
+            "db": "dbs",
+            "schema": "schemas",
+            "table": "tables",
+            "column": "columns",
+        }
+        if db_attr not in db_attrs:
+            raise ValueError(f"'{db_attr}' is not a valid database attribute.")
+        plural = singular_to_plural_map[db_attr]
 
-    def get_coord_from_table_info(self, table_info: tuple[str]) -> tuple[int]:
-        pass
-
-    def get_index_from_hierarchy(self, index: tuple[int]) -> str:
-        pass
-
-    def get_id(
-        self,
-        *,
-        db: str | None = None,
-        schema: str | None = None,
-        table: str | None = None,
-    ) -> tuple[int | None, int | None, int | None]:
-        # ic(self.coord_to_table_info)
-        # TODO: deprecate
-        return (0, 0, 0)
-
-    def get_db(self, db: str) -> dict[Any, Any]:
-        """Returns the database configuration."""
-        return self.db_config[db]
+        id = self.hierarchy_to_id[plural][value]
+        return id
 
     def list_db_names(self) -> list[str]:
         return dict_keys_to_list(self.db_config.keys())
@@ -175,30 +163,55 @@ class DBConfigManager:
         schema_names: list[str] = [list(s.keys())[0] for s in self.db_config[db]]
         return schema_names
 
-    # TODO: need to find schema index since yml is sequenced
-    def get_schema(self, schema: str, db: str) -> dict[Any, Any]:
+    def list_table_names(self) -> list[str]:
+        """Lists all table names in the form: schema.table_name"""
+        pass
+
+    def list_column_names(self) -> list[str]:
+        pass
+
+    def get_db(self, db: str) -> dict[Any, Any]:
+        """Returns the database configuration."""
+        return self.db_config[db]
+
+    def get_schema(self, schema_name: str) -> dict[Any, Any]:
         """Returns the schema configuration."""
+        schema_id = self._get_id("schema", schema_name)
+        schema = list(self.db_config.values())[0][schema_id]
+        return schema
 
-        # print(schema)
-        # print(db)
+    def get_table(self, schema_table: str) -> dict[Any, Any]:
+        """Returns the table configuration.
 
-        db_id, schema_id, _ = self.get_id(db=db, schema=schema)
+        schema_name has form: schema_name.table_name
+        """
+        schema_name = schema_table.split(".")[0]
+        table_name = schema_table.split(".")[1]
 
-        # for s in self.db_config[db]:
-        #     # ic(s)
-        #     ic(s.keys())
+        schema = self.get_schema(schema_name)
 
-        return
+        table_id = self._get_id("table", table_name)
+        tables = list(schema.values())[0]
 
-    def get_table(self, table: str) -> dict[Any, Any]:
-        """Returns the table configuration."""
-        pass
+        table = tables[table_id]
+        return table
 
-    def list_table_names(self) -> dict[Any, Any]:
-        """Lists all table names in the form: <schema>.<table>"""
-        pass
+    def get_column(self, schema_table_column: str) -> dict[Any, Any]:
+        """"""
+        split = schema_table_column.split(".")
+        schema_name = split[0]
+        table_name = split[1]
+        column_name = split[2]
 
-    pass
+        schema_table = f"{schema_name}.{table_name}"
+        table = self.get_table(schema_table)
+
+        column_id = self._get_id("column", column_name)
+
+        columns = list(table.values())[0]["columns"]
+        column = columns[column_id]
+
+        return column
 
 
 def main() -> None:

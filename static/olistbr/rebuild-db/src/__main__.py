@@ -56,7 +56,10 @@ def main() -> None:
 
     # ic(dbcm.get_db(db))
     # ic(dbcm.list_schema_names(db))
-    ic(dbcm.get_schema("sales", db))
+    # ic(dbcm.get_schema("sales", db))
+    # ic(dbcm.get_table("marketing.fact_marketing_qualified_leads"))
+    # ic(dbcm.get_column("marketing.fact_marketing_qualified_leads.landing_page_id"))
+    # ic(dbcm.get_column('logistics.dim_geolocation.geolocation_sk'))
 
     return
 
