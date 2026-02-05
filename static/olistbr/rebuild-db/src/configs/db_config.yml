@@ -109,9 +109,51 @@ olist_stg:
           name: fk_dim_products_dim_product_category_name_translation__product_category_name
           column: product_category_name
           references:
-          - dim_product_category_name_translation:
+            dim_product_category_name_translation:
               schema: sales
               column: product_category_name
+  - fact_order_reviews:
+      filename: olist_order_reviews_dataset.csv
+      type: fact
+      columns:
+      - review_id:
+          dtype: CHAR(32)
+          nullable: false
+      - order_id:
+          dtype: CHAR(32)
+          nullable: false
+      - reiew_score:
+          dtype: TINYINT
+          nullable: false
+      - reiew_comment_title:
+          dtype: NVARCHAR(30)
+          nullable: true
+      - reiew_comment_message:
+          dtype: NVARCHAR(210)
+          nullable: true
+      - reiew_creation_date:
+          dtype: DATETIME2
+          nullable: false
+      - reiew_answer_timestamp:
+          dtype: DATETIME2
+          nullable: false
+      constraints:
+      - pk:
+          name: pk_fact_order_reviews
+          columns:
+          - review_id
+          - order_id
+      - fk:
+          name: fk_fact_order_reviews_fact_orders__order_id
+          column: order_id
+          references:
+            fact_orders:
+              schema: sales
+              column: order_id
+      - check:
+          name: chk_review_score
+          column: review_score
+          expression: 'BETWEEN 1 AND 5'
 
 - marketing:
 

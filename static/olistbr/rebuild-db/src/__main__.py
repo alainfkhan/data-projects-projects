@@ -54,13 +54,20 @@ lines = 30 * "-"
 
 def main() -> None:
     # connect to default db
+    print(f"Connecting to server: '{server}'")
     dbm = DBManager(driver=driver, server=server, database=default_db)
     cm = DBConfigManager(db_config=db_config)
 
     # for table_name in dbcm.list_table_names():
     #     print(table_name)
-
     with dbm.connect():
+        print(dbm.get_current_db())
+        print(dbm.change_db(db))
+        print(dbm.list_tables())
+
+    return
+    with dbm.connect():
+        print(dbm.get_current_db())
         print(lines)
         # wipe db
         dbm.wipe_db(db)
@@ -74,14 +81,18 @@ def main() -> None:
         print(dbm.change_db(db))
         print(lines)
 
+        # create schemas
         for schema_name in cm.list_schema_names():
             print(dbm.create_schema(schema_name))
 
         print(lines)
 
+        # create tables
         for table_name in cm.list_table_names():
             table = cm.get_table(table_name)
             print(dbm.create_table(table_name, table))
+
+        # insert tables
 
         print(lines)
         print(dbm.list_schemas())

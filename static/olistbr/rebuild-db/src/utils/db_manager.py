@@ -34,11 +34,13 @@ from src.utils.paths import CONFIGS_PATH
 
 # dbcm = DBConfigManager(db_config=db_config)
 
-constraint_map = {
-    "pk": "PRIMARY KEY",
-    "fk": "FOREIGN KEY",
-    "uq": "UNIQUE",
-}
+# constraint_map = {
+#     "pk": "PRIMARY KEY",
+#     "fk": "FOREIGN KEY",
+#     "uq": "UNIQUE",
+# }
+
+ic.disable()
 
 
 class DBManager:
@@ -191,7 +193,7 @@ class DBManager:
 
         has_constraints = "constraints" in list(table.values())[0]
 
-        # TODO: get type for column
+        # TODO: get real type for column
         # columns
         columns = list(table.values())[0]["columns"]
 
@@ -216,22 +218,72 @@ class DBManager:
             is_last_col: bool = i_col == len(columns) - 1
             sql += ",\n" if has_constraints or not is_last_col else "\n"
 
+        # constraints
         if has_constraints:
             constraints = list(table.values())[0]["constraints"]
             ic(constraints)
 
-            for constraint in constraints:
-                constraint_code = list(constraint.keys())[0]
-                constraint_type = constraint_map[constraint_code]
-                print(constraint_type)
+            for i_constraint, constraint in enumerate(constraints):
+                ic(constraint)
 
-                # TODO: switch case pk -> primary key: handle pk, ...
-                # keep config file, relevant for complete automation.
-                sql += "\n"
-                sql += f"\tCONSTRAINTS"
-                sql += "\n"
+                constraint_code: str = list(constraint.keys())[0]
+                fk_ref_str = ""
+                match constraint_code:
+                    case "pk":
+                        constraint_type = "PRIMARY KEY"
+                        pk_cols = list(constraint.values())[0]["columns"]
+                        col_str = ", ".join(pk_cols)
+                    case "fk":
+                        constraint_type = "FOREIGN KEY"
+                        fk_col = list(constraint.values())[0]["column"]
+                        col_str = fk_col
 
+                        fk_ref = list(constraint.values())[0]["references"]
+                        fk_ref_schema = list(fk_ref.values())[0]["schema"]
+                        fk_ref_table_short = list(fk_ref.keys())[0]
+                        fk_ref_table_name = f"{fk_ref_schema}.{fk_ref_table_short}"
+
+                        fk_ref_col = list(fk_ref.values())[0]["column"]
+
+                        fk_ref_str = f"REFERENCES {fk_ref_table_name} ({fk_ref_col})"
+                        ic(fk_ref_str)
+
+                    case "unique":
+                        constraint_type = "UNIQUE"
+                        uniue_cols = list(constraint.values())[0]["columns"]
+                        col_str = uniue_cols
+                    case "check":
+                        constraint_type = "CHECK"
+                        check_col = list(constraint.values())[0]["column"]
+                        constraint_exp = list(constraint.values())[0]["expression"]
+                        col_str = f"{check_col} {constraint_exp}"
+                    case _:
+                        constraint_type = ""
+                        col_str = ""
+
+                constraint_name = list(constraint.values())[0]["name"]
+
+                sql += "\n"
+                sql += f"\tCONSTRAINT {constraint_name}\n"
+                sql += f"\t\t{constraint_type} ({col_str})"
+
+                if fk_ref_str:
+                    sql += "\n"
+                    sql += f"\t\t\t{fk_ref_str}\n"
+                    sql += "\t\t\tON DELETE CASCADE\n"
+                    sql += "\t\t\tON UPDATE CASCADE\n"
+
+                is_last_constraint: bool = i_constraint == len(constraints) - 1
+                if not is_last_constraint:
+                    sql += ",\n"
+
+            sql += "\n"
         sql += ");\n"
+
+        # execute
+        self.conn.autocommit = True
+        self.cursor.execute(sql)
+        self.conn.autocommit = False
 
         return sql
 
