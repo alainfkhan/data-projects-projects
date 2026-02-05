@@ -49,38 +49,43 @@ db = connection_config["database"]
 default_db = "master"
 test_db = "deletesoon"
 
+lines = 30 * "-"
+
 
 def main() -> None:
     # connect to default db
     dbm = DBManager(driver=driver, server=server, database=default_db)
-    dbcm = DBConfigManager(db_config=db_config)
+    cm = DBConfigManager(db_config=db_config)
 
-    # ic(dbcm.get_db())
-    # ic(dbcm.list_db_names())
-    # ic(dbcm.list_schema_names())
-    # ic(dbcm.get_schema("sales", db))
-    # ic(dbcm.get_table("marketing.fact_marketing_qualified_leads"))
-    # ic(dbcm.get_column("marketing.fact_marketing_qualified_leads.landing_page_id"))
-    # ic(dbcm.get_column('logistics.dim_geolocation.geolocation_sk'))
-    # ic(dbcm.list_table_names())
-
-    ic(dbcm.list_schema_names())
-    ic(dbcm.list_table_names())
-    ic(dbcm.list_column_names())
-
-    return
+    # for table_name in dbcm.list_table_names():
+    #     print(table_name)
 
     with dbm.connect():
+        print(lines)
         # wipe db
-        # dbm.wipe_db(db)
-        # print(f"Wiped {db}")
+        dbm.wipe_db(db)
+        print(f"Wiped db: '{db}'")
+        # print("List of dbs:")
+        # print(f"\t{dbm.list_dbs()}")
 
-        print(dbm.get_current_db())
-        dbm.change_db(db)
-        print(dbm.get_current_db())
-        print(dbm.list_dbs())
+        print(lines)
 
-        print(isinstance(db_config, dict))
+        # change to db
+        print(dbm.change_db(db))
+        print(lines)
+
+        for schema_name in cm.list_schema_names():
+            print(dbm.create_schema(schema_name))
+
+        print(lines)
+
+        for table_name in cm.list_table_names():
+            table = cm.get_table(table_name)
+            print(dbm.create_table(table_name, table))
+
+        print(lines)
+        print(dbm.list_schemas())
+        print(dbm.list_tables())
 
 
 if __name__ == "__main__":

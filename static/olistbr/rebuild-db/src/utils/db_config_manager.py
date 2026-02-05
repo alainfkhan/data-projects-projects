@@ -1,4 +1,6 @@
-""" """
+"""
+a database attribute is one of: db, schema, table, column
+"""
 
 from icecream import ic
 from pathlib import Path
@@ -28,6 +30,8 @@ class DBCoord(NamedTuple):
 
 
 class DBInfo(NamedTuple):
+    """The names of the database attributes"""
+
     db: str
     schema: str
     table: str
@@ -100,10 +104,10 @@ class DBConfigManager:
 
                 tables = list(schema.values())[0]
                 for table_id, table in enumerate(tables):
-                    table_name = list(table.keys())[0]
+                    table_short = list(table.keys())[0]
 
-                    hierarchy_to_id["tables"][table_name] = table_id
-                    hierarchy_to_comp["tables"][table_name] = (
+                    hierarchy_to_id["tables"][table_short] = table_id
+                    hierarchy_to_comp["tables"][table_short] = (
                         db_id,
                         schema_id,
                         table_id,
@@ -130,7 +134,7 @@ class DBConfigManager:
                         info: DBInfo = DBInfo(
                             db_name,
                             schema_name,
-                            table_name,
+                            table_short,
                             column_name,
                         )
                         coord_to_info[coord] = info
@@ -178,7 +182,7 @@ class DBConfigManager:
         return schema_names
 
     def list_table_names(self) -> list[str]:
-        """Lists all table names in the form: schema_name.table_name"""
+        """Lists all table names in the form: schema_name.table_short"""
         df = self.df_db_info
         df_tables = df[["schema", "table"]].drop_duplicates()
         table_names = [f"{row.schema}.{row.table}" for row in df_tables.itertuples()]
@@ -205,7 +209,7 @@ class DBConfigManager:
     def get_table(self, schema_table: str) -> dict[Any, Any]:
         """Returns the table configuration.
 
-        schema_name has form: schema_name.table_name
+        table_nam has form: schema_name.table_short
         """
         schema_name = schema_table.split(".")[0]
         table_name = schema_table.split(".")[1]
@@ -222,13 +226,13 @@ class DBConfigManager:
         """"""
         split = schema_table_column.split(".")
         schema_name = split[0]
-        table_name = split[1]
-        column_name = split[2]
+        table_short = split[1]
+        column_short = split[2]
 
-        schema_table = f"{schema_name}.{table_name}"
-        table = self.get_table(schema_table)
+        table_name = f"{schema_name}.{table_short}"
+        table = self.get_table(table_name)
 
-        column_id = self._get_id("column", column_name)
+        column_id = self._get_id("column", column_short)
 
         columns = list(table.values())[0]["columns"]
         column = columns[column_id]
@@ -237,10 +241,6 @@ class DBConfigManager:
 
 
 def main() -> None:
-    db_config_path: Path = CONFIGS_PATH / "db_config.yml"
-    with open(db_config_path, "r") as f:
-        db_config = yaml.safe_load(f)
-
     pass
 
 

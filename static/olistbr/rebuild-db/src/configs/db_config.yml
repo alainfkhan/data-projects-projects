@@ -145,7 +145,7 @@ olist_stg:
       columns:
       - geolocation_sk:
           dtype: INT
-          nullable: flase
+          nullable: false
           sk:
             seed: 1
             increment: 1
