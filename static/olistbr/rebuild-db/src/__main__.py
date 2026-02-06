@@ -69,6 +69,8 @@ def main() -> None:
     #     print(dbm.change_db(db))
     #     print(dbm.list_tables())
 
+    return
+
     with dbm.connect():
         print(dbm.get_current_db())
         print(lines)
@@ -90,12 +92,22 @@ def main() -> None:
 
         print(lines)
 
-        # create tables
         for table_name in cm.list_table_names():
             table = cm.get_table(table_name)
+            table_values = list(table.values())[0]
+            filename = table_values["filename"]
+            filepath: Path = RAW_PATH / filename
+
+            if not filepath.exists():
+                raise FileNotFoundError(f"'{filepath}' does not exist.")
+
+            column_shorts = cm.list_column_shorts(table_name)
+
+            # create tables
             print(dbm.create_table(table_name, table))
 
-        # insert tables
+            # insert into tables
+            print(dbm.insert_from_csv(filepath, table_name, column_shorts))
 
         db_tables = dbm.list_tables()
         db_schemas = dbm.list_schemas()

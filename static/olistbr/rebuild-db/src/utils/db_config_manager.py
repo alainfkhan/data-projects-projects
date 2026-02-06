@@ -188,6 +188,15 @@ class DBConfigManager:
         table_names = [f"{row.schema}.{row.table}" for row in df_tables.itertuples()]
         return table_names
 
+    def list_table_shorts(self, schema_name: str) -> list[str]:
+        """Lists all the table short names from a schema."""
+        df = self.df_db_info
+        df_tables = df[["schema", "table"]].drop_duplicates()
+        df_table_shorts = df_tables[df_tables["schema"] == schema_name]
+
+        table_shorts = df_table_shorts["table"].tolist()
+        return table_shorts
+
     def list_column_names(self) -> list[str]:
         df = self.df_db_info
         df_columns = df[["schema", "table", "column"]]
@@ -195,6 +204,22 @@ class DBConfigManager:
             f"{row.schema}.{row.table}.{row.column}" for row in df_columns.itertuples()
         ]
         return column_names
+
+    def list_column_shorts(self, table_name: str) -> list[str]:
+        """Lists all column short names from a table."""
+        split = table_name.split(".")
+        schema_name = split[0]
+        table_short = split[1]
+
+        df = self.df_db_info
+        df_columns = df[["schema", "table", "column"]]
+
+        # df_column_shorts = df_columns[(df_columns['schema'] == schema_name) & (df_columns['table'] == table_short)]
+        df_column_shorts = df_columns.query(
+            "schema == @schema_name and table == @table_short"
+        )
+        column_shorts = df_column_shorts["column"].tolist()
+        return column_shorts
 
     def get_db(self) -> dict[Any, Any]:
         """Returns the database configuration."""
@@ -209,7 +234,7 @@ class DBConfigManager:
     def get_table(self, schema_table: str) -> dict[Any, Any]:
         """Returns the table configuration.
 
-        table_nam has form: schema_name.table_short
+        table_name has form: schema_name.table_short
         """
         schema_name = schema_table.split(".")[0]
         table_name = schema_table.split(".")[1]

@@ -277,6 +277,37 @@ class DBManager:
 
         return sql
 
+    def insert_from_csv(
+        self, filepath: Path, table_name: str, column_shorts: list[str]
+    ) -> str:
+        """Insert data from a csv file into a created table.
+
+        table_name is schema_name.table_short ie: sales.dim_customers
+
+        column_name is the name of the column ie: customer_id
+        """
+
+        df = pd.read_csv(filepath)
+
+        params = df.values.tolist()
+        # do not print params
+
+        sql: str = ""
+        sql += f"INSERT INTO {table_name} (\n"
+        sql += f"\t{',\n\t'.join(column_shorts)}\n"
+        sql += ")\n"
+        sql += f"VALUES ({', '.join(['?'] * len(column_shorts))});\n"
+
+        self.cursor.fast_executemany = True
+        try:
+            self.cursor.executemany(sql, params)
+            self.conn.commit()
+        except Exception as e:
+            self.conn.rollback()
+        self.cursor.fast_executemany = False
+
+        return sql
+
     def wipe_db(self, database: str) -> None:
         """
         if in db change to master

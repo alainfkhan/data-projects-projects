@@ -1,7 +1,6 @@
 # what i want the tables to look like
 # can be generated
 # keep spaces: 2
-# do not change, keep format, live with it
 olist_stg:
 
 - sales:
@@ -155,7 +154,7 @@ olist_stg:
               column: customer_id
 
   - fact_order_items:
-      filename: olist_order_items
+      filename: olist_order_items_dataset.csv
       type: fact
       columns:
       - order_id:
