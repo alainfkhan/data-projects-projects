@@ -40,8 +40,6 @@ from src.utils.paths import CONFIGS_PATH
 #     "uq": "UNIQUE",
 # }
 
-ic.disable()
-
 
 class DBManager:
     def __init__(self, driver: str, server: str, database: str) -> None:
@@ -191,7 +189,7 @@ class DBManager:
         sql: str = ""
         sql += f"CREATE TABLE {table_name} (\n"
 
-        has_constraints = "constraints" in list(table.values())[0]
+        has_constraints: bool = "constraints" in list(table.values())[0]
 
         # TODO: get real type for column
         # columns
@@ -221,47 +219,39 @@ class DBManager:
         # constraints
         if has_constraints:
             constraints = list(table.values())[0]["constraints"]
-            ic(constraints)
 
             for i_constraint, constraint in enumerate(constraints):
-                ic(constraint)
+                constraint_values = list(constraint.values())[0]
+                constraint_name: str = list(constraint.keys())[0]
+                constraint_type: str = constraint_values["type"]
 
-                constraint_code: str = list(constraint.keys())[0]
                 fk_ref_str = ""
-                match constraint_code:
-                    case "pk":
-                        constraint_type = "PRIMARY KEY"
-                        pk_cols = list(constraint.values())[0]["columns"]
+                match constraint_type.upper():
+                    case "PRIMARY KEY":
+                        pk_cols = constraint_values["columns"]
                         col_str = ", ".join(pk_cols)
-                    case "fk":
-                        constraint_type = "FOREIGN KEY"
-                        fk_col = list(constraint.values())[0]["column"]
+                    case "FOREIGN KEY":
+                        fk_col = constraint_values["column"]
                         col_str = fk_col
 
-                        fk_ref = list(constraint.values())[0]["references"]
-                        fk_ref_schema = list(fk_ref.values())[0]["schema"]
-                        fk_ref_table_short = list(fk_ref.keys())[0]
+                        fk_ref = constraint_values["references"]
+                        fk_ref_schema: str = list(fk_ref.values())[0]["schema"]
+                        fk_ref_table_short: str = list(fk_ref.keys())[0]
                         fk_ref_table_name = f"{fk_ref_schema}.{fk_ref_table_short}"
 
                         fk_ref_col = list(fk_ref.values())[0]["column"]
 
                         fk_ref_str = f"REFERENCES {fk_ref_table_name} ({fk_ref_col})"
-                        ic(fk_ref_str)
 
-                    case "unique":
-                        constraint_type = "UNIQUE"
-                        uniue_cols = list(constraint.values())[0]["columns"]
-                        col_str = uniue_cols
-                    case "check":
-                        constraint_type = "CHECK"
-                        check_col = list(constraint.values())[0]["column"]
-                        constraint_exp = list(constraint.values())[0]["expression"]
+                    case "UNIQUE":
+                        uniue_cols: list[str] = constraint_values["columns"]
+                        col_str: str = ", ".join(uniue_cols)
+                    case "CHECK":
+                        check_col = constraint_values["column"]
+                        constraint_exp = constraint_values["expression"]
                         col_str = f"{check_col} {constraint_exp}"
                     case _:
-                        constraint_type = ""
-                        col_str = ""
-
-                constraint_name = list(constraint.values())[0]["name"]
+                        col_str = "alsdf;alksdj;f"
 
                 sql += "\n"
                 sql += f"\tCONSTRAINT {constraint_name}\n"
@@ -271,7 +261,7 @@ class DBManager:
                     sql += "\n"
                     sql += f"\t\t\t{fk_ref_str}\n"
                     sql += "\t\t\tON DELETE CASCADE\n"
-                    sql += "\t\t\tON UPDATE CASCADE\n"
+                    sql += "\t\t\tON UPDATE CASCADE"
 
                 is_last_constraint: bool = i_constraint == len(constraints) - 1
                 if not is_last_constraint:

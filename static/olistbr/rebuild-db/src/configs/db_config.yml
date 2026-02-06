@@ -26,8 +26,8 @@ olist_stg:
           dtype: CHAR(2)
           nullable: true
       constraints:
-      - pk:
-          name: pk_dim_customers
+      - pk_dim_customers:
+          type: PRIMARY KEY
           columns:
           - customer_id
 
@@ -48,13 +48,13 @@ olist_stg:
           dtype: CHAR(2)
           nullable: false
       constraints:
-      - pk:
-          name: pk_dim_sellers
+      - pk_dim_sellers:
+          type: PRIMARY KEY
           columns:
           - seller_id
 
   - dim_product_category_name_translation:
-      filename: product_category_name_translation
+      filename: product_category_name_translation.csv
       type: dim
       columns:
       - product_category_name:
@@ -64,8 +64,8 @@ olist_stg:
           dtype: VARCHAR(50)
           nullable: false
       constraints:
-      - pk:
-          name: pk_dim_product_category_name_translation
+      - pk_dim_product_category_name_translation:
+          type: PRIMARY KEY
           columns:
           - product_category_name
 
@@ -101,17 +101,145 @@ olist_stg:
           dtype: TINYINT
           nullable: true
       constraints:
-      - pk:
-          name: pk_dim_products
+      - pk_dim_products:
+          type: PRIMARY KEY
           columns:
           - product_id
-      - fk:
-          name: fk_dim_products_dim_product_category_name_translation__product_category_name
+      - fk_dim_products_dim_product_category_name_translation__product_category_name:
+          type: FOREIGN KEY
           column: product_category_name
           references:
             dim_product_category_name_translation:
               schema: sales
               column: product_category_name
+
+  - fact_orders:
+      filename: olist_orders_dataset.csv
+      type: fact
+      columns:
+      - order_id:
+          dtype: CHAR(32)
+          nullable: false
+      - customer_id:
+          dtype: CHAR(32)
+          nullable: false
+      - order_status:
+          dtype: VARCHAR(20)
+          nullable: false
+      - order_purchase_timestamp:
+          dtype: DATETIME2
+          nullable: false
+      - order_approved_at:
+          dtype: DATETIME2
+          nullable: true
+      - order_delivered_carrier_date:
+          dtype: DATETIME2
+          nullable: true
+      - order_delivered_customer_date:
+          dtype: DATETIME2
+          nullable: true
+      - order_estimated_delivery_date:
+          dtype: DATETIME2
+          nullable: true
+      constraints:
+      - pk_fact_orders:
+          type: PRIMARY KEY
+          columns:
+          - order_id
+      - fk_fact_orders_dim_customers__customer_id:
+          type: FOREIGN KEY
+          column: customer_id
+          references:
+            dim_customers:
+              schema: sales
+              column: customer_id
+
+  - fact_order_items:
+      filename: olist_order_items
+      type: fact
+      columns:
+      - order_id:
+          dtype: CHAR(32)
+          nullable: false
+      - order_item_id:
+          dtype: TINYINT
+          nullable: false
+      - product_id:
+          dtype: CHAR(32)
+          nullable: false
+      - seller_id:
+          dtype: CHAR(32)
+          nullable: false
+      - shipping_limit_date:
+          dtype: DATETIME2
+          nullable: false
+      - price:
+          dtype: DECIMAL(9, 4)
+          nullable: false
+      - freight_value:
+          dtype: DECIMAL(9, 4)
+          nullable: false
+      constraints:
+      - pk_fact_order_items:
+          type: PRIMARY KEY
+          columns:
+          - order_id
+          - order_item_id
+      - fk_fact_order_items_fact_orders__order_id:
+          type: FOREIGN KEY
+          column: order_id
+          references:
+            fact_orders:
+              schema: sales
+              column: order_id
+      - fk_fact_order_items_dim_products__product_id:
+          type: FOREIGN KEY
+          column: product_id
+          references:
+            dim_products:
+              schema: sales
+              column: product_id
+      - fk_fact_order_items_dim_sellers__seller_id:
+          type: FOREIGN KEY
+          column: seller_id
+          references:
+            dim_sellers:
+              schema: sales
+              column: seller_id
+
+  - fact_order_payments:
+      filename: olist_order_payments_dataset.csv
+      type: fact
+      columns:
+      - order_id:
+          dtype: CHAR(32)
+          nullable: false
+      - payment_sequential:
+          dtype: TINYINT
+          nullable: false
+      - payment_type:
+          dtype: VARCHAR(20)
+          nullable: false
+      - payment_installments:
+          dtype: TINYINT
+          nullable: false
+      - payment_value:
+          dtype: DECIMAL(9, 4)
+          nullable: false
+      constraints:
+      - pk_fact_order_payments:
+          type: PRIMARY KEY
+          columns:
+          - order_id
+          - payment_sequential
+      - fk_fact_order_payments_fact_orders__order_id:
+          type: FOREIGN KEY
+          column: order_id
+          references:
+            fact_orders:
+              schema: sales
+              column: order_id
+
   - fact_order_reviews:
       filename: olist_order_reviews_dataset.csv
       type: fact
@@ -122,7 +250,7 @@ olist_stg:
       - order_id:
           dtype: CHAR(32)
           nullable: false
-      - reiew_score:
+      - review_score:
           dtype: TINYINT
           nullable: false
       - reiew_comment_title:
@@ -138,20 +266,20 @@ olist_stg:
           dtype: DATETIME2
           nullable: false
       constraints:
-      - pk:
-          name: pk_fact_order_reviews
+      - pk_fact_order_reviews:
+          type: PRIMARY KEY
           columns:
           - review_id
           - order_id
-      - fk:
-          name: fk_fact_order_reviews_fact_orders__order_id
+      - fk_fact_order_reviews_fact_orders__order_id:
+          type: FOREIGN KEY
           column: order_id
           references:
             fact_orders:
               schema: sales
               column: order_id
-      - check:
-          name: chk_review_score
+      - chk_review_score:
+          type: CHECK
           column: review_score
           expression: 'BETWEEN 1 AND 5'
 
@@ -174,10 +302,69 @@ olist_stg:
           dtype: VARCHAR(20)
           nullable: true
       constraints:
-      - pk:
-          name: pk_fact_marketing_qualified_leads
+      - pk_fact_marketing_qualified_leads:
+          type: PRIMARY KEY
           columns:
           - mql_id
+
+  - fact_closed_deals:
+      filename: olist_closed_deals_dataset.csv
+      type: fact
+      columns:
+      - mql_id:
+          dtype: CHAR(32)
+          nullable: false
+      - seller_id:
+          dtype: CHAR(32)
+          nullable: false
+      - sdr_id:
+          dtype: CHAR(32)
+          nullable: false
+      - sr_id:
+          dtype: CHAR(32)
+          nullable: false
+      - won_date:
+          dtype: DATETIME2
+          nullable: false
+      - business_segment:
+          dtype: VARCHAR(40)
+          nullable: false
+      - lead_type:
+          dtype: VARCHAR(20)
+          nullable: false
+      - lead_behaviour_profile:
+          dtype: VARCHAR(20)
+          nullable: false
+      - has_company:
+          dtype: BIT
+          nullable: false
+      - has_gtin:
+          dtype: BIT
+          nullable: false
+      - average_stock:
+          dtype: VARCHAR(10)
+          nullable: false
+      - business_type:
+          dtype: VARCHAR(10)
+          nullable: false
+      - declared_product_catalog_size:
+          dtype: DECIMAL(9, 4)
+          nullable: false
+      - declared_monthly_revenue:
+          dtype: DECIMAL(19, 4)
+          nullable: false
+      constraints:
+      - pk_fact_closed_deals:
+          type: PRIMARY KEY
+          columns:
+          - mql_id
+      - fk_fact_closed_deals_fact_marketing_qualified_leads__mql_id:
+          type: FOREIGN KEY
+          column: mql_id
+          references:
+            fact_marketing_qualified_leads:
+              schema: marketing
+              column: mql_id
 
 - logistics:
 
@@ -206,3 +393,14 @@ olist_stg:
       - geolocation_state:
           dtype: CHAR(2)
           nullable: true
+      constraints:
+      - pk_dim_geolocation:
+          type: PRIMARY KEY
+          columns:
+          - geolocation_sk
+      - uq_dim_geolocation_zip_lat_lng:
+          type: UNIQUE
+          columns:
+          - geolocation_zip_code_prefix
+          - geolocation_lat
+          - geolocation_lng

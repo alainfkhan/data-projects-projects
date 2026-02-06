@@ -32,6 +32,8 @@ from src.utils.paths import RAW_PATH, CONFIGS_PATH
 from src.utils.db_manager import DBManager
 from src.utils.db_config_manager import DBConfigManager
 
+# ic.disable()
+
 # get configs
 connection_config_path: Path = CONFIGS_PATH / "connection.yml"
 with open(connection_config_path, "r") as f:
@@ -56,16 +58,17 @@ def main() -> None:
     # connect to default db
     print(f"Connecting to server: '{server}'")
     dbm = DBManager(driver=driver, server=server, database=default_db)
+    print("Connected")
     cm = DBConfigManager(db_config=db_config)
 
     # for table_name in dbcm.list_table_names():
     #     print(table_name)
-    with dbm.connect():
-        print(dbm.get_current_db())
-        print(dbm.change_db(db))
-        print(dbm.list_tables())
 
-    return
+    # with dbm.connect():
+    #     print(dbm.get_current_db())
+    #     print(dbm.change_db(db))
+    #     print(dbm.list_tables())
+
     with dbm.connect():
         print(dbm.get_current_db())
         print(lines)
@@ -94,9 +97,22 @@ def main() -> None:
 
         # insert tables
 
+        db_tables = dbm.list_tables()
+        db_schemas = dbm.list_schemas()
+
         print(lines)
-        print(dbm.list_schemas())
-        print(dbm.list_tables())
+
+        print("Database:")
+        print(f"{dbm.get_current_db()}")
+        print(lines)
+
+        print(f"[{len(db_schemas)}] Schemas:")
+        print("\n".join(db_schemas))
+        print(lines)
+
+        print(f"[{len(db_tables)}] Tables:")
+        print("\n".join(db_tables))
+        print(lines)
 
 
 if __name__ == "__main__":
