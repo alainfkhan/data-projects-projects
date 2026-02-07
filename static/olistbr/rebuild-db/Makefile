@@ -4,7 +4,7 @@ run:
 
 .PHONY: test
 test:
-	python -m src.utils.db_config_manager
+	python -m src.tests.test
 
 .PHONY: paths
 paths:

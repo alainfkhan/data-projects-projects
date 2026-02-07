@@ -34,6 +34,7 @@ from src.utils.db_manager import DBManager
 from src.utils.db_config_manager import DBConfigManager
 
 # ic.disable()
+debug = True
 
 # get configs
 connection_config_path: Path = CONFIGS_PATH / "connection.yml"
@@ -52,114 +53,95 @@ db = connection_config["database"]
 default_db = "master"
 test_db = "deletesoon"
 
-lines = 30 * "-"
+long_lines = 80 * "-"
+short_lines = 40 * "-"
+equals = 80 * "="
+spaces = 30 * " "
 
 
 def main() -> None:
     # connect to default db
-    print(f"Connecting to server: '{server}'")
+    print(f"Connecting to server: '{server}'", end="\r")
     dbm = DBManager(driver=driver, server=server, database=default_db)
-    print("Connected")
-    cm = DBConfigManager(db_config=db_config)
-
-    def get_table_metadata(table_name: str) -> tuple[Path, list[str]]:
-        table = cm.get_table(table_name)
-        table_values = list(table.values())[0]
-        table_column_shorts = cm.list_column_shorts(table_name)
-
-        filename = table_values["filename"]
-        filepath: Path = RAW_PATH / filename
-        if not filepath.exists():
-            raise FileNotFoundError(f"'{filepath}' does not exist.")
-        return filepath, table_column_shorts
-
-    # for table_name in dbcm.list_table_names():
-    #     print(table_name)
-
-    # with dbm.connect():
-    #     print(dbm.get_current_db())
-    #     print(dbm.change_db(db))
-    #     print(dbm.list_tables())
-
     conn, cursor = dbm.connect()
 
-    with conn:
-        print(dbm.get_current_db())
-        print(lines)
-        # wipe db
-        dbm.wipe_db(db)
-        print(f"Wiped db: '{db}'")
-        # print("List of dbs:")
-        # print(f"\t{dbm.list_dbs()}")
+    print("Successful connection" + spaces)
+    print(f"\tDriver used:            '{driver}'")
+    print(f"\tConnected to server:    '{server}'")
+    print(f"\tConnected to database:  '{dbm.get_current_db()}'")
+    print()
 
-        print(lines)
+    cm = DBConfigManager(db_config=db_config)
+
+    with conn:
+        if not debug:
+            # wipe db
+            dbm.wipe_db(db)
+            print(f"Successfully wiped database: '{db}'")
+        else:
+            print(f"DEBUG: <wipe database '{db}'>")
+
+        print()
+        print("SQL strings used:")
+        print(long_lines)
 
         # change to db
         print(dbm.change_db(db))
-        print(lines)
+        print(long_lines)
 
         # create schemas
         for schema_name in cm.list_schema_names():
-            print(dbm.create_schema(schema_name))
+            if not debug:
+                print(dbm.create_schema(schema_name))
+            else:
+                print(f"DEBUG: <create schema '{schema_name}'>")
 
-        print(lines)
+        print(long_lines)
 
-        # create tables
+        # create tables and insert data
         for table_name in cm.list_table_names():
             table = cm.get_table(table_name)
-            print(dbm.create_table(table_name, table))
+            table_values = list(table.values())[0]
 
-        # insert into tables
-        # TODO: logistics.dim_geolocation takes very long to insert, why?
-        working_tables_names = [
-            # "sales.dim_customers",
-            # "sales.dim_sellers",
-            # "sales.dim_product_category_name_translation",
-            # "sales.dim_products",
-            # "sales.fact_orders",
-            # "sales.fact_order_items",
-            # "sales.fact_order_payments",
-            # "sales.fact_order_reviews",
-            # "marketing.fact_marketing_qualified_leads",
-            # "marketing.fact_closed_deals",
-            "logistics.dim_geolocation",
-        ]
-        for working_table_name in working_tables_names:
-            working_table = cm.get_table(working_table_name)
-            working_table_values = list(working_table.values())[0]
-            working_table_column_shorts = cm.list_column_shorts(working_table_name)
+            table_column_shorts = cm.list_column_shorts(table_name)
 
-            filename = working_table_values["filename"]
+            filename = table_values["filename"]
             filepath: Path = RAW_PATH / filename
             if not filepath.exists():
                 raise FileNotFoundError(f"'{filepath}' does not exist.")
 
-            print(
-                dbm.insert_from_csv(
-                    filepath, working_table_name, working_table_column_shorts
-                )
-            )
+            if not debug:
+                # create table
+                print(dbm.create_table(table_name, table))
+                # insert data
+                print(dbm.insert_from_csv(filepath, table_name, table_column_shorts))
+            else:
+                print(f"DEBUG: <create table '{table_name}' sql>")
+                print(f"DEBUG: <insert table '{table_name}' sql>")
 
-        # insert tables methodical
-        # sales.dim_products
+        print(long_lines)
+        print()
 
         db_tables = dbm.list_tables()
         db_schemas = dbm.list_schemas()
 
-        print(lines)
+        print(f"Overview of database: '{dbm.get_current_db()}'")
+        print(short_lines)
 
-        print("Database:")
-        print(f"{dbm.get_current_db()}")
-        print(lines)
+        # print("[#tables in schema] schema_name")
+        print(f"{len(db_schemas)} total schemas in the database:")
+        print(f"\t{'\n\t'.join(db_schemas)}")
+        print(short_lines)
 
-        print(f"{len(db_schemas)} schemas created:")
-        print("\n".join(db_schemas))
-        print(lines)
-
-        print(f"{len(db_tables)} tables created")
+        # print("[#rows, #columns] table_name")
+        print(f"{len(db_tables)} total tables in the database:")
+        print(f"\t{'\n\t'.join(db_tables)}")
         # TODO: add [total_rows, total_cols]
         # print(f"[{total_rows}, {total_cols}]{'\n'.join(db_tables)}")
-        print(lines)
+        print(short_lines)
+        print(
+            f"!!! '{db}' subject to repeated rewrites. Remember to copy the database."
+        )
 
 
 if __name__ == "__main__":
