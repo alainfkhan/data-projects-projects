@@ -22,7 +22,7 @@ import pandas as pd
 import pyodbc
 import yaml
 from icecream import ic
-from pyodbc import Row, Connection
+from pyodbc import Row, Connection, Cursor
 from pandas import DataFrame
 
 from src.utils.db_config_manager import DBConfigManager
@@ -50,7 +50,7 @@ class DBManager:
         self.default_db = "master"
         self.system_dbs = ["master", "model", "msdb", "tempdb"]
 
-    def connect(self) -> Connection:
+    def connect(self) -> tuple[Connection, Cursor]:
         """Connects to a database."""
         conn = pyodbc.connect(f"""
                             DRIVER={{{self.driver}}};
@@ -58,9 +58,11 @@ class DBManager:
                             DATABASE={self.database};
                             Trusted_Connection=yes;
                             """)
+        cursor = conn.cursor()
+
         self.conn = conn
-        self.cursor = conn.cursor()
-        return conn
+        self.cursor = cursor
+        return conn, cursor
 
     def is_sys_db(self, database: str) -> bool:
         """Checks if the input database is a core system database."""
@@ -75,6 +77,20 @@ class DBManager:
         if current_db:
             return current_db[0]
         return None
+
+    def get_table_shape(self, table_name: str) -> tuple[int, int]:
+        """Gets the number of rows and columns a table has."""
+        # TODO: need to complete
+        split = table_name.split(".")
+        schema_name = split[0]
+        table_short = split[1]
+
+        total_rows = self.cursor.execute(
+            f"select count(*) from {table_short}"
+        ).fetchone()
+        total_columns = 0
+
+        return total_rows, total_columns
 
     def change_db(self, database: str) -> str:
         """Change the database."""
@@ -284,13 +300,18 @@ class DBManager:
 
         table_name is schema_name.table_short ie: sales.dim_customers
 
-        column_name is the name of the column ie: customer_id
+        column_shorts is a list of columns like: customer_id
         """
-
-        df = pd.read_csv(filepath)
-
-        params = df.values.tolist()
+        # # old
+        # df = pd.read_csv(filepath, keep_default_na=False, na_values=[""])
+        # df = df.where(pd.notnull(df), None)
+        # params = df.values.tolist()
         # do not print params
+
+        # trying
+        df = pd.read_csv(filepath)
+        df_clean = df.astype(object).where(pd.notnull(df), None)
+        params = list(df_clean.itertuples(index=False, name=None))
 
         sql: str = ""
         sql += f"INSERT INTO {table_name} (\n"
@@ -303,6 +324,7 @@ class DBManager:
             self.cursor.executemany(sql, params)
             self.conn.commit()
         except Exception as e:
+            print(f"Failed to insert '{table_name}': {e}")
             self.conn.rollback()
         self.cursor.fast_executemany = False
 

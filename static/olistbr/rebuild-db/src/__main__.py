@@ -21,6 +21,7 @@ pk
 import os
 import time
 from pathlib import Path
+from typing import NamedTuple
 
 import yaml
 import pyodbc
@@ -61,6 +62,17 @@ def main() -> None:
     print("Connected")
     cm = DBConfigManager(db_config=db_config)
 
+    def get_table_metadata(table_name: str) -> tuple[Path, list[str]]:
+        table = cm.get_table(table_name)
+        table_values = list(table.values())[0]
+        table_column_shorts = cm.list_column_shorts(table_name)
+
+        filename = table_values["filename"]
+        filepath: Path = RAW_PATH / filename
+        if not filepath.exists():
+            raise FileNotFoundError(f"'{filepath}' does not exist.")
+        return filepath, table_column_shorts
+
     # for table_name in dbcm.list_table_names():
     #     print(table_name)
 
@@ -69,9 +81,9 @@ def main() -> None:
     #     print(dbm.change_db(db))
     #     print(dbm.list_tables())
 
-    return
+    conn, cursor = dbm.connect()
 
-    with dbm.connect():
+    with conn:
         print(dbm.get_current_db())
         print(lines)
         # wipe db
@@ -92,22 +104,44 @@ def main() -> None:
 
         print(lines)
 
+        # create tables
         for table_name in cm.list_table_names():
             table = cm.get_table(table_name)
-            table_values = list(table.values())[0]
-            filename = table_values["filename"]
-            filepath: Path = RAW_PATH / filename
+            print(dbm.create_table(table_name, table))
 
+        # insert into tables
+        # TODO: logistics.dim_geolocation takes very long to insert, why?
+        working_tables_names = [
+            "sales.dim_customers",
+            "sales.dim_sellers",
+            "sales.dim_product_category_name_translation",
+            "sales.dim_products",
+            "sales.fact_orders",
+            "sales.fact_order_items",
+            "sales.fact_order_payments",
+            "sales.fact_order_reviews",
+            "marketing.fact_marketing_qualified_leads",
+            "marketing.fact_closed_deals",
+            # "logistics.dim_geolocation",
+        ]
+        for working_table_name in working_tables_names:
+            working_table = cm.get_table(working_table_name)
+            working_table_values = list(working_table.values())[0]
+            working_table_column_shorts = cm.list_column_shorts(working_table_name)
+
+            filename = working_table_values["filename"]
+            filepath: Path = RAW_PATH / filename
             if not filepath.exists():
                 raise FileNotFoundError(f"'{filepath}' does not exist.")
 
-            column_shorts = cm.list_column_shorts(table_name)
+            print(
+                dbm.insert_from_csv(
+                    filepath, working_table_name, working_table_column_shorts
+                )
+            )
 
-            # create tables
-            print(dbm.create_table(table_name, table))
-
-            # insert into tables
-            print(dbm.insert_from_csv(filepath, table_name, column_shorts))
+        # insert tables methodical
+        # sales.dim_products
 
         db_tables = dbm.list_tables()
         db_schemas = dbm.list_schemas()
@@ -118,12 +152,13 @@ def main() -> None:
         print(f"{dbm.get_current_db()}")
         print(lines)
 
-        print(f"[{len(db_schemas)}] Schemas:")
+        print(f"{len(db_schemas)} schemas created:")
         print("\n".join(db_schemas))
         print(lines)
 
-        print(f"[{len(db_tables)}] Tables:")
-        print("\n".join(db_tables))
+        print(f"{len(db_tables)} tables created")
+        # TODO: add [total_rows, total_cols]
+        # print(f"[{total_rows}, {total_cols}]{'\n'.join(db_tables)}")
         print(lines)
 
 

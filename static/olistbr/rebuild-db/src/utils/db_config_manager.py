@@ -218,7 +218,17 @@ class DBConfigManager:
         df_column_shorts = df_columns.query(
             "schema == @schema_name and table == @table_short"
         )
-        column_shorts = df_column_shorts["column"].tolist()
+        column_short_candidates = df_column_shorts["column"].tolist()
+
+        # remove created columns: column config contains sk
+        remove_colums: list[str] = []
+        for col_row in df_column_shorts.itertuples():
+            column_name = f"{col_row.schema}.{col_row.table}.{col_row.column}"
+            column = self.get_column(column_name)
+            if "sk" in list(column.values())[0]:
+                remove_colums.append(list(column.keys())[0])
+
+        column_shorts = [x for x in column_short_candidates if x not in remove_colums]
         return column_shorts
 
     def get_db(self) -> dict[Any, Any]:

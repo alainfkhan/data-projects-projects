@@ -104,13 +104,13 @@ olist_stg:
           type: PRIMARY KEY
           columns:
           - product_id
-      - fk_dim_products_dim_product_category_name_translation__product_category_name:
-          type: FOREIGN KEY
-          column: product_category_name
-          references:
-            dim_product_category_name_translation:
-              schema: sales
-              column: product_category_name
+      # - fk_dim_products_dim_product_category_name_translation__product_category_name:
+      #     type: FOREIGN KEY
+      #     column: product_category_name
+      #     references:
+      #       dim_product_category_name_translation:
+      #         schema: sales
+      #         column: product_category_name
 
   - fact_orders:
       filename: olist_orders_dataset.csv
@@ -231,13 +231,13 @@ olist_stg:
           columns:
           - order_id
           - payment_sequential
-      - fk_fact_order_payments_fact_orders__order_id:
-          type: FOREIGN KEY
-          column: order_id
-          references:
-            fact_orders:
-              schema: sales
-              column: order_id
+      # - fk_fact_order_payments_fact_orders__order_id:
+      #     type: FOREIGN KEY
+      #     column: order_id
+      #     references:
+      #       fact_orders:
+      #         schema: sales
+      #         column: order_id
 
   - fact_order_reviews:
       filename: olist_order_reviews_dataset.csv
@@ -270,13 +270,13 @@ olist_stg:
           columns:
           - review_id
           - order_id
-      - fk_fact_order_reviews_fact_orders__order_id:
-          type: FOREIGN KEY
-          column: order_id
-          references:
-            fact_orders:
-              schema: sales
-              column: order_id
+      # - fk_fact_order_reviews_fact_orders__order_id:
+      #     type: FOREIGN KEY
+      #     column: order_id
+      #     references:
+      #       fact_orders:
+      #         schema: sales
+      #         column: order_id
       - chk_review_score:
           type: CHECK
           column: review_score
@@ -327,43 +327,43 @@ olist_stg:
           nullable: false
       - business_segment:
           dtype: VARCHAR(40)
-          nullable: false
+          nullable: true
       - lead_type:
           dtype: VARCHAR(20)
-          nullable: false
+          nullable: true
       - lead_behaviour_profile:
           dtype: VARCHAR(20)
-          nullable: false
+          nullable: true
       - has_company:
           dtype: BIT
-          nullable: false
+          nullable: true
       - has_gtin:
           dtype: BIT
-          nullable: false
+          nullable: true
       - average_stock:
           dtype: VARCHAR(10)
-          nullable: false
+          nullable: true
       - business_type:
-          dtype: VARCHAR(10)
-          nullable: false
+          dtype: VARCHAR(20)
+          nullable: true
       - declared_product_catalog_size:
           dtype: DECIMAL(9, 4)
-          nullable: false
+          nullable: true
       - declared_monthly_revenue:
           dtype: DECIMAL(19, 4)
-          nullable: false
+          nullable: true
       constraints:
       - pk_fact_closed_deals:
           type: PRIMARY KEY
           columns:
           - mql_id
-      - fk_fact_closed_deals_fact_marketing_qualified_leads__mql_id:
-          type: FOREIGN KEY
-          column: mql_id
-          references:
-            fact_marketing_qualified_leads:
-              schema: marketing
-              column: mql_id
+      # - fk_fact_closed_deals_fact_marketing_qualified_leads__mql_id:
+      #     type: FOREIGN KEY
+      #     column: mql_id
+      #     references:
+      #       fact_marketing_qualified_leads:
+      #         schema: marketing
+      #         column: mql_id
 
 - logistics:
 
