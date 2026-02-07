@@ -112,17 +112,17 @@ def main() -> None:
         # insert into tables
         # TODO: logistics.dim_geolocation takes very long to insert, why?
         working_tables_names = [
-            "sales.dim_customers",
-            "sales.dim_sellers",
-            "sales.dim_product_category_name_translation",
-            "sales.dim_products",
-            "sales.fact_orders",
-            "sales.fact_order_items",
-            "sales.fact_order_payments",
-            "sales.fact_order_reviews",
-            "marketing.fact_marketing_qualified_leads",
-            "marketing.fact_closed_deals",
-            # "logistics.dim_geolocation",
+            # "sales.dim_customers",
+            # "sales.dim_sellers",
+            # "sales.dim_product_category_name_translation",
+            # "sales.dim_products",
+            # "sales.fact_orders",
+            # "sales.fact_order_items",
+            # "sales.fact_order_payments",
+            # "sales.fact_order_reviews",
+            # "marketing.fact_marketing_qualified_leads",
+            # "marketing.fact_closed_deals",
+            "logistics.dim_geolocation",
         ]
         for working_table_name in working_tables_names:
             working_table = cm.get_table(working_table_name)

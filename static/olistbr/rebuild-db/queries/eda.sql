@@ -2,7 +2,7 @@ use olist_stg;
 
 select top (1000)
 *
-from sales.dim_products;
+from logistics.dim_geolocation;
 
 
 select top (1000)

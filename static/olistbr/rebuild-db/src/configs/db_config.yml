@@ -397,9 +397,9 @@ olist_stg:
           type: PRIMARY KEY
           columns:
           - geolocation_sk
-      - uq_dim_geolocation_zip_lat_lng:
-          type: UNIQUE
-          columns:
-          - geolocation_zip_code_prefix
-          - geolocation_lat
-          - geolocation_lng
+    #   - uq_dim_geolocation_zip_lat_lng:
+    #       type: UNIQUE
+    #       columns:
+    #       - geolocation_zip_code_prefix
+    #       - geolocation_lat
+    #       - geolocation_lng
