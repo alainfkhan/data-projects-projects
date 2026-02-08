@@ -1,2 +1,2 @@
-ls -l data/raw > data/permissions.txt
+ls -l data/raw >> docs/files/permissions.txt
 chmod a-w data/raw/*.csv

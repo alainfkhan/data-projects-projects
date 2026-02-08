@@ -1,7 +1,3 @@
-.PHONY: paths
-paths:
-	python -m rebuild-db.src.utils.paths
-
 .PHONY: format
 format:
 	#sqlfluff format queries
@@ -11,7 +7,13 @@ format:
 # need to:
 # 	deactivate conda current env
 # 	source rebuild-db .venv
+
 .PHONY: db
 db:
-	python -m rebuild-db.src
+	echo 'building-db'
+
+# to rebuild db:
+# cd rebuild-db
+# source .venv/Scripts/activate
+# python -m src
 

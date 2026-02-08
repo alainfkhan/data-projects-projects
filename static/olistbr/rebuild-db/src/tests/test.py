@@ -34,6 +34,7 @@ test_db = "deletesoon"
 
 lines = 30 * "-"
 
+
 def main() -> None:
     # connect to default db
     print(f"Connecting to server: '{server}'")

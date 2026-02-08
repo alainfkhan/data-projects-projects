@@ -1,0 +1,21 @@
+USE master;
+GO
+
+-- if db exists
+IF DB_ID('olist_stg') IS NOT NULL
+BEGIN
+    -- disconnect users
+    ALTER DATABASE olist_stg SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+    DROP DATABASE olist_stg;
+END;
+GO
+
+CREATE DATABASE olist_stg;
+GO
+
+ALTER DATABASE olist_stg
+SET RECOVERY SIMPLE;
+GO
+
+USE olist_stg;
+GO

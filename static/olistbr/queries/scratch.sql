@@ -1,7 +1,7 @@
 /* scratch
 ctrl + shift + e to run
 
-USE olist;
+USE olist_stg;
 SELECT * FROM sys.schemas;
 SELECT * FROM sys.tables;
 

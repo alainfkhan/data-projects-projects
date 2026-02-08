@@ -57,12 +57,12 @@ CREATE TABLE sales.dim_products (           -- nulls: tail
 
     CONSTRAINT pk_dim_products
         PRIMARY KEY (product_id),
-    CONSTRAINT
-    fk_dim_products_dim_product_category_name_translation__product_category_name
-        FOREIGN KEY (product_category_name)
-            REFERENCES
-                sales.dim_product_category_name_translation
-                (product_category_name)
+    -- CONSTRAINT
+    -- fk_dim_products_dim_product_category_name_translation__product_category_name
+    --     FOREIGN KEY (product_category_name)
+    --         REFERENCES
+    --             sales.dim_product_category_name_translation
+    --             (product_category_name)
 
 );
 
@@ -119,9 +119,9 @@ CREATE TABLE sales.fact_order_payments (    -- no nulls
 
     CONSTRAINT pk_fact_order_payments
         PRIMARY KEY (order_id, payment_sequential),
-    CONSTRAINT fk_fact_order_payments_fact_orders__order_id
-        FOREIGN KEY (order_id)
-            REFERENCES sales.fact_orders (order_id)
+    -- CONSTRAINT fk_fact_order_payments_fact_orders__order_id
+    --     FOREIGN KEY (order_id)
+    --         REFERENCES sales.fact_orders (order_id)
 );
 
 -- olist_order_reviews_dataset.csv
@@ -136,9 +136,9 @@ CREATE TABLE sales.fact_order_reviews (     -- nulls: title, message
 
     CONSTRAINT pk_fact_order_reviews
         PRIMARY KEY (review_id, order_id),
-    CONSTRAINT fk_fact_order_reviews_fact_orders__order_id
-        FOREIGN KEY (order_id)
-            REFERENCES sales.fact_orders (order_id),
+    -- CONSTRAINT fk_fact_order_reviews_fact_orders__order_id
+    --     FOREIGN KEY (order_id)
+    --         REFERENCES sales.fact_orders (order_id),
     CONSTRAINT chk_review_score CHECK (review_score BETWEEN 1 AND 5)
 );
 
@@ -176,9 +176,9 @@ CREATE TABLE marketing.fact_closed_deals (      -- not null: ids, won_date, rev
 
     CONSTRAINT pk_fact_closed_deals
         PRIMARY KEY (mql_id),
-    CONSTRAINT fk_fact_closed_deals_fact_marketing_qualified_leads__mql_id
-        FOREIGN KEY (mql_id)
-            REFERENCES marketing.fact_marketing_qualified_leads (mql_id)
+    -- CONSTRAINT fk_fact_closed_deals_fact_marketing_qualified_leads__mql_id
+    --     FOREIGN KEY (mql_id)
+    --         REFERENCES marketing.fact_marketing_qualified_leads (mql_id)
 );
 
 -- ==========
@@ -198,6 +198,6 @@ CREATE TABLE logistics.dim_geolocation (
 
     CONSTRAINT pk_dim_geolocation
         PRIMARY KEY (geolocation_sk),
-    CONSTRAINT uq_dim_geolocation_zip_lat_lng
-        UNIQUE (geolocation_zip_code_prefix, geolocation_lat, geolocation_lng)
+    -- CONSTRAINT uq_dim_geolocation_zip_lat_lng
+    --     UNIQUE (geolocation_zip_code_prefix, geolocation_lat, geolocation_lng)
 );

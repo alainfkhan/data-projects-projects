@@ -1,7 +1,4 @@
-type:
-
-
-
+type: fact or dim
 
 structure:
 <> indicate customisable fields
@@ -21,32 +18,37 @@ schemas, tables, and columns must be ordered => as a list
 <fk> add fk on existing col
 <fk_name>, has format: fk_<child>_<parent>__<col>
 
-
-<db>
-    - <schema1>
-        - <table1>
-            filename: <table1.csv>
-            type: <type>
-            columns:
-                - col1:
-                    dtype: <dtype>
-                    nullable: <nullable>
-                    <sk>:
-                        seed: <seed>
-                        increment: <increment>
-                - col2:
-                    dtype: <dtype>
-                    nullable: <nullable>
-                - ...
-            constraints:
-                pk:
-                    name: <pk_name>
-                    columns:
-                        - <pk_cols>
-                <fk>:
-                    name: <fk_name>
-                    column: <col>
-                    references:
-                        <other table>: 
-                            schema: <schema>
-                            column: <col>
+<db_name>
+- <schema1_name>:
+    - <table1_name>:
+        filename: file1.csv
+        type: fact
+        columns:
+            - <column1>:
+                dtype:
+                nullable:
+                sk:
+                    seed:
+                    increment:
+            - <column2>
+                dtype:
+                ...
+        constraints:
+            <pk_constraint>
+                type: PRIMARY KEY
+                columns:
+                    - <column1>
+            <fk_constraint>
+                type: FOREIGN KEY
+                column: <column2>
+                references:
+                    <table0>:
+                        schema: <schema1_name>
+                        column: <schema1_column_name>
+            <chk_constraint>
+            <uq_constraint>
+                type: UNIQUE
+                columns:
+                    - <column_a>
+                    - <column_b>
+                    - <column_c>

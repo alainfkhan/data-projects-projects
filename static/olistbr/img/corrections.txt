@@ -1,2 +1,11 @@
 geolocation_lng DECIMAL(9, 6)
 geolocation_lat DECIMAL(9, 6)
+
+constraints not implemented:
+    fk_dim_products_dim_product_category_name_translation__product_category_name
+    fk_fact_order_payments_fact_orders__order_id
+    fk_fact_order_reviews_fact_orders__order_id
+    fk_fact_closed_deals_fact_marketing_qualified_leads__mql_id
+    uq_dim_geolocation_zip_lat_lng
+
+need to add dim_date table
