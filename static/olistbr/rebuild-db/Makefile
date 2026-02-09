@@ -1,6 +1,6 @@
 .PHONY: run
 run:
-	python -m src
+	uv run src
 
 .PHONY: test
 test:

@@ -309,7 +309,9 @@ class DBManager:
         # do not print params
 
         # trying
-        df = pd.read_csv(filepath)
+        # TODO: account for cols that need to be truncated during insert
+        # marketing.fact_closed_deals and logistics.dim_geolocation
+        df = pd.read_csv(filepath, dtype=object)
         df_clean = df.astype(object).where(pd.notnull(df), None)
         params = list(df_clean.itertuples(index=False, name=None))
 

@@ -34,7 +34,20 @@ from src.utils.db_manager import DBManager
 from src.utils.db_config_manager import DBConfigManager
 
 # ic.disable()
-debug = True
+
+# debugs
+send_sql = False
+
+wipe_db = False
+create_schemas = False
+create_tables = False
+insert_tables = False
+
+override_table_names = True
+custom_table_names = [
+    "marketing.fact_closed_deals",
+    "logistics.dim_geolocation",
+]
 
 # get configs
 connection_config_path: Path = CONFIGS_PATH / "connection.yml"
@@ -56,7 +69,7 @@ test_db = "deletesoon"
 long_lines = 80 * "-"
 short_lines = 40 * "-"
 equals = 80 * "="
-spaces = 30 * " "
+spaces = 80 * " "
 
 
 def main() -> None:
@@ -74,8 +87,8 @@ def main() -> None:
     cm = DBConfigManager(db_config=db_config)
 
     with conn:
-        if not debug:
-            # wipe db
+        # wipe db
+        if send_sql and wipe_db:
             dbm.wipe_db(db)
             print(f"Successfully wiped database: '{db}'")
         else:
@@ -91,7 +104,7 @@ def main() -> None:
 
         # create schemas
         for schema_name in cm.list_schema_names():
-            if not debug:
+            if send_sql and create_schemas:
                 print(dbm.create_schema(schema_name))
             else:
                 print(f"DEBUG: <create schema '{schema_name}'>")
@@ -99,7 +112,12 @@ def main() -> None:
         print(long_lines)
 
         # create tables and insert data
-        for table_name in cm.list_table_names():
+        if override_table_names:
+            table_names = custom_table_names
+        else:
+            table_names = cm.list_table_names()
+
+        for table_name in table_names:
             table = cm.get_table(table_name)
             table_values = list(table.values())[0]
 
@@ -108,15 +126,25 @@ def main() -> None:
             filename = table_values["filename"]
             filepath: Path = RAW_PATH / filename
             if not filepath.exists():
-                raise FileNotFoundError(f"'{filepath}' does not exist.")
+                print(f"'{filepath}' does not exist.")
 
-            if not debug:
-                # create table
+            # create table
+            if send_sql and create_tables:
                 print(dbm.create_table(table_name, table))
-                # insert data
-                print(dbm.insert_from_csv(filepath, table_name, table_column_shorts))
             else:
                 print(f"DEBUG: <create table '{table_name}' sql>")
+
+            # insert data
+            if send_sql and insert_tables:
+                print(f"Inserting: '{filepath.name}'", end="\r")
+                insert_sql: str = dbm.insert_from_csv(
+                    filepath,
+                    table_name,
+                    table_column_shorts,
+                )
+                print(spaces)
+                print(insert_sql)
+            else:
                 print(f"DEBUG: <insert table '{table_name}' sql>")
 
         print(long_lines)

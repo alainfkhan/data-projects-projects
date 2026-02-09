@@ -22,19 +22,24 @@ Sync the environment using `uv`:
 uv sync
 ```
 
-## Rebuild the database
+## Rebuild the database by running `src`
 
 Run `src` to rebuild the database:
 ```bash
-uv src
+make run
 ```
+Or:
+```bash
+uv run src
+```
+
 
 > [!NOTE]
 > - You could be on debug mode.
 > - To exit debug mode, go to `src.__main__.py`.
-> - Find the variable `debug` just after imports and before `def main() -> None:`.
-> - Change the bool of `debug` from `True` to `False`.
+> - Find the variable `send_sql` just after imports and before `def main() -> None:`.
+> - Change the bool of `send_sql` from `False` to `True`.
 > - Run `src` to rebuild the database.
-> - Then revert `debug` back to `True` to avoid any accidental rebuilds.
+> - Then revert `send_sql` back to `False` to avoid any accidental rebuilds.
 > - Don't use the created staging database for analysis.
 > - Copy the staging database and use that for analysis.

@@ -1,4 +1,3 @@
-# what i want the tables to look like
 # can be generated
 # keep spaces: 2
 olist_stg:
@@ -252,16 +251,16 @@ olist_stg:
       - review_score:
           dtype: TINYINT
           nullable: false
-      - reiew_comment_title:
+      - review_comment_title:
           dtype: NVARCHAR(30)
           nullable: true
-      - reiew_comment_message:
+      - review_comment_message:
           dtype: NVARCHAR(210)
           nullable: true
-      - reiew_creation_date:
+      - review_creation_date:
           dtype: DATETIME2
           nullable: false
-      - reiew_answer_timestamp:
+      - review_answer_timestamp:
           dtype: DATETIME2
           nullable: false
       constraints:

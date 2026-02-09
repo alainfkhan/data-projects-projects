@@ -1,5 +1,6 @@
 TODO
-    docstring list order -> ordered
-        eg: asdf.sql, qwer.sql -> 01_asdf.sql, 02_qwer.sql
-        so change docstring file orders -> shell scripts run order
-        
+    pd.read_csv(filepath, dtype=object)
+    dtype=object causes issues with truncation
+    need to truncate some cols for tables:
+        marketing.fact_closed_deals
+        logistics.dim_geolocation

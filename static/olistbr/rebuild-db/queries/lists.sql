@@ -27,3 +27,8 @@ select *
 from INFORMATION_SCHEMA.TABLES
 where TABLE_TYPE='BASE TABLE';
 go
+
+use olist_stg
+
+select top 1000 * from sales.dim_sellers s
+where s.seller_id = 'c0f3eea2e14555b6faeea3dd58c1b1c3'

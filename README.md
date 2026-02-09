@@ -1,16 +1,14 @@
 # Analysis projects
 
-## Notable projects
+## Notable analysis projects
 
-- [Olist project](https://github.com/alainfkhan/data-projects-projects/tree/main/static/olistbr)
-  `geospatial`, `time-series` | `sql-server`
-
-<!-- - [Project 2](https://www.google.com) -->
+- [Olist](https://github.com/alainfkhan/data-projects-projects/tree/main/static/olistbr)
+- [Restaurant Business Online](https://github.com/alainfkhan/data-projects-projects/blob/main/macos/bogacz-res/README.md)
 
 ## Explaining groups
 
 A group is simply a directory in this folder.
-If a folder: `some-group` is created in any way, then a new group: `some-group` is formed and can be seen by the CLI tool.
+If a folder: `some-group` is created in any way, then a new group: `some-group` is formed and can be seen by the CLI tool: [`dpx`](https://github.com/alainfkhan/data-projects-dpx).
 
 The current configuration of groups:
 
