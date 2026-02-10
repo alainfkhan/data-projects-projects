@@ -3,6 +3,18 @@ select db_name()
 
 use master
 use olist_stg
+use deletesoon
+
+create schema some_schema;
+
+create table some_schema.table_name (
+    a INT,
+    b varchar(20)
+)
+insert into some_schema.table_name
+values (10, 'test')
+
+select * from some_schema.table_name
 
 -- list all dbs
 select name from master.sys.databases 
@@ -17,20 +29,27 @@ drop schema logistics;
 go
 */
 
--- list all schemas in db
+-- list all schemas in connected-to database
 select name
 from sys.schemas
 where schema_id between 5 and 16383;
 go
 
+-- list schemas in any database
 
--- list all tables in db
-select *
+-- list tables in connected-to database
+select TABLE_CATALOG, TABLE_SCHEMA, TABLE_NAME
 from INFORMATION_SCHEMA.TABLES
-where TABLE_TYPE='BASE TABLE';
 go
 
--- show all tables
+-- list tables in schema
+select TABLE_NAME
+from INFORMATION_SCHEMA.TABLES
+where TABLE_SCHEMA = 'sales'
+
+
+
+--
 /*
 select top 1000 * from sales.dim_customers;
 select top 1000 * from sales.dim_sellers;
@@ -44,6 +63,25 @@ select top 1000 * from marketing.fact_marketing_qualified_leads;
 select top 1000 * from marketing.fact_closed_deals;
 select top 1000 * from logistics.dim_geolocation;
 */
+
+-- count rows
+select count(*) from sales.dim_customers
+
+-- count columns
+select count(*) from INFORMATION_SCHEMA.columns
+where TABLE_SCHEMA = 'sales'
+and TABLE_NAME = 'dim_customers'
+
+SELECT
+    TABLE_SCHEMA,
+    TABLE_NAME,
+    COLUMN_NAME,
+    DATA_TYPE,
+    CHARACTER_MAXIMUM_LENGTH,
+    IS_NULLABLE
+FROM INFORMATION_SCHEMA.COLUMNS
+
+
 
 -- get total reviews by score
 select

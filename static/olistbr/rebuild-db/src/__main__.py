@@ -12,6 +12,9 @@ from typing import NamedTuple
 import yaml
 import pyodbc
 import pandas as pd
+from pyodbc import Row
+from rich.console import Console
+from rich.table import Table
 from icecream import ic
 # from pyodbc import Row, Connection, Cursor
 
@@ -31,7 +34,8 @@ insert_tables = True
 
 override_table_names = False
 custom_table_names = [
-    "marketing.fact_closed_deals",
+    "sales.dim_customers",
+    # "marketing.fact_closed_deals",
     # "logistics.dim_geolocation",
 ]
 
@@ -52,15 +56,15 @@ db = connection_config["database"]
 default_db = "master"
 test_db = "deletesoon"
 
-long_lines = 80 * "-"
-short_lines = 40 * "-"
+long_lines = 100 * "-"
+short_lines = 50 * "-"
 equals = 80 * "="
 spaces = 80 * " "
 
 
 def main() -> None:
     # connect to default db
-    print(f"Connecting to server: '{server}'", end="\r")
+    print(f"Establishing a connection to server: '{server}'", end="\r")
     dbm = DBManager(driver=driver, server=server, database=default_db)
     conn, cursor = dbm.connect()
 
@@ -125,9 +129,9 @@ def main() -> None:
             if send_sql and insert_tables:
                 print(f"Inserting: '{filepath.name}'...", end="\r")
                 insert_sql: str = dbm.insert_from_csv(
-                    filepath,
-                    table_name,
-                    table_column_shorts,
+                    filepath=filepath,
+                    table_name=table_name,
+                    column_shorts=table_column_shorts,
                 )
                 print(spaces)
                 print(insert_sql)
@@ -137,27 +141,74 @@ def main() -> None:
         print(long_lines)
         print()
 
-        db_tables = dbm.list_tables()
-        db_schemas = dbm.list_schemas()
-
+        # database overview
         print(f"Overview of database: '{dbm.get_current_db()}'")
         print(short_lines)
 
-        # print("[#tables in schema] schema_name")
-        print(f"{len(db_schemas)} total schemas in the database:")
-        print(f"\t{'\n\t'.join(db_schemas)}")
-        print(short_lines)
+        # schemas
+        db_schemas = dbm.list_schemas()
 
-        # print("[#rows, #columns] table_name")
-        print(f"{len(db_tables)} total tables in the database:")
-        print(f"\t{'\n\t'.join(db_tables)}")
-        # TODO: add [total_rows, total_cols]
-        # print(f"[{total_rows}, {total_cols}]{'\n'.join(db_tables)}")
+        schema_table = Table(title="Schemas")
+        schema_table.add_column("Schema name")
+        schema_table.add_column("Tables")
+
+        for schema in db_schemas:
+            table_shorts = dbm.list_table_shorts_in_schema(schema_name=schema)
+            schema_table.add_row(schema, str(len(table_shorts)))
+
+        # tables
+        db_tables = dbm.list_tables()
+
+        tables_table = Table(title="Tables")
+        tables_table.add_column("Table name")
+        tables_table.add_column("Rows")
+        tables_table.add_column("Columns")
+
+        for table_name in db_tables:
+            rows, cols = dbm.get_table_shape(table_name)
+            tables_table.add_row(table_name, str(rows), str(cols))
+
+
+        # columns
+        query = cursor.execute("""
+            SELECT
+                TABLE_SCHEMA,
+                TABLE_NAME,
+                COLUMN_NAME,
+                DATA_TYPE,
+                CHARACTER_MAXIMUM_LENGTH,
+                IS_NULLABLE
+            FROM INFORMATION_SCHEMA.COLUMNS
+        """)
+        rows: list[Row] = query.fetchall()
+
+        columns_table = Table(title="Colums")
+        columns_table.add_column("Schema name")
+        columns_table.add_column("Table name")
+        columns_table.add_column("Column name")
+        columns_table.add_column("Data Type")
+        columns_table.add_column("Char. Max Length")
+        columns_table.add_column("Is nullable")
+
+        for row in rows:
+            columns_table.add_row(
+                str(row[0]),
+                str(row[1]),
+                str(row[2]),
+                str(row[3]),
+                str(row[4]),
+                str(row[5]),
+            )
+
+        console = Console()
+        console.print(schema_table)
+        console.print(tables_table)
+        # console.print(columns_table)
+
         print(short_lines)
         print(f"!!! '{db}' subject to repeated rewrites.")
         print("!!! Remember to copy the database.")
         print(short_lines)
-
 
 if __name__ == "__main__":
     main()

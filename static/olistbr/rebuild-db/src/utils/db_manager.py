@@ -79,17 +79,24 @@ class DBManager:
 
     def get_table_shape(self, table_name: str) -> tuple[int, int]:
         """Gets the number of rows and columns a table has."""
-        # TODO: need to complete
         split = table_name.split(".")
         schema_name = split[0]
         table_short = split[1]
 
-        total_rows = self.cursor.execute(
-            f"select count(*) from {table_short}"
-        ).fetchone()
-        total_columns = 0
+        # rows
+        get_rows = self.cursor.execute(f"select count(*) from {table_name}").fetchone()
+        total_rows: int = 0 if get_rows is None else get_rows[0]
 
-        return total_rows, total_columns
+        # columns
+        get_cols = self.cursor.execute(f"""
+            select count(*)
+            from information_schema.columns
+            where table_schema = '{schema_name}'
+                and table_name = '{table_short}'
+        """).fetchone()
+        total_cols: int = 0 if get_cols is None else get_cols[0]
+
+        return total_rows, total_cols
 
     def change_db(self, database: str) -> str:
         """Change the database."""
@@ -102,37 +109,56 @@ class DBManager:
         query = self.cursor.execute("""
             select name
             from master.sys.databases;
-            """)
+        """)
         rows: list[Row] = query.fetchall()
 
         all_dbs: list[str] = [row[0] for row in rows]
         return all_dbs
 
     def list_schemas(self) -> list[str]:
-        """List all created schemas in the database."""
+        """List created schemas in the connected-to database."""
         query = self.cursor.execute("""
             select name
             from sys.schemas
-            where schema_id between 5 and 16383
-            """)
+            where schema_id between 5 and 16383;
+        """)
         rows: list[Row] = query.fetchall()
 
         schema_names: list[str] = [row[0] for row in rows]
         return schema_names
 
     def list_tables(self) -> list[str]:
-        """List all created tables in the database."""
+        """List created tables in the connected-to database."""
         query = self.cursor.execute("""
             select
                 table_schema,
                 table_name
-            from information_schema.tables
-            where table_type='BASE TABLE';
-            """)
+            from information_schema.tables;
+        """)
         rows: list[Row] = query.fetchall()
 
         table_names: list[str] = [f"{row[0]}.{row[1]}" for row in rows]
         return table_names
+
+    def list_schemas_in_db(self, db: str) -> list[str]:
+        """Lists schemas in a database."""
+        pass
+
+    def list_table_shorts_in_schema(self, schema_name: str) -> list[str]:
+        """List tables in a schema."""
+        query = self.cursor.execute(f"""
+            select table_name
+            from information_schema.tables
+            where table_schema = '{schema_name}'
+        """)
+        rows: list[Row] = query.fetchall()
+
+        table_shorts: list[str] = [row[0] for row in rows]
+        return table_shorts
+
+    def list_columns_in_table(self, table_name: str) -> list[str]:
+        """List columns in a table"""
+        pass
 
     def query(self, sql: str) -> DataFrame:
         """Query the database, will only get rows, col names wont show."""
@@ -377,7 +403,7 @@ class DBManager:
         self.cursor.execute(f"""
             alter database {database}
             set recovery simple
-            """)
+        """)
         self.conn.autocommit = False
 
 
