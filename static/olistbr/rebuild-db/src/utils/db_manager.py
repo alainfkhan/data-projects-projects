@@ -28,17 +28,16 @@ from pandas import DataFrame
 from src.utils.db_config_manager import DBConfigManager
 from src.utils.paths import CONFIGS_PATH
 
-# db_config_path: Path = CONFIGS_PATH / "db_config.yml"
-# with open(db_config_path, "r") as f:
-#     db_config = yaml.safe_load(f)
+db_config_path: Path = CONFIGS_PATH / "db_config.yml"
+with open(db_config_path, "r") as f:
+    db_config = yaml.safe_load(f)
 
-# dbcm = DBConfigManager(db_config=db_config)
+cm = DBConfigManager(db_config=db_config)
 
-# constraint_map = {
-#     "pk": "PRIMARY KEY",
-#     "fk": "FOREIGN KEY",
-#     "uq": "UNIQUE",
-# }
+type_map: dict[str, type] = {
+    "str": str,
+    "int": int,
+}
 
 
 class DBManager:
@@ -308,11 +307,28 @@ class DBManager:
         # params = df.values.tolist()
         # do not print params
 
-        # trying
-        # TODO: account for cols that need to be truncated during insert
-        # marketing.fact_closed_deals and logistics.dim_geolocation
-        df = pd.read_csv(filepath, dtype=object)
+        split = table_name.split(".")
+        schema_name = split[0]
+        table_short = split[1]
+
+        # get converters
+        # TODO: remove dependency on dbconfigmanager in this file
+        converters: dict[str, type] = dict()
+        column_shorts = cm.list_column_shorts(table_name)
+        for column_short in column_shorts:
+            column_name = f"{schema_name}.{table_short}.{column_short}"
+            column = cm.get_column(column_name)
+            column_values = list(column.values())[0]
+
+            has_converter = "converter" in column_values
+            if has_converter:
+                converter = column_values["converter"]
+                converters[column_short] = type_map[converter]
+
+        df = pd.read_csv(filepath, converters=converters)
         df_clean = df.astype(object).where(pd.notnull(df), None)
+        df_clean = df_clean[column_shorts]
+
         params = list(df_clean.itertuples(index=False, name=None))
 
         sql: str = ""

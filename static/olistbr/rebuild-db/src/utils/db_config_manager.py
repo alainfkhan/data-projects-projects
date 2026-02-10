@@ -244,7 +244,7 @@ class DBConfigManager:
     def get_table(self, schema_table: str) -> dict[Any, Any]:
         """Returns the table configuration.
 
-        table_name has form: schema_name.table_short
+        schema_table has form: schema_name.table_short
         """
         schema_name = schema_table.split(".")[0]
         table_name = schema_table.split(".")[1]
@@ -258,7 +258,10 @@ class DBConfigManager:
         return table
 
     def get_column(self, schema_table_column: str) -> dict[Any, Any]:
-        """"""
+        """Returns the column configutaion.
+
+        schema_table_column has form: schema_name.table_name.column_name
+        """
         split = schema_table_column.split(".")
         schema_name = split[0]
         table_short = split[1]

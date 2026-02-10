@@ -1,21 +1,7 @@
 """
 rebuilds the staging db
 
-will have:
-olist
-olist_stg
-
-olist attained from copying olist_stg
-
-csv -> pd -> sqlserver
-
-assume exists
-schema
-table
-column
-dtype
-nullable
-pk
+csv -> df -> sqlserver
 """
 
 import os
@@ -38,15 +24,15 @@ from src.utils.db_config_manager import DBConfigManager
 # debugs
 send_sql = False
 
-wipe_db = False
-create_schemas = False
-create_tables = False
-insert_tables = False
+wipe_db = True
+create_schemas = True
+create_tables = True
+insert_tables = True
 
-override_table_names = True
+override_table_names = False
 custom_table_names = [
     "marketing.fact_closed_deals",
-    "logistics.dim_geolocation",
+    # "logistics.dim_geolocation",
 ]
 
 # get configs
@@ -89,6 +75,7 @@ def main() -> None:
     with conn:
         # wipe db
         if send_sql and wipe_db:
+            print(f"Wiping database: '{db}'...", end="\r")
             dbm.wipe_db(db)
             print(f"Successfully wiped database: '{db}'")
         else:
@@ -107,7 +94,7 @@ def main() -> None:
             if send_sql and create_schemas:
                 print(dbm.create_schema(schema_name))
             else:
-                print(f"DEBUG: <create schema '{schema_name}'>")
+                print(f"DEBUG: <create schema '{schema_name}' sql>")
 
         print(long_lines)
 
@@ -136,7 +123,7 @@ def main() -> None:
 
             # insert data
             if send_sql and insert_tables:
-                print(f"Inserting: '{filepath.name}'", end="\r")
+                print(f"Inserting: '{filepath.name}'...", end="\r")
                 insert_sql: str = dbm.insert_from_csv(
                     filepath,
                     table_name,
@@ -167,9 +154,9 @@ def main() -> None:
         # TODO: add [total_rows, total_cols]
         # print(f"[{total_rows}, {total_cols}]{'\n'.join(db_tables)}")
         print(short_lines)
-        print(
-            f"!!! '{db}' subject to repeated rewrites. Remember to copy the database."
-        )
+        print(f"!!! '{db}' subject to repeated rewrites.")
+        print("!!! Remember to copy the database.")
+        print(short_lines)
 
 
 if __name__ == "__main__":

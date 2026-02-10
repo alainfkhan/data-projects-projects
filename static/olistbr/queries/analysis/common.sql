@@ -21,7 +21,7 @@ SET
 EXEC sp_sqlexec @sql;
 GO
 
--- or simply:
+-- list schemas simply:
 SELECT DB_NAME();
 SELECT name
 FROM sys.schemas
@@ -51,7 +51,8 @@ EXEC sp_help 'marketing.fact_closed_deals';
 SELECT TOP 1000 *
 FROM marketing.fact_closed_deals;
 
--- random analysis
+-- random analyses
+-- get the longest review comment message
 WITH cte AS (
 SELECT --TOP 1000
     t.review_score,

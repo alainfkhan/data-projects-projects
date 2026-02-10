@@ -17,6 +17,7 @@ olist_stg:
       - customer_zip_code_prefix:
           dtype: CHAR(5)
           nullable: false
+          converter: str
       - customer_city:
           dtype: VARCHAR(50)
           nullable: true
@@ -39,6 +40,7 @@ olist_stg:
       - seller_zip_code_prefix:
           dtype: CHAR(5)
           nullable: false
+          converter: str
       - seller_city:
           dtype: NVARCHAR(50)
           nullable: false
@@ -379,6 +381,7 @@ olist_stg:
       - geolocation_zip_code_prefix:
           dtype: CHAR(5)
           nullable: false
+          converter: str
       - geolocation_lat:
           dtype: DECIMAL(9, 6)
           nullable: true
