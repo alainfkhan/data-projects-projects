@@ -25,7 +25,7 @@ from src.utils.db_config_manager import DBConfigManager
 # ic.disable()
 
 # debugs
-send_sql = False
+send_sql = True
 
 wipe_db = True
 create_schemas = True
@@ -168,7 +168,6 @@ def main() -> None:
             rows, cols = dbm.get_table_shape(table_name)
             tables_table.add_row(table_name, str(rows), str(cols))
 
-
         # columns
         query = cursor.execute("""
             SELECT
@@ -209,6 +208,7 @@ def main() -> None:
         print(f"!!! '{db}' subject to repeated rewrites.")
         print("!!! Remember to copy the database.")
         print(short_lines)
+
 
 if __name__ == "__main__":
     main()

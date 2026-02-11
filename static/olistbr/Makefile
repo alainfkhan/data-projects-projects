@@ -1,6 +1,7 @@
 .PHONY: format
 format:
 	sqlfluff format queries
+	sqlfluff format rebuild-db/queries/rebuild-db
 	ruff format .
 
 # cannot run on conda env

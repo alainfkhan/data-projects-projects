@@ -1,0 +1,68 @@
+want to have columns:
+dim_date
+relatively cheap to store
+format: 'yyyy-mm-dd'
+assume brasilia time BRT = UTC-3
+so dates are BRT
+
+is_weekend if satruday or sunday
+day_of_week
+    day 1 means monday
+    day 7 means sunday
+day_of_month
+    month 1 means January
+    month 12 means December
+
+brazil fy: 1jan-31dec
+    quarter 1: 1jan-30apr
+
+date_key
+full_date
+day_of_week
+day_name
+day_name_short
+is_weekend
+day_of_month
+is_last_day_of_month
+day_of_year
+week_of_year
+month_of_year
+month_name
+month_name_short
+quarter
+year
+
+monday
+tuesday
+wednesday
+thursday
+friday
+satruday
+sunday
+
+January
+february
+march
+april
+may
+june
+july
+august
+september
+october
+november
+december
+
+select @@datefirst
+set datefirst 1
+
+datefirst, sat, sun
+1, 6, 7
+2, 5, 6
+3, 4, 5
+4, 3, 4
+5, 2, 3
+6, 1, 2
+7, 7, 1
+
+n, 7-datefirstf%7, 6-datefirst%7
