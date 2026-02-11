@@ -1,0 +1,40 @@
+some repeats with accents
+
+what to do:
+    replace all accents with ascii
+    manaul map from misspelled to correct
+
+examples:
+    sa£0 paulo 
+    luis = luiz
+    d oeste = d`oeste = doeste = d'oeste
+    d%26apos%3balho = d alho = dalho = d'alho
+    some have names that need '-', others are copies (?)
+
+
+significant finds:
+0nnnn = SP
+    sa£o paulo, sao paulo, são paulo, sãopaulo, sp,
+1nnnn = SP
+    ---
+    mogi guacu, mogi guaçu, mogi-guacu,
+    mogi mirim, mogi-mirim,
+    ---
+    palmeira d oeste, palmeira doeste, palmeira d'oeste,
+    ---
+    santa barbara d oeste,
+    santa bárbara d`oeste,
+    santa barbara doeste,
+    santa barbara d'oeste,
+    santa bárbara doeste,
+    santa bárbara d'oeste,
+    ---
+    sao joao do pau d alho,
+    são joão do pau d%26apos%3balho,
+    sao joao do pau dalho,
+    sao joao do pau d'alho,
+    são joão do pau d'alho,
+    ---
+    sao luis do paraitinga,
+    sao luiz do paraitinga,
+    são luiz do paraitinga,

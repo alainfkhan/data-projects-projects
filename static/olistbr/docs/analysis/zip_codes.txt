@@ -1,0 +1,59 @@
+
+brazil postal codes of form: nnnnn-nnn
+zip_code_prefix is first part: nnnnn
+xnnnn = some state
+---
+better to do in python
+---
+like 1 digit = state(total rows)
+0nnnn =
+    AC(1),
+    SP(245731), 
+    RN(1)
+1nnnn = 
+    SP(158537) 
+2nnnn =
+    AC(2),
+    ES(16748),
+    RJ(121169)
+3nnnn =
+    MG(126336)
+4nnnn =
+    BA(36045),
+    SE(3563)
+5nnnn =
+    AL(4183),
+    PB(5538),
+    PE(16432),
+    RN(5040)
+6nnnn =
+    AC(1298),
+    AM(2432),
+    AP(838),
+    CE(11674),
+    MA(7853)
+    PA(10853)
+    PI(4549)
+    RR(646)
+7nnnn =
+    DF(12986),
+    GO(20139),
+    MS(10431),
+    MT(1231),
+    RO(3478),
+    RS(1),
+    TO(3576)
+8nnnn =
+    PR(57859),
+    SC(38328)
+9nnnn =
+    RS(61850)
+
+--------------------------------------------------
+TODO: after cleaning
+like 2 digits = geolocation_city
+00nnn = none
+01nnn =
+    sao paulo, são paulo, 
+    sao bernardo do campo
+

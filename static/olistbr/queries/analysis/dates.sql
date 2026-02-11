@@ -1,4 +1,5 @@
 -- date analysis
+-- find the max and min dates in the dataset
 
 USE olist_stg
 

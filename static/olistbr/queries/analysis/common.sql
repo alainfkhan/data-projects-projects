@@ -21,7 +21,7 @@ SET
 EXEC sp_sqlexec @sql;
 GO
 
--- list schemas simply:
+-- list schemas simple:
 SELECT DB_NAME();
 SELECT name
 FROM sys.schemas
