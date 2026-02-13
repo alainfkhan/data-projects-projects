@@ -1,2 +1,3 @@
-https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
-https://www.kaggle.com/datasets/olistbr/marketing-funnel-olist
+brazilian-ecommerce, https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce
+marketing-funnel-olist, https://www.kaggle.com/datasets/olistbr/marketing-funnel-olist
+cep, https://data.mendeley.com/datasets/g97jb8fp57/1 

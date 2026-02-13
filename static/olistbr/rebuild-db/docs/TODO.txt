@@ -4,3 +4,8 @@ README.md
     explain end steps:
         this creates a staging db
         need to copy to make usable
+
+change config dim_geolocations to fact_geolocations since its transactional
+add debug execute=execute when false only return sql to see code
+add execute sql files after original dataset ingestion (dates, cep)
+queries/rebuild-db/ .sql files intended for automation

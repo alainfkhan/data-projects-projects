@@ -3,3 +3,6 @@ TODO:
     research what type of questions i would be asked
     change payment datatypes to scale 2
         there will never be a case where payments require more than 2 dp
+    make alias table city: alias, canon_name
+    change dim_geolocation to fact_geolocation
+    insert sup dataset to db

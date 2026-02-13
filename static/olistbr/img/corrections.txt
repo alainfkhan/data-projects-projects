@@ -1,5 +1,6 @@
 geolocation_lng DECIMAL(9, 6)
 geolocation_lat DECIMAL(9, 6)
+dim_geolocation to fact_geolocation
 
 constraints not implemented:
     fk_dim_products_dim_product_category_name_translation__product_category_name
@@ -8,4 +9,6 @@ constraints not implemented:
     fk_fact_closed_deals_fact_marketing_qualified_leads__mql_id
     uq_dim_geolocation_zip_lat_lng
 
-need to add dim_date table
+need to add external tables
+    dim_date
+    dim_cep (complete brazilian postal codes dataset)

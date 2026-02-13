@@ -384,6 +384,9 @@ class DBManager:
 
         create db
         """
+        # TODO: add argument: execute:bool=True
+        # if execute=False dont execute, return sql
+        # else exectue, return sql
         if self.is_sys_db(database):
             raise ValueError("Cannot wipe a system database.")
 

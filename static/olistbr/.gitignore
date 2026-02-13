@@ -1,2 +1,6 @@
 .vs
 *.slnx
+
+# close to 100MB
+# 99.3MB
+TB_CEP_BR_2018.csv

@@ -2,9 +2,9 @@ some repeats with accents
 
 what to do:
     replace all accents with ascii
-    manaul map from misspelled to correct
+    manual map from misspelled to correct
 
-examples:
+notable differences:
     sa£0 paulo 
     luis = luiz
     d oeste = d`oeste = doeste = d'oeste

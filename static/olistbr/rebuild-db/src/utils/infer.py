@@ -29,7 +29,6 @@ def infer_dtypes(df: DataFrame) -> DataFrame:
         columns=[
             # keys
             "has_unique_entries",
-            "where_duplicates",
             # nulls
             "has_nulls",
             "where_nulls",
@@ -79,7 +78,6 @@ def infer_dtypes(df: DataFrame) -> DataFrame:
 
         # keys ==================================================
         out_df.loc[col, "has_unique_entries"] = 1 if clean_series.is_unique else 0
-        out_df.loc[col, "where_duplicates"] = df.duplicated().tolist()
 
         # nulls ==================================================
         where_null = df[col].isnull()

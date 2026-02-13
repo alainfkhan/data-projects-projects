@@ -37,6 +37,21 @@ FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_TYPE = 'BASE TABLE';
 GO
 
+-- list created temp tables
+SELECT *
+FROM TEMPDB.SYS.OBJECTS
+WHERE [TYPE] = 'U'
+
+
+-- list temp table schema
+SELECT *
+FROM TEMPDB.SYS.ALL_COLUMNS
+WHERE OBJECT_ID = (
+    SELECT OBJECT_ID
+    FROM TEMPDB.SYS.TABLES
+    WHERE NAME LIKE '#tmp_dim_geolocation_canon_ascii%'
+)
+
 -- list tables in a specific schema
 SELECT TABLE_NAME
 FROM INFORMATION_SCHEMA.TABLES
@@ -75,3 +90,8 @@ SELECT TOP 1000
         OVER (ORDER BY c.len_message DESC, c.review_comment_message ASC)
         AS dense_rank
 FROM cte AS c
+
+-- list collations
+select *
+from sys.fn_helpcollations()
+where name like 'sql%'
