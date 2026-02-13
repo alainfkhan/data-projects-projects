@@ -1,0 +1,295 @@
+Successful connection
+        Driver used:            'ODBC Driver 17 for SQL Server'
+        Connected to server:    'localhost'
+        Connected to database:  'master'
+
+SQL strings executed:
+----------------------------------------------------------------------------------------------------
+Wipe database 'olist_stg':
+
+>>>       ALTER DATABASE olist_stg SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+>>>
+>>>       DROP DATABASE olist_stg;
+>>>
+>>>       CREATE DATABASE olist_stg;
+>>>
+>>>       ALTER DATABASE olist_stg
+>>>       SET RECOVERY SIMPLE;
+
+----------------------------------------------------------------------------------------------------
+Switch to created database:
+
+>>>       USE olist_stg;
+
+----------------------------------------------------------------------------------------------------
+Create schemas:
+
+>>>       CREATE SCHEMA sales;
+>>>       CREATE SCHEMA marketing;
+>>>       CREATE SCHEMA logistics;
+
+----------------------------------------------------------------------------------------------------
+Create tables and insert data:
+
+--------------------------------------------------
+'olist_customers_dataset.csv'
+
+>>>       CREATE TABLE sales.dim_customers (
+>>>             customer_id CHAR(32) NOT NULL,
+>>>             customer_unique_id CHAR(32) NOT NULL,
+>>>             customer_zip_code_prefix CHAR(5) NOT NULL,
+>>>             customer_city VARCHAR(50),
+>>>             customer_state CHAR(2),
+>>>
+>>>             CONSTRAINT pk_dim_customers
+>>>                     PRIMARY KEY (customer_id)
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'olist_sellers_dataset.csv'
+
+>>>       CREATE TABLE sales.dim_sellers (
+>>>             seller_id CHAR(32) NOT NULL,
+>>>             seller_zip_code_prefix CHAR(5) NOT NULL,
+>>>             seller_city NVARCHAR(50) NOT NULL,
+>>>             seller_state CHAR(2) NOT NULL,
+>>>
+>>>             CONSTRAINT pk_dim_sellers
+>>>                     PRIMARY KEY (seller_id)
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'product_category_name_translation.csv'
+
+>>>       CREATE TABLE sales.dim_product_category_name_translation (
+>>>             product_category_name VARCHAR(50) NOT NULL,
+>>>             product_category_name_english VARCHAR(50) NOT NULL,
+>>>
+>>>             CONSTRAINT pk_dim_product_category_name_translation
+>>>                     PRIMARY KEY (product_category_name)
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'olist_products_dataset.csv'
+
+>>>       CREATE TABLE sales.dim_products (
+>>>             product_id CHAR(32) NOT NULL,
+>>>             product_category_name VARCHAR(50),
+>>>             product_name_lenght TINYINT,
+>>>             product_description_lenght SMALLINT,
+>>>             product_photos_qty TINYINT,
+>>>             product_weight_g INT,
+>>>             product_length_cm TINYINT,
+>>>             product_height_cm TINYINT,
+>>>             product_width_cm TINYINT,
+>>>
+>>>             CONSTRAINT pk_dim_products
+>>>                     PRIMARY KEY (product_id)
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'olist_orders_dataset.csv'
+
+>>>       CREATE TABLE sales.fact_orders (
+>>>             order_id CHAR(32) NOT NULL,
+>>>             customer_id CHAR(32) NOT NULL,
+>>>             order_status VARCHAR(20) NOT NULL,
+>>>             order_purchase_timestamp DATETIME2 NOT NULL,
+>>>             order_approved_at DATETIME2,
+>>>             order_delivered_carrier_date DATETIME2,
+>>>             order_delivered_customer_date DATETIME2,
+>>>             order_estimated_delivery_date DATETIME2,
+>>>
+>>>             CONSTRAINT pk_fact_orders
+>>>                     PRIMARY KEY (order_id),
+>>>
+>>>             CONSTRAINT fk_fact_orders_dim_customers__customer_id
+>>>                     FOREIGN KEY (customer_id)
+>>>                             REFERENCES sales.dim_customers (customer_id)
+>>>                             ON DELETE CASCADE
+>>>                             ON UPDATE CASCADE
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'olist_order_items_dataset.csv'
+
+>>>       CREATE TABLE sales.fact_order_items (
+>>>             order_id CHAR(32) NOT NULL,
+>>>             order_item_id TINYINT NOT NULL,
+>>>             product_id CHAR(32) NOT NULL,
+>>>             seller_id CHAR(32) NOT NULL,
+>>>             shipping_limit_date DATETIME2 NOT NULL,
+>>>             price DECIMAL(9, 4) NOT NULL,
+>>>             freight_value DECIMAL(9, 4) NOT NULL,
+>>>
+>>>             CONSTRAINT pk_fact_order_items
+>>>                     PRIMARY KEY (order_id, order_item_id),
+>>>
+>>>             CONSTRAINT fk_fact_order_items_fact_orders__order_id
+>>>                     FOREIGN KEY (order_id)
+>>>                             REFERENCES sales.fact_orders (order_id)
+>>>                             ON DELETE CASCADE
+>>>                             ON UPDATE CASCADE,
+>>>
+>>>             CONSTRAINT fk_fact_order_items_dim_products__product_id
+>>>                     FOREIGN KEY (product_id)
+>>>                             REFERENCES sales.dim_products (product_id)
+>>>                             ON DELETE CASCADE
+>>>                             ON UPDATE CASCADE,
+>>>
+>>>             CONSTRAINT fk_fact_order_items_dim_sellers__seller_id
+>>>                     FOREIGN KEY (seller_id)
+>>>                             REFERENCES sales.dim_sellers (seller_id)
+>>>                             ON DELETE CASCADE
+>>>                             ON UPDATE CASCADE
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'olist_order_payments_dataset.csv'
+
+>>>       CREATE TABLE sales.fact_order_payments (
+>>>             order_id CHAR(32) NOT NULL,
+>>>             payment_sequential TINYINT NOT NULL,
+>>>             payment_type VARCHAR(20) NOT NULL,
+>>>             payment_installments TINYINT NOT NULL,
+>>>             payment_value DECIMAL(9, 4) NOT NULL,
+>>>
+>>>             CONSTRAINT pk_fact_order_payments
+>>>                     PRIMARY KEY (order_id, payment_sequential)
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'olist_order_reviews_dataset.csv'
+
+>>>       CREATE TABLE sales.fact_order_reviews (
+>>>             review_id CHAR(32) NOT NULL,
+>>>             order_id CHAR(32) NOT NULL,
+>>>             review_score TINYINT NOT NULL,
+>>>             review_comment_title NVARCHAR(30),
+>>>             review_comment_message NVARCHAR(210),
+>>>             review_creation_date DATETIME2 NOT NULL,
+>>>             review_answer_timestamp DATETIME2 NOT NULL,
+>>>
+>>>             CONSTRAINT pk_fact_order_reviews
+>>>                     PRIMARY KEY (review_id, order_id),
+>>>
+>>>             CONSTRAINT chk_review_score
+>>>                     CHECK (review_score BETWEEN 1 AND 5)
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'olist_marketing_qualified_leads_dataset.csv'
+
+>>>       CREATE TABLE marketing.fact_marketing_qualified_leads (
+>>>             mql_id CHAR(32) NOT NULL,
+>>>             first_contact_date DATE NOT NULL,
+>>>             landing_page_id CHAR(32) NOT NULL,
+>>>             origin VARCHAR(20),
+>>>
+>>>             CONSTRAINT pk_fact_marketing_qualified_leads
+>>>                     PRIMARY KEY (mql_id)
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'olist_closed_deals_dataset.csv'
+
+>>>       CREATE TABLE marketing.fact_closed_deals (
+>>>             mql_id CHAR(32) NOT NULL,
+>>>             seller_id CHAR(32) NOT NULL,
+>>>             sdr_id CHAR(32) NOT NULL,
+>>>             sr_id CHAR(32) NOT NULL,
+>>>             won_date DATETIME2 NOT NULL,
+>>>             business_segment VARCHAR(40),
+>>>             lead_type VARCHAR(20),
+>>>             lead_behaviour_profile VARCHAR(20),
+>>>             has_company BIT,
+>>>             has_gtin BIT,
+>>>             average_stock VARCHAR(10),
+>>>             business_type VARCHAR(20),
+>>>             declared_product_catalog_size DECIMAL(9, 4),
+>>>             declared_monthly_revenue DECIMAL(19, 4),
+>>>
+>>>             CONSTRAINT pk_fact_closed_deals
+>>>                     PRIMARY KEY (mql_id)
+>>>       );
+>>>
+
+Insert successful
+
+--------------------------------------------------
+'olist_geolocation_dataset.csv'
+
+>>>       CREATE TABLE logistics.fact_geolocation (
+>>>             geolocation_sk INT IDENTITY(1, 1) NOT NULL,
+>>>             geolocation_zip_code_prefix CHAR(5) NOT NULL,
+>>>             geolocation_lat DECIMAL(9, 6),
+>>>             geolocation_lng DECIMAL(9, 6),
+>>>             geolocation_city NVARCHAR(40),
+>>>             geolocation_state CHAR(2),
+>>>
+>>>             CONSTRAINT pk_dim_geolocation
+>>>                     PRIMARY KEY (geolocation_sk)
+>>>       );
+>>>
+
+Insert successful
+
+----------------------------------------------------------------------------------------------------
+
+Overview of database: 'olist_stg'
+--------------------------------------------------
+        Schemas
+┏━━━━━━━━━━━━━┳━━━━━━━━┓
+┃ Schema name ┃ Tables ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━┩
+│ sales       │ 8      │
+│ marketing   │ 2      │
+│ logistics   │ 1      │
+└─────────────┴────────┘
+                              Tables
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┓
+┃ Table name                                  ┃ Rows    ┃ Columns ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━┩
+│ sales.dim_customers                         │ 99441   │ 5       │
+│ sales.dim_sellers                           │ 3095    │ 4       │
+│ sales.dim_product_category_name_translation │ 71      │ 2       │
+│ sales.dim_products                          │ 32951   │ 9       │
+│ sales.fact_orders                           │ 99441   │ 8       │
+│ sales.fact_order_items                      │ 112650  │ 7       │
+│ sales.fact_order_payments                   │ 103886  │ 5       │
+│ sales.fact_order_reviews                    │ 99224   │ 7       │
+│ marketing.fact_marketing_qualified_leads    │ 8000    │ 4       │
+│ marketing.fact_closed_deals                 │ 842     │ 14      │
+│ logistics.fact_geolocation                  │ 1000163 │ 6       │
+└─────────────────────────────────────────────┴─────────┴─────────┘
+--------------------------------------------------
+!!! 'olist_stg' subject to repeated rewrites.
+!!! Remember to copy the database.
+--------------------------------------------------

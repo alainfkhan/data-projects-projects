@@ -1,5 +1,8 @@
 use olist_stg;
 
+select *
+from INFORMATION_SCHEMA.tables
+
 select top (1000)
     *
 from logistics.dim_geolocation;

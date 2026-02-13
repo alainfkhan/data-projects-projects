@@ -203,8 +203,8 @@ class DBManager:
 
     def create_db(self, database: str, execute: bool = True) -> str:
         """Creates a new database."""
-        if database in self.list_dbs():
-            raise ValueError(f"'{database}' already exists.")
+        # if database in self.list_dbs():
+        #     raise ValueError(f"'{database}' already exists.")
 
         if self.is_sys_db(database):
             raise ValueError("Cannot create a system database.")
@@ -432,17 +432,17 @@ class DBManager:
 
         current_db = self.get_current_db()
         if current_db == database:
-            complete_sql += self.change_db(self.default_db)
+            complete_sql += self.change_db(self.default_db, execute=execute)
             complete_sql += "\n\n"
 
         # if database exists
         if database in self.list_dbs():
-            complete_sql += self.disconnect_users_from_db(database)
+            complete_sql += self.disconnect_users_from_db(database, execute=execute)
             complete_sql += "\n\n"
-            complete_sql += self.drop_db(database)
+            complete_sql += self.drop_db(database, execute=execute)
             complete_sql += "\n\n"
 
-        complete_sql += self.create_db(database)
+        complete_sql += self.create_db(database, execute=execute)
         complete_sql += "\n\n"
 
         sql: str = ""

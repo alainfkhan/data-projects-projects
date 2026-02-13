@@ -25,7 +25,7 @@ from src.utils.db_config_manager import DBConfigManager
 # ic.disable()
 
 # debugs
-execute = True
+execute = False
 
 wipe_db = True
 change_db = True

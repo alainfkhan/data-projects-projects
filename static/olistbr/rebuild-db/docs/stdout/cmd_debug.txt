@@ -1,0 +1,295 @@
+Successful connection
+        Driver used:            'ODBC Driver 17 for SQL Server'
+        Connected to server:    'localhost'
+        Connected to database:  'master'
+
+SQL strings generated but not executed:
+----------------------------------------------------------------------------------------------------
+Wipe database 'olist_stg':
+
+DEBUG:    ALTER DATABASE olist_stg SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+DEBUG:
+DEBUG:    DROP DATABASE olist_stg;
+DEBUG:
+DEBUG:    CREATE DATABASE olist_stg;
+DEBUG:
+DEBUG:    ALTER DATABASE olist_stg
+DEBUG:    SET RECOVERY SIMPLE;
+
+----------------------------------------------------------------------------------------------------
+Switch to created database:
+
+DEBUG:    USE olist_stg;
+
+----------------------------------------------------------------------------------------------------
+Create schemas:
+
+DEBUG:    CREATE SCHEMA sales;
+DEBUG:    CREATE SCHEMA marketing;
+DEBUG:    CREATE SCHEMA logistics;
+
+----------------------------------------------------------------------------------------------------
+Create tables and insert data:
+
+--------------------------------------------------
+'olist_customers_dataset.csv'
+
+DEBUG:    CREATE TABLE sales.dim_customers (
+DEBUG:          customer_id CHAR(32) NOT NULL,
+DEBUG:          customer_unique_id CHAR(32) NOT NULL,
+DEBUG:          customer_zip_code_prefix CHAR(5) NOT NULL,
+DEBUG:          customer_city VARCHAR(50),
+DEBUG:          customer_state CHAR(2),
+DEBUG:
+DEBUG:          CONSTRAINT pk_dim_customers
+DEBUG:                  PRIMARY KEY (customer_id)
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'olist_sellers_dataset.csv'
+
+DEBUG:    CREATE TABLE sales.dim_sellers (
+DEBUG:          seller_id CHAR(32) NOT NULL,
+DEBUG:          seller_zip_code_prefix CHAR(5) NOT NULL,
+DEBUG:          seller_city NVARCHAR(50) NOT NULL,
+DEBUG:          seller_state CHAR(2) NOT NULL,
+DEBUG:
+DEBUG:          CONSTRAINT pk_dim_sellers
+DEBUG:                  PRIMARY KEY (seller_id)
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'product_category_name_translation.csv'
+
+DEBUG:    CREATE TABLE sales.dim_product_category_name_translation (
+DEBUG:          product_category_name VARCHAR(50) NOT NULL,
+DEBUG:          product_category_name_english VARCHAR(50) NOT NULL,
+DEBUG:
+DEBUG:          CONSTRAINT pk_dim_product_category_name_translation
+DEBUG:                  PRIMARY KEY (product_category_name)
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'olist_products_dataset.csv'
+
+DEBUG:    CREATE TABLE sales.dim_products (
+DEBUG:          product_id CHAR(32) NOT NULL,
+DEBUG:          product_category_name VARCHAR(50),
+DEBUG:          product_name_lenght TINYINT,
+DEBUG:          product_description_lenght SMALLINT,
+DEBUG:          product_photos_qty TINYINT,
+DEBUG:          product_weight_g INT,
+DEBUG:          product_length_cm TINYINT,
+DEBUG:          product_height_cm TINYINT,
+DEBUG:          product_width_cm TINYINT,
+DEBUG:
+DEBUG:          CONSTRAINT pk_dim_products
+DEBUG:                  PRIMARY KEY (product_id)
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'olist_orders_dataset.csv'
+
+DEBUG:    CREATE TABLE sales.fact_orders (
+DEBUG:          order_id CHAR(32) NOT NULL,
+DEBUG:          customer_id CHAR(32) NOT NULL,
+DEBUG:          order_status VARCHAR(20) NOT NULL,
+DEBUG:          order_purchase_timestamp DATETIME2 NOT NULL,
+DEBUG:          order_approved_at DATETIME2,
+DEBUG:          order_delivered_carrier_date DATETIME2,
+DEBUG:          order_delivered_customer_date DATETIME2,
+DEBUG:          order_estimated_delivery_date DATETIME2,
+DEBUG:
+DEBUG:          CONSTRAINT pk_fact_orders
+DEBUG:                  PRIMARY KEY (order_id),
+DEBUG:
+DEBUG:          CONSTRAINT fk_fact_orders_dim_customers__customer_id
+DEBUG:                  FOREIGN KEY (customer_id)
+DEBUG:                          REFERENCES sales.dim_customers (customer_id)
+DEBUG:                          ON DELETE CASCADE
+DEBUG:                          ON UPDATE CASCADE
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'olist_order_items_dataset.csv'
+
+DEBUG:    CREATE TABLE sales.fact_order_items (
+DEBUG:          order_id CHAR(32) NOT NULL,
+DEBUG:          order_item_id TINYINT NOT NULL,
+DEBUG:          product_id CHAR(32) NOT NULL,
+DEBUG:          seller_id CHAR(32) NOT NULL,
+DEBUG:          shipping_limit_date DATETIME2 NOT NULL,
+DEBUG:          price DECIMAL(9, 4) NOT NULL,
+DEBUG:          freight_value DECIMAL(9, 4) NOT NULL,
+DEBUG:
+DEBUG:          CONSTRAINT pk_fact_order_items
+DEBUG:                  PRIMARY KEY (order_id, order_item_id),
+DEBUG:
+DEBUG:          CONSTRAINT fk_fact_order_items_fact_orders__order_id
+DEBUG:                  FOREIGN KEY (order_id)
+DEBUG:                          REFERENCES sales.fact_orders (order_id)
+DEBUG:                          ON DELETE CASCADE
+DEBUG:                          ON UPDATE CASCADE,
+DEBUG:
+DEBUG:          CONSTRAINT fk_fact_order_items_dim_products__product_id
+DEBUG:                  FOREIGN KEY (product_id)
+DEBUG:                          REFERENCES sales.dim_products (product_id)
+DEBUG:                          ON DELETE CASCADE
+DEBUG:                          ON UPDATE CASCADE,
+DEBUG:
+DEBUG:          CONSTRAINT fk_fact_order_items_dim_sellers__seller_id
+DEBUG:                  FOREIGN KEY (seller_id)
+DEBUG:                          REFERENCES sales.dim_sellers (seller_id)
+DEBUG:                          ON DELETE CASCADE
+DEBUG:                          ON UPDATE CASCADE
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'olist_order_payments_dataset.csv'
+
+DEBUG:    CREATE TABLE sales.fact_order_payments (
+DEBUG:          order_id CHAR(32) NOT NULL,
+DEBUG:          payment_sequential TINYINT NOT NULL,
+DEBUG:          payment_type VARCHAR(20) NOT NULL,
+DEBUG:          payment_installments TINYINT NOT NULL,
+DEBUG:          payment_value DECIMAL(9, 4) NOT NULL,
+DEBUG:
+DEBUG:          CONSTRAINT pk_fact_order_payments
+DEBUG:                  PRIMARY KEY (order_id, payment_sequential)
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'olist_order_reviews_dataset.csv'
+
+DEBUG:    CREATE TABLE sales.fact_order_reviews (
+DEBUG:          review_id CHAR(32) NOT NULL,
+DEBUG:          order_id CHAR(32) NOT NULL,
+DEBUG:          review_score TINYINT NOT NULL,
+DEBUG:          review_comment_title NVARCHAR(30),
+DEBUG:          review_comment_message NVARCHAR(210),
+DEBUG:          review_creation_date DATETIME2 NOT NULL,
+DEBUG:          review_answer_timestamp DATETIME2 NOT NULL,
+DEBUG:
+DEBUG:          CONSTRAINT pk_fact_order_reviews
+DEBUG:                  PRIMARY KEY (review_id, order_id),
+DEBUG:
+DEBUG:          CONSTRAINT chk_review_score
+DEBUG:                  CHECK (review_score BETWEEN 1 AND 5)
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'olist_marketing_qualified_leads_dataset.csv'
+
+DEBUG:    CREATE TABLE marketing.fact_marketing_qualified_leads (
+DEBUG:          mql_id CHAR(32) NOT NULL,
+DEBUG:          first_contact_date DATE NOT NULL,
+DEBUG:          landing_page_id CHAR(32) NOT NULL,
+DEBUG:          origin VARCHAR(20),
+DEBUG:
+DEBUG:          CONSTRAINT pk_fact_marketing_qualified_leads
+DEBUG:                  PRIMARY KEY (mql_id)
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'olist_closed_deals_dataset.csv'
+
+DEBUG:    CREATE TABLE marketing.fact_closed_deals (
+DEBUG:          mql_id CHAR(32) NOT NULL,
+DEBUG:          seller_id CHAR(32) NOT NULL,
+DEBUG:          sdr_id CHAR(32) NOT NULL,
+DEBUG:          sr_id CHAR(32) NOT NULL,
+DEBUG:          won_date DATETIME2 NOT NULL,
+DEBUG:          business_segment VARCHAR(40),
+DEBUG:          lead_type VARCHAR(20),
+DEBUG:          lead_behaviour_profile VARCHAR(20),
+DEBUG:          has_company BIT,
+DEBUG:          has_gtin BIT,
+DEBUG:          average_stock VARCHAR(10),
+DEBUG:          business_type VARCHAR(20),
+DEBUG:          declared_product_catalog_size DECIMAL(9, 4),
+DEBUG:          declared_monthly_revenue DECIMAL(19, 4),
+DEBUG:
+DEBUG:          CONSTRAINT pk_fact_closed_deals
+DEBUG:                  PRIMARY KEY (mql_id)
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+--------------------------------------------------
+'olist_geolocation_dataset.csv'
+
+DEBUG:    CREATE TABLE logistics.fact_geolocation (
+DEBUG:          geolocation_sk INT IDENTITY(1, 1) NOT NULL,
+DEBUG:          geolocation_zip_code_prefix CHAR(5) NOT NULL,
+DEBUG:          geolocation_lat DECIMAL(9, 6),
+DEBUG:          geolocation_lng DECIMAL(9, 6),
+DEBUG:          geolocation_city NVARCHAR(40),
+DEBUG:          geolocation_state CHAR(2),
+DEBUG:
+DEBUG:          CONSTRAINT pk_dim_geolocation
+DEBUG:                  PRIMARY KEY (geolocation_sk)
+DEBUG:    );
+DEBUG:
+
+Data not inserted
+
+----------------------------------------------------------------------------------------------------
+
+Overview of database: 'olist_stg'
+--------------------------------------------------
+        Schemas
+┏━━━━━━━━━━━━━┳━━━━━━━━┓
+┃ Schema name ┃ Tables ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━┩
+│ sales       │ 8      │
+│ marketing   │ 2      │
+│ logistics   │ 1      │
+└─────────────┴────────┘
+                              Tables
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┓
+┃ Table name                                  ┃ Rows    ┃ Columns ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━┩
+│ sales.dim_customers                         │ 99441   │ 5       │
+│ sales.dim_sellers                           │ 3095    │ 4       │
+│ sales.dim_product_category_name_translation │ 71      │ 2       │
+│ sales.dim_products                          │ 32951   │ 9       │
+│ sales.fact_orders                           │ 99441   │ 8       │
+│ sales.fact_order_items                      │ 112650  │ 7       │
+│ sales.fact_order_payments                   │ 103886  │ 5       │
+│ sales.fact_order_reviews                    │ 99224   │ 7       │
+│ marketing.fact_marketing_qualified_leads    │ 8000    │ 4       │
+│ marketing.fact_closed_deals                 │ 842     │ 14      │
+│ logistics.fact_geolocation                  │ 1000163 │ 6       │
+└─────────────────────────────────────────────┴─────────┴─────────┘
+--------------------------------------------------
+!!! 'olist_stg' subject to repeated rewrites.
+!!! Remember to copy the database.
+--------------------------------------------------
