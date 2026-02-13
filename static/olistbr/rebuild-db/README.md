@@ -8,9 +8,9 @@
 
 ---
 
-- Running `rebuild-db` drops and rebuilds a staging database, and inserts data from this project.
-- The created staging database is intended to be copied and should not be used for analysis.
-- `rebuild-db` uses `uv` as the python project manager.
+- Running `rebuild-db` drops and rebuilds a staging database `olist_stg`, and inserts data from this project into created tables.
+- The created staging database `olist_stg` is intended to be copied and should not be used for analysis since it's susceptible to frequent rewrites and hence potential data loss.
+- `rebuild-db` uses `uv` as the python package manager.
 
 ## Setup the virtual environment
 
@@ -35,20 +35,74 @@ uv sync
 Run `src` to rebuild the database:
 ```bash
 make run
-```
-Or:
-```bash
+# or
 uv run src
 ```
-
 
 > [!NOTE]
 > - You could be on debug mode.
 > - To exit debug mode, go to [`src/__main__.py`](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/rebuild-db/src/__main__.py).
-> - Find the variable `send_sql` just after imports and before `def main() -> None:`.
-> - Change the bool of `send_sql` from `False` to `True`.
-> - Change any of the other bools as required.
+> - Find the variable `execute` just after imports and before `def main() -> None:`.
+> - Change the bool of `execute` from `False` to `True`.
+> - Change the bools of any of the other debug variables as required.
 > - Run `src` to rebuild the database.
-> - Then revert `send_sql` back to `False` to avoid any accidental rebuilds.
+> - Then revert `execute` back to `False` to avoid any accidental rebuilds.
 > - Do not use the created staging database for analysis.
 > - Copy the staging database and use that for analysis.
+
+### Running this program
+![](../img/cmd_execute.gif)
+
+<details>
+
+<summary>View the database overview</summary>
+
+```txt
+Overview of database: 'olist_stg'
+--------------------------------------------------
+        Schemas
+┏━━━━━━━━━━━━━┳━━━━━━━━┓
+┃ Schema name ┃ Tables ┃
+┡━━━━━━━━━━━━━╇━━━━━━━━┩
+│ sales       │ 8      │
+│ marketing   │ 2      │
+│ logistics   │ 1      │
+└─────────────┴────────┘
+                              Tables
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┓
+┃ Table name                                  ┃ Rows    ┃ Columns ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━┩
+│ sales.dim_customers                         │ 99441   │ 5       │
+│ sales.dim_sellers                           │ 3095    │ 4       │
+│ sales.dim_product_category_name_translation │ 71      │ 2       │
+│ sales.dim_products                          │ 32951   │ 9       │
+│ sales.fact_orders                           │ 99441   │ 8       │
+│ sales.fact_order_items                      │ 112650  │ 7       │
+│ sales.fact_order_payments                   │ 103886  │ 5       │
+│ sales.fact_order_reviews                    │ 99224   │ 7       │
+│ marketing.fact_marketing_qualified_leads    │ 8000    │ 4       │
+│ marketing.fact_closed_deals                 │ 842     │ 14      │
+│ logistics.fact_geolocation                  │ 1000163 │ 6       │
+└─────────────────────────────────────────────┴─────────┴─────────┘
+
+```
+</details>
+
+- Run `src`
+- This generates dynamic sql commands that is sent to the connected database.
+- The configuration file [`src/configs/connection.yml`](src/configs/connection.yml) defines the connection string used to connect to a server. This can be configured by the user.
+- The database configuration file [`src/configs/db_config.yml`](src/configs/db_config.yml) defines the table schemas for this dataset.
+    - This configuration file was created manually. Column data types, and constraints were determined from a previous analysis on the csv files.
+- The database overview queries the database as it is.
+- Notice the file `olist_geolocation_dataset.csv` takes the longest time to process since it has the table with the most rows with `1000163` rows.
+
+#### In debug mode:
+![](../img/cmd_debug.gif)
+
+> [!NOTE]
+> - The gif above shows running this program `rebuild-db` in debug mode (with `execute = False`)
+> - The database overview that appears at the end queries the database as it is.
+> - The reason it shows no tables existing is because this program was ran before creating the tables.
+> - If there was a lone table currently existing in the database, the database overview would show it.
+
+### Data validation

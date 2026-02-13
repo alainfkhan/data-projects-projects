@@ -368,9 +368,9 @@ olist_stg:
 
 - logistics:
 
-  - dim_geolocation:
+  - fact_geolocation:
       filename: olist_geolocation_dataset.csv
-      type: dim
+      type: fact
       columns:
       - geolocation_sk:
           dtype: INT

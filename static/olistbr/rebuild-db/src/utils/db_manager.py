@@ -98,10 +98,11 @@ class DBManager:
 
         return total_rows, total_cols
 
-    def change_db(self, database: str) -> str:
+    def change_db(self, database: str, execute: bool = True) -> str:
         """Change the database."""
         sql = f"USE {database};"
-        self.cursor.execute(sql)
+        if execute:
+            self.cursor.execute(sql)
         return sql
 
     def list_dbs(self) -> list[str]:
@@ -168,18 +169,22 @@ class DBManager:
         df = pd.DataFrame(tuple(t) for t in rows)
         return df
 
-    def disconnect_users_from_db(self, database: str) -> None:
+    def disconnect_users_from_db(self, database: str, execute: bool = True) -> str:
         """
         After disconnecting users,
         must immediately commit to drop the db if intended.
         """
-        self.conn.autocommit = True
-        self.cursor.execute(
-            f"alter database {database} set single_user with rollback immediate;"
-        )
-        self.conn.autocommit = False
 
-    def drop_db(self, database: str) -> None:
+        sql = f"ALTER DATABASE {database} SET SINGLE_USER WITH ROLLBACK IMMEDIATE;"
+
+        if execute:
+            self.conn.autocommit = True
+            self.cursor.execute(sql)
+            self.conn.autocommit = False
+
+        return sql
+
+    def drop_db(self, database: str, execute: bool = True) -> str:
         """Drops a database if not connected to it."""
         if self.is_sys_db(database):
             raise ValueError("Cannot drop a system database.")
@@ -187,11 +192,16 @@ class DBManager:
         if self.get_current_db() == database:
             raise ValueError("Cannot drop a database you're connected to.")
 
-        self.conn.autocommit = True
-        self.cursor.execute(f"drop database {database};")
-        self.conn.autocommit = False
+        sql = f"DROP DATABASE {database};"
 
-    def create_db(self, database: str) -> None:
+        if execute:
+            self.conn.autocommit = True
+            self.cursor.execute(sql)
+            self.conn.autocommit = False
+
+        return sql
+
+    def create_db(self, database: str, execute: bool = True) -> str:
         """Creates a new database."""
         if database in self.list_dbs():
             raise ValueError(f"'{database}' already exists.")
@@ -199,19 +209,36 @@ class DBManager:
         if self.is_sys_db(database):
             raise ValueError("Cannot create a system database.")
 
-        self.conn.autocommit = True
-        self.cursor.execute(f"create database {database};")
-        self.conn.autocommit = False
+        sql = f"CREATE DATABASE {database};"
 
-    def create_schema(self, schema_name: str) -> str:
-        """Creates a new schema."""
-        sql = f"CREATE SCHEMA {schema_name};"
-        self.conn.autocommit = True
-        self.cursor.execute(sql)
-        self.conn.autocommit = False
+        if execute:
+            self.conn.autocommit = True
+            self.cursor.execute(sql)
+            self.conn.autocommit = False
+
         return sql
 
-    def create_table(self, table_name: str, table: dict[Any, Any]) -> str:
+    def create_schema(
+        self,
+        schema_name: str,
+        execute: bool = True,
+    ) -> str:
+        """Creates a new schema."""
+        sql = f"CREATE SCHEMA {schema_name};"
+
+        if execute:
+            self.conn.autocommit = True
+            self.cursor.execute(sql)
+            self.conn.autocommit = False
+
+        return sql
+
+    def create_table(
+        self,
+        table_name: str,
+        table: dict[Any, Any],
+        execute: bool = True,
+    ) -> str:
         """Creates a new table.
 
         Returns the sql created.
@@ -224,8 +251,9 @@ class DBManager:
         schema_name = split[0]
         table_short = split[1]
 
-        if schema_name not in self.list_schemas():
-            raise ValueError(f"Schema: '{schema_name}' does not exist.")
+        # must be off for debug
+        # if schema_name not in self.list_schemas():
+        #     raise ValueError(f"Schema: '{schema_name}' does not exist.")
 
         sql: str = ""
         sql += f"CREATE TABLE {table_name} (\n"
@@ -312,14 +340,19 @@ class DBManager:
         sql += ");\n"
 
         # execute
-        self.conn.autocommit = True
-        self.cursor.execute(sql)
-        self.conn.autocommit = False
+        if execute:
+            self.conn.autocommit = True
+            self.cursor.execute(sql)
+            self.conn.autocommit = False
 
         return sql
 
     def insert_from_csv(
-        self, filepath: Path, table_name: str, column_shorts: list[str]
+        self,
+        filepath: Path,
+        table_name: str,
+        column_shorts: list[str],
+        execute: bool = True,
     ) -> str:
         """Insert data from a csv file into a created table.
 
@@ -363,18 +396,23 @@ class DBManager:
         sql += ")\n"
         sql += f"VALUES ({', '.join(['?'] * len(column_shorts))});\n"
 
-        self.cursor.fast_executemany = True
-        try:
-            self.cursor.executemany(sql, params)
-            self.conn.commit()
-        except Exception as e:
-            print(f"Failed to insert '{table_name}': {e}")
-            self.conn.rollback()
-        self.cursor.fast_executemany = False
+        if execute:
+            self.cursor.fast_executemany = True
+            try:
+                self.cursor.executemany(sql, params)
+                self.conn.commit()
+            except Exception as e:
+                print(f"Failed to insert '{table_name}': {e}")
+                self.conn.rollback()
+            self.cursor.fast_executemany = False
 
         return sql
 
-    def wipe_db(self, database: str) -> None:
+    def wipe_db(
+        self,
+        database: str,
+        execute: bool = True,
+    ) -> str:
         """
         if in db change to master
 
@@ -390,24 +428,36 @@ class DBManager:
         if self.is_sys_db(database):
             raise ValueError("Cannot wipe a system database.")
 
+        complete_sql: str = ""
+
         current_db = self.get_current_db()
         if current_db == database:
-            self.change_db(self.default_db)
+            complete_sql += self.change_db(self.default_db)
+            complete_sql += "\n\n"
 
         # if database exists
         if database in self.list_dbs():
-            self.disconnect_users_from_db(database)
-            self.drop_db(database)
+            complete_sql += self.disconnect_users_from_db(database)
+            complete_sql += "\n\n"
+            complete_sql += self.drop_db(database)
+            complete_sql += "\n\n"
 
-        self.create_db(database)
+        complete_sql += self.create_db(database)
+        complete_sql += "\n\n"
+
+        sql: str = ""
+        sql += f"ALTER DATABASE {database}\n"
+        sql += "SET RECOVERY SIMPLE;\n"
+
+        complete_sql += sql
 
         # alter db logs
-        self.conn.autocommit = True
-        self.cursor.execute(f"""
-            alter database {database}
-            set recovery simple
-        """)
-        self.conn.autocommit = False
+        if execute:
+            self.conn.autocommit = True
+            self.cursor.execute(sql)
+            self.conn.autocommit = False
+
+        return complete_sql
 
 
 if __name__ == "__main__":

@@ -25,18 +25,19 @@ from src.utils.db_config_manager import DBConfigManager
 # ic.disable()
 
 # debugs
-send_sql = True
+execute = True
 
 wipe_db = True
+change_db = True
 create_schemas = True
 create_tables = True
-insert_tables = True
+insert_data = True
 
 override_table_names = False
 custom_table_names = [
-    "sales.dim_customers",
+    # "sales.dim_customers",
     # "marketing.fact_closed_deals",
-    # "logistics.dim_geolocation",
+    "logistics.fact_geolocation",
 ]
 
 # get configs
@@ -62,6 +63,23 @@ equals = 80 * "="
 spaces = 80 * " "
 
 
+def mulitline_string_startwith(startwith: str, multiline_string: str) -> str:
+    """For every new line in the multiline string, insert a startwith string."""
+    out_str = "\n".join(f"{startwith}{line}" for line in multiline_string.splitlines())
+    return out_str
+
+
+def debug_str(multi_line_string: str) -> str:
+    """Start with DEBUG: for every new line."""
+    out = mulitline_string_startwith("DEBUG:    ", multiline_string=multi_line_string)
+    return out
+
+
+def sql_str(multi_line_string: str) -> str:
+    out = mulitline_string_startwith(">>>       ", multiline_string=multi_line_string)
+    return out
+
+
 def main() -> None:
     # connect to default db
     print(f"Establishing a connection to server: '{server}'", end="\r")
@@ -77,30 +95,52 @@ def main() -> None:
     cm = DBConfigManager(db_config=db_config)
 
     with conn:
+        print(f"SQL strings {'executed' if execute else 'generated but not executed'}:")
+
+        print(long_lines)
+
         # wipe db
-        if send_sql and wipe_db:
+        if wipe_db:
+            print(f"Wipe database '{db}':")
+            print()
             print(f"Wiping database: '{db}'...", end="\r")
-            dbm.wipe_db(db)
-            print(f"Successfully wiped database: '{db}'")
-        else:
-            print(f"DEBUG: <wipe database '{db}'>")
 
-        print()
-        print("SQL strings used:")
-        print(long_lines)
+            sql_wipe_db: str = dbm.wipe_db(db, execute=execute)
+            print(spaces, end="\r")
+            print(sql_str(sql_wipe_db) if execute else debug_str(sql_wipe_db))
 
-        # change to db
-        print(dbm.change_db(db))
-        print(long_lines)
+            print()
+            print(long_lines)
+
+        # change db
+        if change_db:
+            print("Switch to created database:")
+            print()
+
+            sql_change_db: str = dbm.change_db(db, execute=True)
+            print(sql_str(sql_change_db) if execute else debug_str(sql_change_db))
+
+            print()
+            print(long_lines)
 
         # create schemas
-        for schema_name in cm.list_schema_names():
-            if send_sql and create_schemas:
-                print(dbm.create_schema(schema_name))
-            else:
-                print(f"DEBUG: <create schema '{schema_name}' sql>")
+        if create_schemas:
+            print("Create schemas:")
+            print()
 
-        print(long_lines)
+            for schema_name in cm.list_schema_names():
+                sql_create_schema: str = dbm.create_schema(schema_name, execute=execute)
+                print(
+                    sql_str(sql_create_schema)
+                    if execute
+                    else debug_str(sql_create_schema)
+                )
+
+            print()
+            print(long_lines)
+
+            print("Create tables and insert data:")
+            print()
 
         # create tables and insert data
         if override_table_names:
@@ -120,23 +160,37 @@ def main() -> None:
                 print(f"'{filepath}' does not exist.")
 
             # create table
-            if send_sql and create_tables:
-                print(dbm.create_table(table_name, table))
-            else:
-                print(f"DEBUG: <create table '{table_name}' sql>")
+            if create_tables:
+                sql_create_table: str = (
+                    dbm.create_table(table_name, table, execute=execute) + "\n"
+                )
+                print(short_lines)
+                print(f"'{filepath.name}'")
+                print()
+                print(
+                    sql_str(sql_create_table)
+                    if execute
+                    else debug_str(sql_create_table)
+                )
 
             # insert data
-            if send_sql and insert_tables:
+            if insert_data:
+                print()
                 print(f"Inserting: '{filepath.name}'...", end="\r")
-                insert_sql: str = dbm.insert_from_csv(
+                sql_insert_from_csv: str = dbm.insert_from_csv(
                     filepath=filepath,
                     table_name=table_name,
                     column_shorts=table_column_shorts,
+                    execute=execute,
                 )
-                print(spaces)
-                print(insert_sql)
-            else:
-                print(f"DEBUG: <insert table '{table_name}' sql>")
+                print(spaces, end="\r")
+                # print(sql_str(insert_sql) if execute else debug_str(insert_sql))
+                print(
+                    f"{'Insert successful' if execute else 'Data not inserted'}"
+                    if sql_insert_from_csv
+                    else "Insert unsuccessful"
+                )
+                print()
 
         print(long_lines)
         print()
@@ -168,46 +222,49 @@ def main() -> None:
             rows, cols = dbm.get_table_shape(table_name)
             tables_table.add_row(table_name, str(rows), str(cols))
 
-        # columns
-        query = cursor.execute("""
-            SELECT
-                TABLE_SCHEMA,
-                TABLE_NAME,
-                COLUMN_NAME,
-                DATA_TYPE,
-                CHARACTER_MAXIMUM_LENGTH,
-                IS_NULLABLE
-            FROM INFORMATION_SCHEMA.COLUMNS
-        """)
-        rows: list[Row] = query.fetchall()
-
-        columns_table = Table(title="Colums")
-        columns_table.add_column("Schema name")
-        columns_table.add_column("Table name")
-        columns_table.add_column("Column name")
-        columns_table.add_column("Data Type")
-        columns_table.add_column("Char. Max Length")
-        columns_table.add_column("Is nullable")
-
-        for row in rows:
-            columns_table.add_row(
-                str(row[0]),
-                str(row[1]),
-                str(row[2]),
-                str(row[3]),
-                str(row[4]),
-                str(row[5]),
-            )
-
         console = Console()
         console.print(schema_table)
         console.print(tables_table)
-        # console.print(columns_table)
 
         print(short_lines)
         print(f"!!! '{db}' subject to repeated rewrites.")
         print("!!! Remember to copy the database.")
         print(short_lines)
+
+    return
+
+    # # columns
+    # query = cursor.execute("""
+    #     SELECT
+    #         TABLE_SCHEMA,
+    #         TABLE_NAME,
+    #         COLUMN_NAME,
+    #         DATA_TYPE,
+    #         CHARACTER_MAXIMUM_LENGTH,
+    #         IS_NULLABLE
+    #     FROM INFORMATION_SCHEMA.COLUMNS
+    # """)
+    # rows: list[Row] = query.fetchall()
+
+    # columns_table = Table(title="Columns")
+    # columns_table.add_column("Schema name")
+    # columns_table.add_column("Table name")
+    # columns_table.add_column("Column name")
+    # columns_table.add_column("Data Type")
+    # columns_table.add_column("Char. Max Length")
+    # columns_table.add_column("Is nullable")
+
+    # for row in rows:
+    #     columns_table.add_row(
+    #         str(row[0]),
+    #         str(row[1]),
+    #         str(row[2]),
+    #         str(row[3]),
+    #         str(row[4]),
+    #         str(row[5]),
+    #     )
+
+    # # console.print(columns_table)
 
 
 if __name__ == "__main__":
