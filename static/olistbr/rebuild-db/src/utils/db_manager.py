@@ -25,21 +25,6 @@ from icecream import ic
 from pyodbc import Row, Connection, Cursor
 from pandas import DataFrame
 
-from src.utils.db_config_manager import DBConfigManager
-from src.utils.paths import CONFIGS_PATH
-
-db_config_path: Path = CONFIGS_PATH / "db_config.yml"
-with open(db_config_path, "r") as f:
-    db_config = yaml.safe_load(f)
-
-cm = DBConfigManager(db_config=db_config)
-
-type_map: dict[str, type] = {
-    "str": str,
-    "int": int,
-}
-
-
 class DBManager:
     def __init__(self, driver: str, server: str, database: str) -> None:
         self.driver = driver
@@ -352,13 +337,18 @@ class DBManager:
         filepath: Path,
         table_name: str,
         column_shorts: list[str],
+        converters: None | dict[str, type] = None,
         execute: bool = True,
     ) -> str:
         """Insert data from a csv file into a created table.
 
-        table_name is schema_name.table_short ie: sales.dim_customers
+        table_name is schema_name.table_short eg: sales.dim_customers
 
-        column_shorts is a list of columns like: customer_id
+        column_shorts is a list of columns like: customer_id, customer_unique_id, ...
+
+        converters to force a type on a column in a dataframe
+
+        execute sends the sql to the database
         """
         # # old
         # df = pd.read_csv(filepath, keep_default_na=False, na_values=[""])
@@ -366,23 +356,8 @@ class DBManager:
         # params = df.values.tolist()
         # do not print params
 
-        split = table_name.split(".")
-        schema_name = split[0]
-        table_short = split[1]
-
-        # get converters
-        # TODO: remove dependency on dbconfigmanager in this file
-        converters: dict[str, type] = dict()
-        column_shorts = cm.list_column_shorts(table_name)
-        for column_short in column_shorts:
-            column_name = f"{schema_name}.{table_short}.{column_short}"
-            column = cm.get_column(column_name)
-            column_values = list(column.values())[0]
-
-            has_converter = "converter" in column_values
-            if has_converter:
-                converter = column_values["converter"]
-                converters[column_short] = type_map[converter]
+        if converters is None:
+            converters = {}
 
         df = pd.read_csv(filepath, converters=converters)
         df_clean = df.astype(object).where(pd.notnull(df), None)

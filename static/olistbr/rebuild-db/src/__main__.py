@@ -25,7 +25,7 @@ from src.utils.db_config_manager import DBConfigManager
 # ic.disable()
 
 # debugs
-execute = False
+execute = True
 
 wipe_db = True
 change_db = True
@@ -39,6 +39,12 @@ custom_table_names = [
     # "marketing.fact_closed_deals",
     "logistics.fact_geolocation",
 ]
+
+# maps
+type_map: dict[str, type] = {
+    "str": str,
+    "int": int,
+}
 
 # get configs
 connection_config_path: Path = CONFIGS_PATH / "connection.yml"
@@ -149,6 +155,12 @@ def main() -> None:
             table_names = cm.list_table_names()
 
         for table_name in table_names:
+            # separate names
+            split = table_name.split(".")
+            schema_name = split[0]
+            table_short = split[1]
+
+            # get table values
             table = cm.get_table(table_name)
             table_values = list(table.values())[0]
 
@@ -158,11 +170,14 @@ def main() -> None:
             filepath: Path = RAW_PATH / filename
             if not filepath.exists():
                 print(f"'{filepath}' does not exist.")
+                continue
 
             # create table
             if create_tables:
-                sql_create_table: str = (
-                    dbm.create_table(table_name, table, execute=execute) + "\n"
+                sql_create_table: str = dbm.create_table(
+                    table_name,
+                    table,
+                    execute=execute,
                 )
                 print(short_lines)
                 print(f"'{filepath.name}'")
@@ -173,6 +188,18 @@ def main() -> None:
                     else debug_str(sql_create_table)
                 )
 
+            # get converters
+            converters: dict[str, type] = dict()
+            for column_short in table_column_shorts:
+                column_name = f"{schema_name}.{table_short}.{column_short}"
+                column = cm.get_column(column_name)
+                column_values = list(column.values())[0]
+
+                has_converter = "converter" in column_values
+                if has_converter:
+                    converter = column_values["converter"]
+                    converters[column_short] = type_map[converter]
+
             # insert data
             if insert_data:
                 print()
@@ -181,6 +208,7 @@ def main() -> None:
                     filepath=filepath,
                     table_name=table_name,
                     column_shorts=table_column_shorts,
+                    converters=converters,
                     execute=execute,
                 )
                 print(spaces, end="\r")
@@ -268,4 +296,7 @@ def main() -> None:
 
 
 if __name__ == "__main__":
+    # rebuild-db
     main()
+
+    # add supp data
