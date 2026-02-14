@@ -10,12 +10,12 @@
 
 Running `rebuild-db`:
   1. Rebuilds a staging database `olist_stg`.
-    - Drops a database `olist_stg` if it exists.
-    - Creates a new empty database `olist_stg`.
+      - Drops a database `olist_stg` if it exists.
+      - Creates a new empty database `olist_stg`.
   2. Creates the schema and tables.
-    - As defined by the configuration file.
+      - As defined by the configuration file.
   3. Inserts data into the tables.
-    - From the datasets in [`olistbr/data/raw`](../data/raw/) 
+      - From the datasets in [`olistbr/data/raw`](../data/raw/) 
 
 The created staging database `olist_stg` is intended to be copied and should not be used for analysis since it's susceptible to frequent rewrites and hence also to potential data loss.
 
