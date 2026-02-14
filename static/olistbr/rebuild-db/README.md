@@ -444,6 +444,7 @@ CREATE TABLE sales.dim_customers(
 - Repeat for all other tables.
 
 Q: Why not just write the sql directly?
+
 A: In future iterations the inference would be automatic. The yaml configuration file would act as a storage space for table schemas, that communicates to the program.
 
 #### A note on forgone constraints:
