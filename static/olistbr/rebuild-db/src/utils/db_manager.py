@@ -25,6 +25,7 @@ from icecream import ic
 from pyodbc import Row, Connection, Cursor
 from pandas import DataFrame
 
+
 class DBManager:
     def __init__(self, driver: str, server: str, database: str) -> None:
         self.driver = driver

@@ -25,7 +25,9 @@ from src.utils.db_config_manager import DBConfigManager
 # ic.disable()
 
 # debugs
-execute = True
+execute = False
+
+run_main = False
 
 wipe_db = True
 change_db = True
@@ -297,6 +299,10 @@ def main() -> None:
 
 if __name__ == "__main__":
     # rebuild-db
-    main()
-
+    if run_main:
+        main()
+    
     # add supp data
+    print('adding supp data')
+    # add dim_date
+    # add 

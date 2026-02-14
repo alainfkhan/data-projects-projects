@@ -13,25 +13,28 @@ follow iso 8601
     day 1: monday
     day 7: sunday
 
+select * from core.dim_date
+
 */
 
 USE olist_stg;
-GO
 
-/*
-CREATE SCHEMA core;
-GO
-DROP SCHEMA core;
-GO
-*/
+-- if schema core doest exist, create it
+if (schema_id('core')) is null
+    begin
+        exec ('create schema core')
+    end
+
+-- if table exists return
+if (object_id('core.dim_date')) is not null
+    begin
+        set noexec on;
+    end
 
 -- settings
 -- set day1=monday
 -- force
 SET DATEFIRST 1;
-
-DROP TABLE core.dim_date
-GO
 
 CREATE TABLE core.dim_date (
     date_key INT,
@@ -71,6 +74,7 @@ DECLARE @month_name_short VARCHAR(10)
 DECLARE @quarter_number TINYINT
 DECLARE @year_number SMALLINT
 
+-- determined from analysis
 DECLARE @first_date DATE = '2016-01-01'
 DECLARE @end_date DATE = '2020-12-31'
 
@@ -112,7 +116,7 @@ WHILE @i_date <= @end_date
     )
 
     -- increment
-    SET @i_date = DATEADD(D, 1, @i_date)
+    SET @i_date = DATEADD(DAY, 1, @i_date)
 
     INSERT INTO core.dim_date(
         date_key,
@@ -148,3 +152,5 @@ WHILE @i_date <= @end_date
         @quarter_number AS quarter_number,
         @year_number AS year_number;
     END
+
+set noexec off;
