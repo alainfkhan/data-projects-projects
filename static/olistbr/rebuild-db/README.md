@@ -8,9 +8,20 @@
 
 ---
 
-- Running `rebuild-db` drops and rebuilds a staging database `olist_stg`, and inserts data from this project into the created tables.
-- The created staging database `olist_stg` is intended to be copied and should not be used for analysis since it's susceptible to frequent rewrites and hence also to potential data loss.
-- `rebuild-db` uses `uv` as the python package manager.
+Running `rebuild-db`:
+  1. Rebuilds a staging database `olist_stg`.
+    - Drops a database `olist_stg` if it exists.
+    - Creates a new empty database `olist_stg`.
+  2. Creates the schema and tables.
+    - As defined by the configuration file.
+  3. Inserts data into the tables.
+    - From the datasets in [`olistbr/data/raw`](../data/raw/) 
+
+The created staging database `olist_stg` is intended to be copied and should not be used for analysis since it's susceptible to frequent rewrites and hence also to potential data loss.
+
+`rebuild-db` uses `uv` as the python package manager.
+
+---
 
 ## Setup the virtual environment
 
@@ -98,10 +109,10 @@ Overview of database: 'olist_stg'
 
 - View an example output at [`docs/stdout/cmd_execute.txt`](docs/stdout/cmd_execute.txt).
 - Running `src` generates dynamic sql commands that is sent to the connected database.
-- The connection configuration file [`src/configs/connection.yml`](src/configs/connection.yml) defines the connection string used to connect to a server.
+- The connection configuration file [`src/configs/connection.yml`](src/configs/connection.yml) defines the connection variables used to connect to a server.
   - This can be configured by the user.
 - The database configuration file [`src/configs/db_config.yml`](src/configs/db_config.yml) defines the table schemas for this dataset.
-  - This configuration file was created manually. Column data types, and constraints were determined from a preliminary analysis on the dataset.
+  - The information in this configuration file was manually typed. Column data types, and constraints were determined from a preliminary analysis on the dataset.
 - The database overview queries the database as it is.
 - Notice the file `olist_geolocation_dataset.csv` takes the longest time to process since it has the table with the most rows with `1000163` rows.
 
@@ -115,6 +126,7 @@ Overview of database: 'olist_stg'
 
 - View an example output at [`docs/stdout/cmd_debug.txt`](docs/stdout/cmd_debug.txt)
 - The output in debug mode still shows the sql generated but is not executed to the server.
+- Debug mode acts as a confirmation layer before sql commands are actually executed.
 
 > [!NOTE]
 >
@@ -125,11 +137,14 @@ Overview of database: 'olist_stg'
 
 </details>
 
-### Data validation
+### Data type validation
 
-- An inference function was used to help determine the SQL server data types of the columns.
+- An inference function was used to help determine the SQL server data type of the columns that optimise storage.
 - The `infer_dtypes()` function from [`src/utils/infer.py`](src/utils/infer.py) inputs a pandas dataframe and outputs an attributes table that describes each column.
 - View a current example in [`notebooks/table_attrs.ipynb`](notebooks/table_attrs.ipynb)
+- Other [functions](src/utils/measures.py) were used to determine other attributes like:
+  - finding the max `precision` and `scale` of a supposed `DECIMAL` datatype.
+  - how similar a string is from another using dice similarity.
 
 Suppose we would like to find the SQL server data types of columns from `olist_customers_dataset.csv` that optimise storage.
 We consider using a `.ipynb` jupyter notebook for analysis.
@@ -352,43 +367,48 @@ df_attributes
 </div>
 
 - The dataframe `df` from `olist_customers_dataset.csv` has columns:
-  1. `customer_id`
-  1. `customer_unique_id`
-  1. `customer_zip_code_prefix`
-  1. `customer_city`
-  1. `customer_state`
+  - `customer_id`
+  - `customer_unique_id`
+  - `customer_zip_code_prefix`
+  - `customer_city`
+  - `customer_state`
 - The outputted attributes table `df_attributes` shown above has
   - rows as the column names in the dataframe `df`
   - and columns that describe them:
-    1. `has_unique_entries`
-    1. `has_nulls`
-    1. `where_nulls`
-    1. `total_nulls`
-    1. ...
-- We use the attributes table `df_attributes` to help us determine the column datatypes before we create the tables.
-- In the attributes table `df_attributes`, consider row `customer_id`:
-  - On constraints:
-    - `has_unique_entries` = `1`
-    - `has_nulls` = `0`
-    - Is a natural key to `olist_customers_dataset.csv`.
-    - We can be confident that `customer_id` is a `PRIMARY KEY`.
-  - On data type:
-    - `sorted_chars_used` = `0123456789abcdef`
-    - contains alphabet characters and so has to be a [`Character string`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/data-types-transact-sql?view=sql-server-ver17#character-strings)
-      - either: `CHAR`, `NCHAR`, `VARCHAR`, `NVARCHAR`, `TEXT`
-      - reject `TEXT`
-    - `has_ascii` = `1`
-    - `has_non_ascii` = `0`
-    - has ascii characters and only ascii characters.
-      - reduce to: `CHAR`, `VARCHAR`
-    - `is_fixed_length` = `1`
-      - choose: `CHAR`
-    - `maximum_entry_length` = `32`
-    - We can be confident that `customer_id` has the datatype: `CHAR(32)`
+    - `has_unique_entries`
+    - `has_nulls`
+    - `where_nulls`
+    - `total_nulls`
+    - `sorted_chars_used`
+    - ...
 
-Therefore when creating the table:
+We use the attributes table `df_attributes` to help us determine the column datatypes before we create the tables.
 
-- Manually input the table configuration (can be automated in future iterations) in [`src/configs/db_config.yml`](src/configs/db_config.yml):
+In the attributes table `df_attributes`, consider row `customer_id`:
+
+- On constraints:
+  - `has_unique_entries` = `1`
+  - `has_nulls` = `0`
+  - is a natural key to `olist_customers_dataset.csv`.
+  - No other columns have unique entries.
+  - We can be confident that the `PRIMARY KEY` is only `customer_id`.
+- On data type:
+  - `sorted_chars_used` = `0123456789abcdef`
+  - contains alphabet characters and so has to be a [`Character string`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/data-types-transact-sql?view=sql-server-ver17#character-strings) data type.
+    - either: `CHAR`, `NCHAR`, `VARCHAR`, `NVARCHAR`, `TEXT`
+    - reject: `TEXT`
+  - `has_ascii` = `1`
+  - `has_non_ascii` = `0`
+  - has ascii characters and only ascii characters.
+    - reduce to: `CHAR`, `VARCHAR`
+  - `is_fixed_length` = `1`
+    - choose: `CHAR`
+  - `maximum_entry_length` = `32`.
+  - We can be confident that `customer_id` has the datatype: `CHAR(32)`
+
+Then, when creating the table:
+
+- Manually type the table configuration in [`src/configs/db_config.yml`](src/configs/db_config.yml):
 
 ```yml
 olist_stg:
@@ -400,7 +420,7 @@ olist_stg:
       - customer_id:
         dtype: CHAR(32)
         nullable: false
-      # ...
+      # ...other columns...
     constraints:
       - pk_dim_customers
         type: PRIMARY KEY
@@ -408,16 +428,38 @@ olist_stg:
         - customer_id
 ```
 
-- The program will later generate the sql string:
+- The program will later generate the following sql string:
 
 ```sql
 CREATE TABLE sales.dim_customers(
   customer_id CHAR(32) NOT NULL,
-  -- ...
+  -- ...other columns...
 
   CONSTRAINT pk_dim_customers
     PRIMARY KEY (customer_id)
 )
 ```
 
+- Repeat the data type analysis for the other columns in this table.
+- Repeat for all other tables.
 
+Q: Why not just write the sql directly?
+A: In future iterations the inference would be automatic. The yaml configuration file would act as a storage space for table schemas, that communicates to the program.
+
+#### A note on forgone constraints:
+
+- A `FOREIGN KEY` constraint requires a 1-1 or 1-many relationship.
+- Columns with entries that cannot be reached cannot have the `FOREIGN KEY` constraint.
+- Some foreign keys defined by the entity relationship diagram (ERD) provided by Olist were not implemented since it breaks the requirement.
+- The relationship is noted but is not coded in creating the tables.
+- Tables that didn't implement foreign keys:
+  - `dim_products`
+  - `fact_order_payments`
+  - `fact_order_reviews`
+  - `fact_closed_deals`
+
+#### A note on data integrity:
+
+- Column names: `product_name_lenght` and `product_description_lenght` from table `dim_products` were purposely not corrected.
+- Columns: `geolocation_lat` and `geolocation_lng` from table `fact_geolocation` containing latitudinal and longitudinal coordinates were truncated from having at most 18 decimal places down to at most 6.
+- Columns with payment values needing at most 2 decimal places were given more decimal places (at most 4) for free (without any negative effect on storage since the `DECIMAL` data type is binned).
