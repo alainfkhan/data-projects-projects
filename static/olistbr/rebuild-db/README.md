@@ -101,7 +101,7 @@ Overview of database: 'olist_stg'
 - The connection configuration file [`src/configs/connection.yml`](src/configs/connection.yml) defines the connection string used to connect to a server.
   - This can be configured by the user.
 - The database configuration file [`src/configs/db_config.yml`](src/configs/db_config.yml) defines the table schemas for this dataset.
-  - This configuration file was created manually. Column data types, and constraints were determined from a previous analysis on the dataset.
+  - This configuration file was created manually. Column data types, and constraints were determined from a preliminary analysis on the dataset.
 - The database overview queries the database as it is.
 - Notice the file `olist_geolocation_dataset.csv` takes the longest time to process since it has the table with the most rows with `1000163` rows.
 
@@ -127,29 +127,24 @@ Overview of database: 'olist_stg'
 
 ### Data validation
 
-- An inference function was used to help the engineer determine a columns data type.
-- The `infer_dtypes()` function from [`src/utils/infer.py`](src/utils/infer.py) inputs a dataframe and outputs an attributes table that describes each column in the dataframe that was inputted.
+- An inference function was used to help determine the SQL server data types of the columns.
+- The `infer_dtypes()` function from [`src/utils/infer.py`](src/utils/infer.py) inputs a pandas dataframe and outputs an attributes table that describes each column.
 - View a current example in [`notebooks/table_attrs.ipynb`](notebooks/table_attrs.ipynb)
 
+Suppose we would like to find the SQL server data types of columns from `olist_customers_dataset.csv` that optimise storage.
+We consider using a `.ipynb` jupyter notebook for analysis.
+
 ```py
+# As an example for illustration
+import pandas as pd
+
+filepath = 'olist_customers_dataset.csv'
 df = pd.read_csv(filepath, dtype=object)
-infer_dtype(df)
+df_attributes = infer_dtype(df)
+df_attributes
 ```
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }`</style>`
-
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -355,3 +350,74 @@ infer_dtype(df)
   </tbody>
 </table>
 </div>
+
+- The dataframe `df` from `olist_customers_dataset.csv` has columns:
+  1. `customer_id`
+  1. `customer_unique_id`
+  1. `customer_zip_code_prefix`
+  1. `customer_city`
+  1. `customer_state`
+- The outputted attributes table `df_attributes` shown above has
+  - rows as the column names in the dataframe `df`
+  - and columns that describe them:
+    1. `has_unique_entries`
+    1. `has_nulls`
+    1. `where_nulls`
+    1. `total_nulls`
+    1. ...
+- We use the attributes table `df_attributes` to help us determine the column datatypes before we create the tables.
+- In the attributes table `df_attributes`, consider row `customer_id`:
+  - On constraints:
+    - `has_unique_entries` = `1`
+    - `has_nulls` = `0`
+    - Is a natural key to `olist_customers_dataset.csv`.
+    - We can be confident that `customer_id` is a `PRIMARY KEY`.
+  - On data type:
+    - `sorted_chars_used` = `0123456789abcdef`
+    - contains alphabet characters and so has to be a [`Character string`](https://learn.microsoft.com/en-us/sql/t-sql/data-types/data-types-transact-sql?view=sql-server-ver17#character-strings)
+      - either: `CHAR`, `NCHAR`, `VARCHAR`, `NVARCHAR`, `TEXT`
+      - reject `TEXT`
+    - `has_ascii` = `1`
+    - `has_non_ascii` = `0`
+    - has ascii characters and only ascii characters.
+      - reduce to: `CHAR`, `VARCHAR`
+    - `is_fixed_length` = `1`
+      - choose: `CHAR`
+    - `maximum_entry_length` = `32`
+    - We can be confident that `customer_id` has the datatype: `CHAR(32)`
+
+Therefore when creating the table:
+
+- Manually input the table configuration (can be automated in future iterations) in [`src/configs/db_config.yml`](src/configs/db_config.yml):
+
+```yml
+olist_stg:
+- sales:
+  - dim_customers:
+    filename: olist_customers_dataset.csv
+    type: dim
+    columns:
+      - customer_id:
+        dtype: CHAR(32)
+        nullable: false
+      # ...
+    constraints:
+      - pk_dim_customers
+        type: PRIMARY KEY
+        columns:
+        - customer_id
+```
+
+- The program will later generate the sql string:
+
+```sql
+CREATE TABLE sales.dim_customers(
+  customer_id CHAR(32) NOT NULL,
+  -- ...
+
+  CONSTRAINT pk_dim_customers
+    PRIMARY KEY (customer_id)
+)
+```
+
+
