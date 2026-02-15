@@ -301,8 +301,8 @@ if __name__ == "__main__":
     # rebuild-db
     if run_main:
         main()
-    
+
     # add supp data
-    print('adding supp data')
+    print("adding supp data")
     # add dim_date
-    # add 
+    # add

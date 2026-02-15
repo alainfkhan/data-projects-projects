@@ -1,0 +1,6 @@
+CEP;UF;CIDADE;BAIRRO;LOGRADOURO;COMPLEMENTO
+01001000;SP;São Paulo;Sé;Praça da Sé - lado ímpar;
+01001001;SP;São Paulo;Sé;Praça da Sé - lado par;
+01001010;SP;São Paulo;Sé;Rua Filipe de Oliveira;
+01001900;SP;São Paulo;Sé;Praça da Sé, 108 ; UNESP - Universidade Estadual Júlio de Mesquita Filho
+01001901;SP;São Paulo;Sé;Praça da Sé, 371 ; Edifício Santa Lídia
