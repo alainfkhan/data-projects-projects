@@ -46,6 +46,9 @@ def dice_sim(A: set[str], B: set[str]) -> float:
     partial coverage = (0, 1)
     no coverage = 0
     """
+    if len(A) + len(B) == 0:
+        return 0
+
     return 2 * len(A.intersection(B)) / (len(A) + len(B))
 
 

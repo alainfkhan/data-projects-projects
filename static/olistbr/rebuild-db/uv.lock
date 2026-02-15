@@ -698,6 +698,7 @@ name = "rebuild-db"
 version = "0.1.0"
 source = { editable = "." }
 dependencies = [
+    { name = "numpy" },
     { name = "pandas" },
     { name = "pydantic" },
     { name = "pyodbc" },
@@ -714,6 +715,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
+    { name = "numpy", specifier = ">=2.4.1" },
     { name = "pandas", specifier = ">=3.0.0" },
     { name = "pydantic", specifier = ">=2.12.5" },
     { name = "pyodbc", specifier = ">=5.3.0" },
