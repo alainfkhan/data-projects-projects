@@ -395,11 +395,11 @@ olist_stg:
           dtype: CHAR(2)
           nullable: true
       constraints:
-      - pk_dim_geolocation:
+      - pk_fact_geolocation:
           type: PRIMARY KEY
           columns:
           - geolocation_sk
-    #   - uq_dim_geolocation_zip_lat_lng:
+    #   - uq_fact_geolocation_zip_lat_lng:
     #       type: UNIQUE
     #       columns:
     #       - geolocation_zip_code_prefix

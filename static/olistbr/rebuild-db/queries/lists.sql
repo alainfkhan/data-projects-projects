@@ -61,7 +61,9 @@ select top 1000 * from sales.fact_order_payments;
 select top 1000 * from sales.fact_order_reviews;
 select top 1000 * from marketing.fact_marketing_qualified_leads;
 select top 1000 * from marketing.fact_closed_deals;
-select top 1000 * from logistics.dim_geolocation;
+select top 1000 * from logistics.fact_geolocation;
+
+select * from core.dim_date;
 */
 
 -- count rows

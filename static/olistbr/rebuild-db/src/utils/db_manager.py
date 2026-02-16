@@ -35,14 +35,20 @@ class DBManager:
         self.default_db = "master"
         self.system_dbs = ["master", "model", "msdb", "tempdb"]
 
-    def connect(self) -> tuple[Connection, Cursor]:
+    def connect(self) -> None | tuple[Connection, Cursor]:
         """Connects to a database."""
-        conn = pyodbc.connect(f"""
-                            DRIVER={{{self.driver}}};
-                            SERVER={self.server};
-                            DATABASE={self.database};
-                            Trusted_Connection=yes;
-                            """)
+        try:
+            conn = pyodbc.connect(f"""
+                                DRIVER={{{self.driver}}};
+                                SERVER={self.server};
+                                DATABASE={self.database};
+                                Trusted_Connection=yes;
+                                """)
+        except Exception as e:
+            print("db_manager.connect() execption message")
+            print(e)
+            return
+
         cursor = conn.cursor()
 
         self.conn = conn
@@ -212,10 +218,13 @@ class DBManager:
         """Creates a new schema."""
         sql = f"CREATE SCHEMA {schema_name};"
 
-        if execute:
-            self.conn.autocommit = True
-            self.cursor.execute(sql)
-            self.conn.autocommit = False
+        try:
+            if execute:
+                self.conn.autocommit = True
+                self.cursor.execute(sql)
+                self.conn.autocommit = False
+        except Exception as e:
+            print(e)
 
         return sql
 

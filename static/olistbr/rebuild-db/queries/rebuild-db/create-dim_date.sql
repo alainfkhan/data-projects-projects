@@ -22,7 +22,7 @@ USE olist_stg;
 -- if schema core doest exist, create it
 if (schema_id('core')) is null
     begin
-        exec ('create schema core')
+        exec ('create schema core');
     end
 
 -- if table exists return
@@ -56,7 +56,6 @@ CREATE TABLE core.dim_date (
     CONSTRAINT pk_date_key
         PRIMARY KEY (date_key)
 );
-GO
 
 DECLARE @date_key INT
 DECLARE @full_date DATE

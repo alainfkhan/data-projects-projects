@@ -2,6 +2,10 @@
 run:
 	uv run src
 
+.PHONY: ingest
+ingest:
+	uv run -m src.ingest
+
 .PHONY: test
 test:
 	python -m src.tests.test

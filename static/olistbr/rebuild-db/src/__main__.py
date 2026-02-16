@@ -6,6 +6,7 @@ csv -> df -> sqlserver
 
 import os
 import time
+import runpy
 from pathlib import Path
 from typing import NamedTuple
 
@@ -18,7 +19,7 @@ from rich.table import Table
 from icecream import ic
 # from pyodbc import Row, Connection, Cursor
 
-from src.utils.paths import RAW_PATH, CONFIGS_PATH
+from src.utils.paths import RAW_PATH, CONFIGS_PATH, REBUILD_DB_PATH
 from src.utils.db_manager import DBManager
 from src.utils.db_config_manager import DBConfigManager
 
@@ -28,6 +29,7 @@ from src.utils.db_config_manager import DBConfigManager
 execute = False
 
 run_main = False
+run_ingest = True
 
 wipe_db = True
 change_db = True
@@ -298,11 +300,10 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # rebuild-db
-    if run_main:
-        main()
+    # # rebuild-db
+    # if run_main:
+    #     main()
 
-    # add supp data
-    print("adding supp data")
-    # add dim_date
-    # add
+    if run_ingest:
+        ingest_filepath = REBUILD_DB_PATH / "src" / "ingest"
+        runpy.run_path(str(ingest_filepath), run_name="__main__")
