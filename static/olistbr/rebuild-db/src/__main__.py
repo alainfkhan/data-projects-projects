@@ -27,7 +27,7 @@ from src.utils.db_config_manager import DBConfigManager
 # ic.disable()
 
 # debugs
-execute = False
+execute = True
 
 run_main = True
 run_ingest = True
@@ -303,8 +303,7 @@ if __name__ == "__main__":
     # rebuild-db
     if run_main:
         main()
-
-    print()
+        print()
 
     # ingest supplementary data
     if run_ingest:
@@ -314,8 +313,8 @@ if __name__ == "__main__":
         ingest_filepath = REBUILD_DB_PATH / "src" / "ingest"
         runpy.run_path(str(ingest_filepath), run_name="__main__")
 
-    print(long_lines)
-    print()
+        print(long_lines)
+        print()
 
     dbm = DBManager(
         driver=driver,

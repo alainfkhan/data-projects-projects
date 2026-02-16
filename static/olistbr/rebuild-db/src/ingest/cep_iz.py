@@ -24,11 +24,12 @@ from pathlib import Path
 
 import pandas as pd
 from icecream import ic
+from rich import print
 
 from src.utils.paths import EXTERNAL_PATH
 
 # debugs
-overwrite_if_exists = False
+overwrite_if_exists = True
 
 
 canon_filename = "TB_CEP_BR_2018.csv"
@@ -66,6 +67,8 @@ def main() -> tuple[None | Path, None | Path]:
         )
         return (None, None)
 
+    print(f"Handling '{canon_filename}'...", end="\r")
+
     df = pd.read_csv(
         canon_filepath,
         delimiter=";",
@@ -97,13 +100,13 @@ def main() -> tuple[None | Path, None | Path]:
     if not AuBmA_filepath.exists() or overwrite_if_exists:
         print(f"Creating '{AuBmA_filepath.name}'...", end="\r")
         df_AuBmA.to_csv(AuBmA_filepath, index=False)
-        print(" " * 50)
+        print(" " * 50, end="\r")
         print(f"File '{AuBmA_filepath.name}' created successfully.")
 
     if not B_filepath.exists() or overwrite_if_exists:
         print(f"Creating '{B_filepath.name}'...", end="\r")
         df_B.to_csv(B_filepath, index=False)
-        print(" " * 50)
+        print(" " * 50, end="\r")
         print(f"File '{B_filepath.name}' created successfully.")
 
     return out

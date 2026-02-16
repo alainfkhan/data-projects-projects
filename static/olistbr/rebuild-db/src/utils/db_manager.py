@@ -78,15 +78,15 @@ class DBManager:
         table_short = split[1]
 
         # rows
-        get_rows = self.cursor.execute(f"select count(*) from {table_name}").fetchone()
+        # get_rows = self.cursor.execute(f"select count(*) from {table_name}").fetchone()
 
         # faster way
-        # get_rows = self.cursor.execute(f"""
-        #     select
-        #         st.row_count
-        #     from sys.dm_db_partition_stats as st
-        #     where st.object_id = object_id('{table_name}')
-        # """).fetchone()
+        get_rows = self.cursor.execute(f"""
+            select
+                st.row_count
+            from sys.dm_db_partition_stats as st
+            where st.object_id = object_id('{table_name}')
+        """).fetchone()
 
         total_rows: int = 0 if get_rows is None else get_rows[0]
 
