@@ -79,6 +79,15 @@ class DBManager:
 
         # rows
         get_rows = self.cursor.execute(f"select count(*) from {table_name}").fetchone()
+
+        # faster way
+        # get_rows = self.cursor.execute(f"""
+        #     select
+        #         st.row_count
+        #     from sys.dm_db_partition_stats as st
+        #     where st.object_id = object_id('{table_name}')
+        # """).fetchone()
+
         total_rows: int = 0 if get_rows is None else get_rows[0]
 
         # columns
@@ -373,6 +382,7 @@ class DBManager:
 
         df = pd.read_csv(filepath, converters=converters)
         df_clean = df.astype(object).where(pd.notnull(df), None)
+        df_clean = df_clean.replace("", None)
         df_clean = df_clean[column_shorts]
 
         params = list(df_clean.itertuples(index=False, name=None))

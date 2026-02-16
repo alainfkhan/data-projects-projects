@@ -95,3 +95,14 @@ FROM cte AS c
 select *
 from sys.fn_helpcollations()
 where name like 'sql%'
+
+-- get rows
+select
+    count(*)
+from logistics.fact_geolocation
+
+-- faster way of getting rows
+select
+    st.row_count
+from sys.dm_db_partition_stats as st
+where st.object_id = object_id('logistics.fact_geolocation')

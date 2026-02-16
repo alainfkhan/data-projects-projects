@@ -6,6 +6,7 @@ orchestrator of additional data ingestions
 from pathlib import Path
 
 import yaml
+from rich import print
 
 from src.ingest.cep_iz import main as cep_iz_main
 from src.utils.db_manager import DBManager
@@ -47,7 +48,7 @@ def main() -> None:
 
         gen_sql_path = REBUILD_DB_QUERIES_PATH / "rebuild-db"
 
-        # generate core.dim_date
+        # regenerate core.dim_date
         sql_dim_date_path = gen_sql_path / "create-dim_date.sql"
         with open(sql_dim_date_path, "r") as f:
             sql_dim_date = f.read()
@@ -59,13 +60,13 @@ def main() -> None:
             pass
         conn.autocommit = False
 
-        print("Generated 'core.dim_date'")
+        print("Regenerated:")
+        print("\t'core.dim_date'")
 
         # generate core.dim_time
 
         # cep
-        # generate cep files
-        # TODO: if filennotfound
+        # generate cep files and get filepaths
         AuBmA_filepath, B_filepath = cep_iz_main()
 
         if AuBmA_filepath is None or B_filepath is None:
@@ -73,59 +74,70 @@ def main() -> None:
         else:
             # generate cep tables
             geolocation_schema = "logistics"
-            cep_1_name = f"{geolocation_schema}.dim_cep_iz_AuBmA"
-            # cep_1_short = cep_1_name.split(".")[1]
+            cep1_short = "dim_cep_iz_AuBmA"
+            cep1_name = f"{geolocation_schema}.{cep1_short}"
 
-            cep_2_name = f"{geolocation_schema}.dim_cep_iz_B"
-            # cep_2_short = cep_2_name.split(".")[1]
+            cep2_short = "dim_cep_iz_B"
+            cep2_name = f"{geolocation_schema}.{cep2_short}"
 
+            # create cep tables
             with open(gen_sql_path / "create-dim_cep_iz.sql", "r") as f:
                 sql_cep_iz = f.read()
 
             cursor.execute(sql_cep_iz)
             conn.commit()
-            print("Created tables:")
-            print(f"\t'{cep_1_name}'")
-            print(f"\t'{cep_2_name}'")
+            print("Refreshed tables:")
+            print(f"\t'{cep1_name}'")
+            print(f"\t'{cep2_name}'")
+
+            cep1_row_count, _ = dbm.get_table_shape(cep1_name)
+            cep2_row_count, _ = dbm.get_table_shape(cep2_name)
 
             # insert file 1
-            print(f"Inserting '{cep_1_name}'...", end="\r")
-            dbm.insert_from_csv(
-                filepath=AuBmA_filepath,
-                table_name=cep_1_name,
-                column_shorts=[
-                    "CEP",
-                    "UF",
-                    "CIDADE",
-                    "BAIRRO",
-                    "LOGRADOURO",
-                    "COMPLEMENTO",
-                ],
-                converters={
-                    "CEP": str,
-                    "COMPLEMENTO": str,
-                },
-                execute=execute,
-            )
-            print(spaces, end="\r")
-            print(f"Table '{cep_1_name}' inserted successfully.")
+            if cep1_row_count == 0:
+                print(f"Inserting '{cep1_name}'...", end="\r")
+                dbm.insert_from_csv(
+                    filepath=AuBmA_filepath,
+                    table_name=cep1_name,
+                    column_shorts=[
+                        "CEP",
+                        "UF",
+                        "CIDADE",
+                        "BAIRRO",
+                        "LOGRADOURO",
+                        "COMPLEMENTO",
+                    ],
+                    converters={
+                        "CEP": str,
+                        "COMPLEMENTO": str,
+                    },
+                    execute=execute,
+                )
+                print(spaces, end="\r")
+                print(f"Table '{cep1_name}' inserted successfully.")
+            else:
+                print(f"Table '{cep1_name}' already exists.")
 
-            print(f"Inserting '{cep_2_name}'...", end="\r")
-            dbm.insert_from_csv(
-                filepath=B_filepath,
-                table_name=f"{cep_2_name}",
-                column_shorts=[
-                    "CEP",
-                    "UF",
-                    "CIDADE",
-                    "BAIRRO",
-                    "LOGRADOURO",
-                ],
-                converters={"CEP": str},
-                execute=execute,
-            )
-            print(spaces, end="\r")
-            print(f"Table '{cep_2_name}' inserted successfully.")
+            # insert file2
+            if cep2_row_count == 0:
+                print(f"Inserting '{cep2_name}'...", end="\r")
+                dbm.insert_from_csv(
+                    filepath=B_filepath,
+                    table_name=f"{cep2_name}",
+                    column_shorts=[
+                        "CEP",
+                        "UF",
+                        "CIDADE",
+                        "BAIRRO",
+                        "LOGRADOURO",
+                    ],
+                    converters={"CEP": str},
+                    execute=execute,
+                )
+                print(spaces, end="\r")
+                print(f"Table '{cep2_name}' inserted successfully.")
+            else:
+                print(f"Table '{cep2_name}' already exists.")
 
 
 if __name__ == "__main__":

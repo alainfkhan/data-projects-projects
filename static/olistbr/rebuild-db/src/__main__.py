@@ -14,6 +14,7 @@ import yaml
 import pyodbc
 import pandas as pd
 from pyodbc import Row
+from rich import print
 from rich.console import Console
 from rich.table import Table
 from icecream import ic
@@ -26,7 +27,7 @@ from src.utils.db_config_manager import DBConfigManager
 # ic.disable()
 
 # debugs
-execute = True
+execute = False
 
 run_main = True
 run_ingest = True
