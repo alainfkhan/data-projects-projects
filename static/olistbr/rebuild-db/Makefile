@@ -6,6 +6,10 @@ run:
 ingest:
 	uv run -m src.ingest
 
+.PHONY: cep
+cep:
+	uv run -m src.ingest.cep_iz
+
 .PHONY: test
 test:
 	python -m src.tests.test
