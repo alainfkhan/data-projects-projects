@@ -21,6 +21,8 @@ from typing import Any
 import pandas as pd
 import pyodbc
 import yaml
+from rich.console import Console
+from rich.table import Table
 from icecream import ic
 from pyodbc import Row, Connection, Cursor
 from pandas import DataFrame
@@ -47,7 +49,7 @@ class DBManager:
         except Exception as e:
             print("db_manager.connect() execption message")
             print(e)
-            return
+            return None
 
         cursor = conn.cursor()
 
@@ -443,6 +445,39 @@ class DBManager:
             self.conn.autocommit = False
 
         return complete_sql
+
+    def show_overview(self) -> None:
+        short_lines = "-" * 50
+        # database overview
+        print(f"Overview of database: '{self.get_current_db()}'")
+        print(short_lines)
+
+        # schemas
+        db_schemas = self.list_schemas()
+
+        schema_table = Table(title="Schemas")
+        schema_table.add_column("Schema name")
+        schema_table.add_column("Tables")
+
+        for schema in db_schemas:
+            table_shorts = self.list_table_shorts_in_schema(schema_name=schema)
+            schema_table.add_row(schema, str(len(table_shorts)))
+
+        # tables
+        db_tables = self.list_tables()
+
+        tables_table = Table(title="Tables")
+        tables_table.add_column("Table name")
+        tables_table.add_column("Rows")
+        tables_table.add_column("Columns")
+
+        for table_name in db_tables:
+            rows, cols = self.get_table_shape(table_name)
+            tables_table.add_row(table_name, str(rows), str(cols))
+
+        console = Console()
+        console.print(schema_table)
+        console.print(tables_table)
 
 
 if __name__ == "__main__":

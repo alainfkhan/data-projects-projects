@@ -25,11 +25,13 @@ if (schema_id('core')) is null
         exec ('create schema core');
     end
 
--- if table exists return
+-- if table exists drop
 if (object_id('core.dim_date')) is not null
     begin
-        set noexec on;
+        drop table core.dim_date;
     end
+
+set nocount on
 
 -- settings
 -- set day1=monday
@@ -151,5 +153,3 @@ WHILE @i_date <= @end_date
         @quarter_number AS quarter_number,
         @year_number AS year_number;
     END
-
-set noexec off;

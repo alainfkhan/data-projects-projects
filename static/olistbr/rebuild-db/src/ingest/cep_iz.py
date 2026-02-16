@@ -14,11 +14,13 @@ cleaned data will go:
 
 later:
 the tables in sqlserver will be called:
-    logistics.dim_cep_iz__AuBmA
-    logistics.dim_cep_iz__B
+    logistics.dim_cep_iz_AuBmA
+    logistics.dim_cep_iz_B
 
 A = A u (B - A) - (B - A)
 """
+
+from pathlib import Path
 
 import pandas as pd
 from icecream import ic
@@ -39,8 +41,22 @@ def get_data() -> None:
     pass
 
 
-def main() -> None:
-    """Creates two tables that are partitions of a table from the dataset url."""
+def main() -> tuple[None | Path, None | Path]:
+    """Creates two tables that are partitions of a table from the dataset url.
+
+    Returns their filepaths if it exists
+    """
+    canon_stem = canon_filename.split(".")[0]
+    AuBmA_filename = f"{canon_stem}__AuBmA.csv"
+    B_filename = f"{canon_stem}__B.csv"
+
+    AuBmA_filepath = EXTERNAL_PATH / "processed" / AuBmA_filename
+    B_filepath = EXTERNAL_PATH / "processed" / B_filename
+
+    out = (AuBmA_filepath, B_filepath)
+
+    if AuBmA_filepath.exists() and B_filepath.exists() and not overwrite_if_exists:
+        return out
 
     if not canon_filepath.exists():
         print(f"File '{canon_filename}' not found in '{canon_filepath.parent}'")
@@ -48,16 +64,7 @@ def main() -> None:
         print(
             f"Save the downloaded dataset '{canon_filename}' to '{canon_filepath.parent}'"
         )
-        return
-
-    AuBmA_filename = f"{canon_filename.split('.')[0]}__AuBmA.csv"
-    B_filename = f"{canon_filename.split('.')[0]}__B.csv"
-
-    AuBmA_filepath = EXTERNAL_PATH / "processed" / AuBmA_filename
-    B_filepath = EXTERNAL_PATH / "processed" / B_filename
-
-    if AuBmA_filepath.exists() and B_filepath.exists() and not overwrite_if_exists:
-        return
+        return (None, None)
 
     df = pd.read_csv(
         canon_filepath,
@@ -88,14 +95,18 @@ def main() -> None:
     df_AuBmA = pd.concat([df_A, df_BmA])
 
     if not AuBmA_filepath.exists() or overwrite_if_exists:
-        print("creating AuBmA")
+        print(f"Creating '{AuBmA_filepath.name}'...", end="\r")
         df_AuBmA.to_csv(AuBmA_filepath, index=False)
-        ic(AuBmA_filepath)
+        print(" " * 50)
+        print(f"File '{AuBmA_filepath.name}' created successfully.")
 
     if not B_filepath.exists() or overwrite_if_exists:
-        print("creating B")
+        print(f"Creating '{B_filepath.name}'...", end="\r")
         df_B.to_csv(B_filepath, index=False)
-        ic(B_filepath)
+        print(" " * 50)
+        print(f"File '{B_filepath.name}' created successfully.")
+
+    return out
 
 
 if __name__ == "__main__":

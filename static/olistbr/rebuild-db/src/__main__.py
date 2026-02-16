@@ -26,9 +26,9 @@ from src.utils.db_config_manager import DBConfigManager
 # ic.disable()
 
 # debugs
-execute = False
+execute = True
 
-run_main = False
+run_main = True
 run_ingest = True
 
 wipe_db = True
@@ -225,43 +225,42 @@ def main() -> None:
                 print()
 
         print(long_lines)
-        print()
 
-        # database overview
-        print(f"Overview of database: '{dbm.get_current_db()}'")
-        print(short_lines)
+        # # database overview
+        # print(f"Overview of database: '{dbm.get_current_db()}'")
+        # print(short_lines)
 
-        # schemas
-        db_schemas = dbm.list_schemas()
+        # # schemas
+        # db_schemas = dbm.list_schemas()
 
-        schema_table = Table(title="Schemas")
-        schema_table.add_column("Schema name")
-        schema_table.add_column("Tables")
+        # schema_table = Table(title="Schemas")
+        # schema_table.add_column("Schema name")
+        # schema_table.add_column("Tables")
 
-        for schema in db_schemas:
-            table_shorts = dbm.list_table_shorts_in_schema(schema_name=schema)
-            schema_table.add_row(schema, str(len(table_shorts)))
+        # for schema in db_schemas:
+        #     table_shorts = dbm.list_table_shorts_in_schema(schema_name=schema)
+        #     schema_table.add_row(schema, str(len(table_shorts)))
 
-        # tables
-        db_tables = dbm.list_tables()
+        # # tables
+        # db_tables = dbm.list_tables()
 
-        tables_table = Table(title="Tables")
-        tables_table.add_column("Table name")
-        tables_table.add_column("Rows")
-        tables_table.add_column("Columns")
+        # tables_table = Table(title="Tables")
+        # tables_table.add_column("Table name")
+        # tables_table.add_column("Rows")
+        # tables_table.add_column("Columns")
 
-        for table_name in db_tables:
-            rows, cols = dbm.get_table_shape(table_name)
-            tables_table.add_row(table_name, str(rows), str(cols))
+        # for table_name in db_tables:
+        #     rows, cols = dbm.get_table_shape(table_name)
+        #     tables_table.add_row(table_name, str(rows), str(cols))
 
-        console = Console()
-        console.print(schema_table)
-        console.print(tables_table)
+        # console = Console()
+        # console.print(schema_table)
+        # console.print(tables_table)
 
-        print(short_lines)
-        print(f"!!! '{db}' subject to repeated rewrites.")
-        print("!!! Remember to copy the database.")
-        print(short_lines)
+        # print(short_lines)
+        # print(f"!!! '{db}' subject to repeated rewrites.")
+        # print("!!! Remember to copy the database.")
+        # print(short_lines)
 
     return
 
@@ -300,10 +299,28 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    # # rebuild-db
-    # if run_main:
-    #     main()
+    # rebuild-db
+    if run_main:
+        main()
 
+    print()
+
+    # ingest supplementary data
     if run_ingest:
+        print("Adding supplementary data")
+        print(short_lines)
+
         ingest_filepath = REBUILD_DB_PATH / "src" / "ingest"
         runpy.run_path(str(ingest_filepath), run_name="__main__")
+
+    print(long_lines)
+    print()
+
+    dbm = DBManager(
+        driver=driver,
+        server=server,
+        database=db,
+    )
+    conn, cursor = dbm.connect()
+    with conn:
+        dbm.show_overview()

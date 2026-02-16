@@ -20,3 +20,12 @@ from sales.dim_customers;
 select top 1000
 *
 from sales.dim_sellers;
+
+select
+    count(*)
+from logistics.dim_cep_iz_AuBmA;
+
+
+select
+    count(*)
+from logistics.dim_cep_iz_B;
