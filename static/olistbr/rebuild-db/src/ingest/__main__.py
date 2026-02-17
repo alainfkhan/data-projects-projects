@@ -41,14 +41,14 @@ def main() -> None:
     with conn:
         dbm.change_db(db)
 
-        # create schemas:
-        if "core" not in dbm.list_schemas():
-            dbm.create_schema("core")
-            print("Created schema: 'core'")
+        # # create schemas:
+        # if "core" not in dbm.list_schemas():
+        #     dbm.create_schema("core")
+        #     print("Created schema: 'core'")
 
         gen_sql_path = REBUILD_DB_QUERIES_PATH / "rebuild-db"
 
-        # regenerate core.dim_date
+        # run sql files
         sql_dim_date_path = gen_sql_path / "create-dim_date.sql"
         with open(sql_dim_date_path, "r") as f:
             sql_dim_date = f.read()
@@ -60,8 +60,8 @@ def main() -> None:
             pass
         conn.autocommit = False
 
-        print("Regenerated:")
-        print("\t'core.dim_date'")
+        # print("Regenerated:")
+        # print("\t'core.dim_date'")
 
         # generate core.dim_time
 
@@ -73,6 +73,7 @@ def main() -> None:
             print("CEP tables not inserted.")
         else:
             # generate cep tables
+            # TODO: get schema name from where geolocation table is
             geolocation_schema = "logistics"
             cep1_short = "dim_cep_iz_AuBmA"
             cep1_name = f"{geolocation_schema}.{cep1_short}"

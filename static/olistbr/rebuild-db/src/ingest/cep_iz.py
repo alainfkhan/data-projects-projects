@@ -29,9 +29,9 @@ from rich import print
 from src.utils.paths import EXTERNAL_PATH
 
 # debugs
-overwrite_if_exists = True
+overwrite_if_exists = False
 
-
+# definitions
 canon_filename = "TB_CEP_BR_2018.csv"
 canon_filepath = EXTERNAL_PATH / "raw" / canon_filename
 

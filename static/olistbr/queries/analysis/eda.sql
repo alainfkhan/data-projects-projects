@@ -16,3 +16,7 @@ select top 1
     g.*
 from logistics.fact_geolocation as g
 order by newid()
+
+select top 1000
+    s.*
+from sales.dim_sellers as s

@@ -19,16 +19,18 @@ select * from core.dim_date
 
 USE olist_stg;
 
--- if schema core doest exist, create it
-if (schema_id('core')) is null
+-- TODO: change columns names: year_number to year etc
+
+-- if schema utils doest exist, create it
+if (schema_id('utils')) is null
     begin
-        exec ('create schema core');
+        exec ('create schema utils');
     end
 
 -- if table exists drop
-if (object_id('core.dim_date')) is not null
+if (object_id('utils.dim_date')) is not null
     begin
-        drop table core.dim_date;
+        drop table utils.dim_date;
     end
 
 set nocount on
@@ -38,7 +40,7 @@ set nocount on
 -- force
 SET DATEFIRST 1;
 
-CREATE TABLE core.dim_date (
+CREATE TABLE utils.dim_date (
     date_key INT,
     full_date DATE,
     day_of_week TINYINT,
@@ -107,7 +109,8 @@ WHILE @i_date <= @end_date
     SET @month_name_short = LEFT(@month_name, 3)
     SET @quarter_number = DATEPART(QUARTER, @i_date)
     SET @year_number = DATEPART(YEAR, @i_date)
-
+    
+    -- key
     DECLARE @zero_padded_month_number CHAR(2) = FORMAT(@month_number, '00')
     DECLARE @zero_padded_day_of_month CHAR(2) = FORMAT(@day_of_month, '00')
     SET @date_key = CAST(
@@ -119,7 +122,7 @@ WHILE @i_date <= @end_date
     -- increment
     SET @i_date = DATEADD(DAY, 1, @i_date)
 
-    INSERT INTO core.dim_date(
+    INSERT INTO utils.dim_date(
         date_key,
         full_date,
         day_of_week,
