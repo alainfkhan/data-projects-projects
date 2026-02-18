@@ -4,20 +4,20 @@ create tables only
 do not do insertions
 
 this file contains two tables A, B
-table A has cols: 
+table A has cols:
     CEP
-    UF 
+    UF
     CIDADE
     BAIRRO
-    LOGRADOURO 
-    COMPLEMENTO 
+    LOGRADOURO
+    COMPLEMENTO
 
 table B has cols:
     CEP
-    UF 
+    UF
     CIDADE
     BAIRRO
-    LOGRADOURO 
+    LOGRADOURO
 
 |B| > |A|
 B does not contain A
@@ -27,48 +27,48 @@ create tables
     AuBmA = Au(B\A) = A union (B set minus A)
     B
 */
-use olist_stg;
+USE olist_stg;
 
-if (schema_id('logistics')) is null
-    begin
-        exec ('create schema logistics')
-    end
+IF (SCHEMA_ID('logistics')) IS NULL
+    BEGIN
+        EXEC ('create schema logistics')
+    END
 
 -- first table
-if (object_id('logistics.dim_cep_iz_AuBmA')) is not null
-    begin
-        set noexec on;
-    end
+IF (OBJECT_ID('logistics.dim_cep_iz_AuBmA')) IS NOT NULL
+    BEGIN
+        SET NOEXEC ON;
+    END
 
-create table logistics.dim_cep_iz_AuBmA (
-    CEP char(8) not null,
-    UF varchar(20) not null,
-    CIDADE nvarchar(70) not null,
-    BAIRRO nvarchar(70),
-    LOGRADOURO nvarchar(150),
-    COMPLEMENTO nvarchar(100),
+CREATE TABLE logistics.dim_cep_iz_AuBmA (
+    cep CHAR(8) NOT NULL,
+    uf VARCHAR(20) NOT NULL,
+    cidade NVARCHAR(70) NOT NULL,
+    bairro NVARCHAR(70),
+    logradouro NVARCHAR(150),
+    complemento NVARCHAR(100),
 
-    constraint pk_cep_iz_AuBmA
-        primary key (CEP)
+    CONSTRAINT pk_cep_iz_AuBmA
+        PRIMARY KEY (CEP)
 )
 
-set noexec off;
+SET NOEXEC OFF;
 
 -- second table
-if (object_id('logistics.dim_cep_iz_B')) is not null
-    begin
-        set noexec on;
-    end
+IF (OBJECT_ID('logistics.dim_cep_iz_B')) IS NOT NULL
+    BEGIN
+        SET NOEXEC ON;
+    END
 
-create table logistics.dim_cep_iz_B (
-    CEP char(8) not null,
-    UF varchar(20) not null,
-    CIDADE nvarchar(70) not null,
-    BAIRRO nvarchar(70),
-    LOGRADOURO nvarchar(150),
+CREATE TABLE logistics.dim_cep_iz_B (
+    cep CHAR(8) NOT NULL,
+    uf VARCHAR(20) NOT NULL,
+    cidade NVARCHAR(70) NOT NULL,
+    bairro NVARCHAR(70),
+    logradouro NVARCHAR(150),
 
-    constraint pk_cep_iz_B
-        primary key (CEP)
+    CONSTRAINT pk_cep_iz_B
+        PRIMARY KEY (CEP)
 )
 
-set noexec off;
+SET NOEXEC OFF;

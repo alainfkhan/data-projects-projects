@@ -1,22 +1,18 @@
-use olist_stg;
+USE olist_stg;
 
 -- complemento had converter type str meaning any nulls = ''
 -- need to change all '' to null
-select
-    *
-from logistics.dim_cep_iz_AuBmA as c
-where c.COMPLEMENTO != '';
+SELECT *
+FROM logistics.dim_cep_iz_AuBmA AS c
+WHERE c.COMPLEMENTO != '';
 
-select top 1000
-    c.*
-from logistics.dim_cep_iz_AuBmA as c
-where c.CEP like '89600%';
+SELECT TOP 1000 c.*
+FROM logistics.dim_cep_iz_AuBmA AS c
+WHERE c.CEP LIKE '89600%';
 
-select top 1
-    g.*
-from logistics.fact_geolocation as g
-order by newid()
+SELECT TOP 1 g.*
+FROM logistics.fact_geolocation AS g
+ORDER BY NEWID()
 
-select top 1000
-    s.*
-from sales.dim_sellers as s
+SELECT TOP 1000 s.*
+FROM sales.dim_sellers AS s

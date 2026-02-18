@@ -1,17 +1,17 @@
-use olist_stg;
+USE olist_stg;
 
-if (schema_id('utils')) is null
-    begin
-        exec ('create schema utils');
-    end;
+IF (SCHEMA_ID('utils')) IS NULL
+    BEGIN
+        EXEC ('create schema utils');
+    END;
 
-if (object_id('utils.dim_time')) is not null
-    begin
+IF (OBJECT_ID('utils.dim_time')) IS NOT NULL
+    BEGIN
         -- drop table utils.dim_time;
-        set noexec on;
-    end;
+        SET NOEXEC ON;
+    END;
 
-set nocount on;
+SET NOCOUNT ON;
 
 /*
 minute of day is floor, 0 indexed, is range
@@ -25,170 +25,170 @@ the (n+1)th minute is minute n
 */
 
 -- second [)
-create table utils.dim_time (
-    time_key int,               -- 33497 = 9*60*60 + 18*60 + 17 | 47281 = 13*60*60 + 8*60 + 1 
-    am_pm char(2),              -- AM | PM
+CREATE TABLE utils.dim_time (
+    time_key INT,               -- 33497 = 9*60*60 + 18*60 + 17 | 47281 = 13*60*60 + 8*60 + 1 
+    am_pm CHAR(2),              -- AM | PM
 
-    full_time time,             -- 09:18:17 | 13:08:01
-    full_time_12 varchar(20),   -- 9:18:17 AM | 1:08:01 PM
+    full_time TIME,             -- 09:18:17 | 13:08:01
+    full_time_12 VARCHAR(20),   -- 9:18:17 AM | 1:08:01 PM
 
-    hour_part tinyint,          -- 9 | 13
-    hour_part_12 tinyint,       -- 9 | 1
-    hh char(2),                 -- 09 | 13
-    hh_12 char(2),              -- 09 | 01
-    hour_of_day tinyint,        -- 9 | 13
+    hour_part TINYINT,          -- 9 | 13
+    hour_part_12 TINYINT,       -- 9 | 1
+    hh CHAR(2),                 -- 09 | 13
+    hh_12 CHAR(2),              -- 09 | 01
+    hour_of_day TINYINT,        -- 9 | 13
 
-    minute_part tinyint,        -- 18 | 8
-    mm char(2),                 -- 18 | 08
-    minute_of_day smallint,     -- 558 = 9*60 + 18 | 788 = 13*60 + 8 
+    minute_part TINYINT,        -- 18 | 8
+    mm CHAR(2),                 -- 18 | 08
+    minute_of_day SMALLINT,     -- 558 = 9*60 + 18 | 788 = 13*60 + 8 
 
-    second_part tinyint,        -- 17 | 1
-    ss char(2),                 -- 17 | 01
-    second_of_day int,          -- 33497 | 47281
+    second_part TINYINT,        -- 17 | 1
+    ss CHAR(2),                 -- 17 | 01
+    second_of_day INT,          -- 33497 | 47281
 
-    shorthand varchar(10),      -- 9h18 | 13h8
-    hhmm char(4),               -- 0918 | 1308
-    hhmm_12 char(4),            -- 0918 | 0108
-    hhmmss char(6),             -- 091817 | 130801
-    hhmmss_12 char(6),          -- 091817 | 010801
+    shorthand VARCHAR(10),      -- 9h18 | 13h8
+    hhmm CHAR(4),               -- 0918 | 1308
+    hhmm_12 CHAR(4),            -- 0918 | 0108
+    hhmmss CHAR(6),             -- 091817 | 130801
+    hhmmss_12 CHAR(6),          -- 091817 | 010801
 
     -- day_bucket_24h tinyint,
-    day_bucket_12h tinyint,         -- 1 | 2
-    day_bucket_8h tinyint,          -- 2 | 2
-    day_bucket_6h tinyint,          -- 2 | 3
-    day_bucket_4h tinyint,          -- 3 | 4
-    day_bucket_3h tinyint,          -- 4 | 5
-    day_bucket_2h tinyint,          -- 5 | 7
+    day_bucket_12h TINYINT,         -- 1 | 2
+    day_bucket_8h TINYINT,          -- 2 | 2
+    day_bucket_6h TINYINT,          -- 2 | 3
+    day_bucket_4h TINYINT,          -- 3 | 4
+    day_bucket_3h TINYINT,          -- 4 | 5
+    day_bucket_2h TINYINT,          -- 5 | 7
     -- day_bucket_1h tinyint,
 
     -- hour_bucket_60m tinyint,
-    hour_bucket_30m tinyint,         -- 1 | 1
-    hour_bucket_20m tinyint,         -- 1 | 1
-    hour_bucket_15m tinyint,         -- 2 | 1
-    hour_bucket_10m tinyint,         -- 2 | 1
+    hour_bucket_30m TINYINT,         -- 1 | 1
+    hour_bucket_20m TINYINT,         -- 1 | 1
+    hour_bucket_15m TINYINT,         -- 2 | 1
+    hour_bucket_10m TINYINT,         -- 2 | 1
     -- hour_bucket_6m tinyint,
-    hour_bucket_5m tinyint,          -- 4 | 2
+    hour_bucket_5m TINYINT,          -- 4 | 2
     -- hour_bucket_4m tinyint,
     -- hour_bucket_3m tinyint,
     -- hour_bucket_2m tinyint,
     -- hour_bucket_1m tinyint,          -- 18 | 8
 
-    constraint pk_dim_time
-        primary key (time_key)
+    CONSTRAINT pk_dim_time
+        PRIMARY KEY (time_key)
 )
 
-declare @time_key int
-declare @am_pm char(2)
-declare @full_time time
-declare @full_time_12 varchar(20)
-declare @hour_part tinyint
-declare @hour_part_12 tinyint
-declare @hh char(2)
-declare @hh_12 char(2)
-declare @hour_of_day tinyint
-declare @minute_part tinyint
-declare @mm char(2)
-declare @minute_of_day smallint
-declare @second_part tinyint
-declare @ss char(2)
-declare @second_of_day int
-declare @shorthand varchar(10)
-declare @hhmm char(4)
-declare @hhmm_12 char(4)
-declare @hhmmss char(6)
-declare @hhmmss_12 char(6)
+DECLARE @time_key INT
+DECLARE @am_pm CHAR(2)
+DECLARE @full_time TIME
+DECLARE @full_time_12 VARCHAR(20)
+DECLARE @hour_part TINYINT
+DECLARE @hour_part_12 TINYINT
+DECLARE @hh CHAR(2)
+DECLARE @hh_12 CHAR(2)
+DECLARE @hour_of_day TINYINT
+DECLARE @minute_part TINYINT
+DECLARE @mm CHAR(2)
+DECLARE @minute_of_day SMALLINT
+DECLARE @second_part TINYINT
+DECLARE @ss CHAR(2)
+DECLARE @second_of_day INT
+DECLARE @shorthand VARCHAR(10)
+DECLARE @hhmm CHAR(4)
+DECLARE @hhmm_12 CHAR(4)
+DECLARE @hhmmss CHAR(6)
+DECLARE @hhmmss_12 CHAR(6)
 -- declare @day_bucket_24h tinyint
-declare @day_bucket_12h tinyint
-declare @day_bucket_8h tinyint
-declare @day_bucket_6h tinyint
-declare @day_bucket_4h tinyint
-declare @day_bucket_3h tinyint
-declare @day_bucket_2h tinyint
+DECLARE @day_bucket_12h TINYINT
+DECLARE @day_bucket_8h TINYINT
+DECLARE @day_bucket_6h TINYINT
+DECLARE @day_bucket_4h TINYINT
+DECLARE @day_bucket_3h TINYINT
+DECLARE @day_bucket_2h TINYINT
 -- declare @day_bucket_1h tinyint
 -- declare @hour_bucket_60m tinyint
-declare @hour_bucket_30m tinyint
-declare @hour_bucket_20m tinyint
-declare @hour_bucket_15m tinyint
-declare @hour_bucket_10m tinyint
+DECLARE @hour_bucket_30m TINYINT
+DECLARE @hour_bucket_20m TINYINT
+DECLARE @hour_bucket_15m TINYINT
+DECLARE @hour_bucket_10m TINYINT
 -- declare @hour_bucket_6m tinyint
-declare @hour_bucket_5m tinyint
+DECLARE @hour_bucket_5m TINYINT
 -- declare @hour_bucket_4m tinyint
 -- declare @hour_bucket_3m tinyint
 -- declare @hour_bucket_2m tinyint
 -- declare @hour_bucket_1m tinyint
 
 -- debugs
-declare @start_second int = 0
-declare @end_second int = 60*60*24 - 1
+DECLARE @start_second INT = 0
+DECLARE @end_second INT = 60 * 60 * 24 - 1
 
-declare @i_second int = @start_second
-while @i_second <= @end_second
-    begin
+DECLARE @i_second INT = @start_second
+WHILE @i_second <= @end_second
+    BEGIN
 
-    set @time_key = @start_second
+    SET @time_key = @start_second
 
-    set @full_time = dateadd(second, @i_second, 0)
-    
-    set @hour_part = datepart(hour, @full_time)
-    set @minute_part = datepart(minute, @full_time)
-    set @second_part = datepart(second, @full_time)
+    SET @full_time = DATEADD(SECOND, @i_second, 0)
 
-    set @am_pm =
-        case when @hour_part < 12
-            then 'AM'
-            else 'PM'
-        end;
-    
-    set @hour_part_12 =
-        case when @hour_part <= 12
-            then @hour_part
-            else @hour_part % 12
-        end;
-    set @hh = format(@hour_part, '00') 
-    set @hh_12 = format(@hour_part_12, '00')
-    set @hour_of_day = @hour_part
-    
-    set @mm = format(@minute_part, '00')
-    set @minute_of_day = @hour_part*60 + @minute_part
+    SET @hour_part = DATEPART(HOUR, @full_time)
+    SET @minute_part = DATEPART(MINUTE, @full_time)
+    SET @second_part = DATEPART(SECOND, @full_time)
 
-    set @ss = format(@second_part, '00')
-    set @second_of_day = @hour_part*60*60 + @minute_part*60 + @second_part
+    SET @am_pm =
+        CASE WHEN @hour_part < 12
+            THEN 'AM'
+            ELSE 'PM'
+        END;
 
-    set @shorthand = concat(@hour_part, 'h', @mm)
-    set @hhmm = concat(@hh, @mm)
-    set @hhmm_12 = concat(@hh_12, @mm)
-    set @hhmmss = concat(@hh, @mm, @ss)
-    set @hhmmss_12 = concat(@hh_12, @mm, @ss)
+    SET @hour_part_12 =
+        CASE WHEN @hour_part <= 12
+            THEN @hour_part
+            ELSE @hour_part % 12
+        END;
+    SET @hh = FORMAT(@hour_part, '00')
+    SET @hh_12 = FORMAT(@hour_part_12, '00')
+    SET @hour_of_day = @hour_part
+
+    SET @mm = FORMAT(@minute_part, '00')
+    SET @minute_of_day = @hour_part * 60 + @minute_part
+
+    SET @ss = FORMAT(@second_part, '00')
+    SET @second_of_day = @hour_part * 60 * 60 + @minute_part * 60 + @second_part
+
+    SET @shorthand = CONCAT(@hour_part, 'h', @mm)
+    SET @hhmm = CONCAT(@hh, @mm)
+    SET @hhmm_12 = CONCAT(@hh_12, @mm)
+    SET @hhmmss = CONCAT(@hh, @mm, @ss)
+    SET @hhmmss_12 = CONCAT(@hh_12, @mm, @ss)
 
     -- buckets
-    set @day_bucket_12h = ((@hour_part / 12) % 12) + 1
-    set @day_bucket_8h = ((@hour_part / 8) % 12) + 1
-    set @day_bucket_6h = ((@hour_part / 6) % 12) + 1
-    set @day_bucket_4h = ((@hour_part / 4) % 12) + 1
-    set @day_bucket_3h = ((@hour_part / 3) % 12) + 1
-    set @day_bucket_2h = ((@hour_part / 2) % 12) + 1
+    SET @day_bucket_12h = ((@hour_part / 12) % 12) + 1
+    SET @day_bucket_8h = ((@hour_part / 8) % 12) + 1
+    SET @day_bucket_6h = ((@hour_part / 6) % 12) + 1
+    SET @day_bucket_4h = ((@hour_part / 4) % 12) + 1
+    SET @day_bucket_3h = ((@hour_part / 3) % 12) + 1
+    SET @day_bucket_2h = ((@hour_part / 2) % 12) + 1
 
-    set @hour_bucket_30m = ((@minute_part / 30) % 12) + 1
-    set @hour_bucket_20m = ((@minute_part / 20) % 12) + 1
-    set @hour_bucket_15m = ((@minute_part / 15) % 12) + 1
-    set @hour_bucket_10m = ((@minute_part / 10) % 12) + 1
-    set @hour_bucket_5m = ((@minute_part / 5) % 12) + 1
+    SET @hour_bucket_30m = ((@minute_part / 30) % 12) + 1
+    SET @hour_bucket_20m = ((@minute_part / 20) % 12) + 1
+    SET @hour_bucket_15m = ((@minute_part / 15) % 12) + 1
+    SET @hour_bucket_10m = ((@minute_part / 10) % 12) + 1
+    SET @hour_bucket_5m = ((@minute_part / 5) % 12) + 1
 
-    set @full_time_12 = concat(
-        case when @hour_part_12 = 0
-            then '12'
-            else @hour_part_12
-        end,
+    SET @full_time_12 = CONCAT(
+        CASE WHEN @hour_part_12 = 0
+            THEN '12'
+            ELSE @hour_part_12
+        END,
         ':', @mm, ':', @ss, ' ', @am_pm)
 
     -- key
-    set @time_key = @second_of_day
-    
+    SET @time_key = @second_of_day
+
     -- increment
-    set @i_second = @i_second + 1
+    SET @i_second = @i_second + 1
 
     -- inserts
-    insert into utils.dim_time(
+    INSERT INTO utils.dim_time (
         time_key,
         am_pm,
         full_time,
@@ -229,7 +229,7 @@ while @i_second <= @end_second
         -- hour_bucket_2m,
         -- hour_bucket_1m,
     )
-    select
+    SELECT
         @time_key,
         @am_pm,
         @full_time,
@@ -269,10 +269,9 @@ while @i_second <= @end_second
         -- @hour_bucket_3m,
         -- @hour_bucket_2m,
         -- @hour_bucket_1m
-    end
+    END
 
-set noexec off;
-
+SET NOEXEC OFF;
 
 -- select top 1000
 -- *
@@ -284,7 +283,6 @@ select * from utils.dim_time
 */
 
 /* verify
-
 
 -- verify day_bucket
 select

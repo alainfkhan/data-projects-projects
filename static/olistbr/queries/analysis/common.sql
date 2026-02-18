@@ -92,17 +92,15 @@ SELECT TOP 1000
 FROM cte AS c
 
 -- list collations
-select *
-from sys.fn_helpcollations()
-where name like 'sql%'
+SELECT *
+FROM sys.fn_helpcollations ()
+WHERE name LIKE 'sql%'
 
 -- get rows
-select
-    count(*)
-from logistics.fact_geolocation
+SELECT COUNT(*)
+FROM logistics.fact_geolocation
 
 -- faster way of getting rows
-select
-    st.row_count
-from sys.dm_db_partition_stats as st
-where st.object_id = object_id('logistics.fact_geolocation')
+SELECT st.row_count
+FROM sys.dm_db_partition_stats AS st
+WHERE st.object_id = OBJECT_ID('logistics.fact_geolocation')

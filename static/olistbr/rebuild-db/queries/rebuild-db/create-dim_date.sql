@@ -22,17 +22,17 @@ USE olist_stg;
 
 -- TODO: change columns names: year_number to year etc
 
-if (schema_id('utils')) is null
-    begin
-        exec ('create schema utils');
-    end;
+IF (SCHEMA_ID('utils')) IS NULL
+    BEGIN
+        EXEC ('create schema utils');
+    END;
 
-if (object_id('utils.dim_date')) is not null
-    begin
-        drop table utils.dim_date;
-    end;
+IF (OBJECT_ID('utils.dim_date')) IS NOT NULL
+    BEGIN
+        DROP TABLE utils.dim_date;
+    END;
 
-set nocount on;
+SET NOCOUNT ON;
 
 -- settings
 -- set day1=monday
@@ -108,7 +108,7 @@ WHILE @i_date <= @end_date
     SET @month_name_short = LEFT(@month_name, 3)
     SET @quarter_number = DATEPART(QUARTER, @i_date)
     SET @year_number = DATEPART(YEAR, @i_date)
-    
+
     -- key
     DECLARE @zero_padded_month_number CHAR(2) = FORMAT(@month_number, '00')
     DECLARE @zero_padded_day_of_month CHAR(2) = FORMAT(@day_of_month, '00')
@@ -121,7 +121,7 @@ WHILE @i_date <= @end_date
     -- increment
     SET @i_date = DATEADD(DAY, 1, @i_date)
 
-    INSERT INTO utils.dim_date(
+    INSERT INTO utils.dim_date (
         date_key,
         full_date,
         day_of_week,

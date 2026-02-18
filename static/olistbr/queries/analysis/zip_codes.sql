@@ -12,7 +12,7 @@ annnn > abnnn
 zp annnn contains zp abnnn
 */
 
-use olist_stg
+USE olist_stg
 
 -- quick view
 /*
@@ -22,142 +22,125 @@ from logistics.dim_geolocation as g
 */
 
 -- list distinct zip code prefixes
-select distinct
-    g.geolocation_zip_code_prefix
-from logistics.dim_geolocation as g
-order by g.geolocation_zip_code_prefix
+SELECT DISTINCT g.geolocation_zip_code_prefix
+FROM logistics.dim_geolocation AS g
+ORDER BY g.geolocation_zip_code_prefix
 
 -- find distinct zp
-select
-    distinct g.geolocation_zip_code_prefix
-from logistics.dim_geolocation as g
-order by g.geolocation_zip_code_prefix
+SELECT DISTINCT g.geolocation_zip_code_prefix
+FROM logistics.dim_geolocation AS g
+ORDER BY g.geolocation_zip_code_prefix
 
 -- find count of distinct zip code prefixes: 19015
-select
-    count(distinct g.geolocation_zip_code_prefix)
-from logistics.dim_geolocation as g
+SELECT COUNT(DISTINCT g.geolocation_zip_code_prefix)
+FROM logistics.dim_geolocation AS g
 
 -- get distinct zp and city
-select distinct top 1000
+SELECT DISTINCT TOP 1000
     g.geolocation_zip_code_prefix,
     g.geolocation_city
-from logistics.dim_geolocation as g
+FROM logistics.dim_geolocation AS g
 
 -- analysis: get states from zipcode starting with:
-select distinct
-    g.geolocation_state as distinct_states
-from logistics.dim_geolocation as g
-where g.geolocation_zip_code_prefix like '0%'
-order by g.geolocation_state
+SELECT DISTINCT g.geolocation_state AS distinct_states
+FROM logistics.dim_geolocation AS g
+WHERE g.geolocation_zip_code_prefix LIKE '0%'
+ORDER BY g.geolocation_state
 
 -- analysis: count 
-select
-    count(*) as count_state_from_zp
-from logistics.dim_geolocation as g
-where g.geolocation_zip_code_prefix like '9%'
-and g.geolocation_state = 'rs'
+SELECT COUNT(*) AS count_state_from_zp
+FROM logistics.dim_geolocation AS g
+WHERE g.geolocation_zip_code_prefix LIKE '9%'
+AND g.geolocation_state = 'rs'
 
 -- see table
-select 
-    g.*
-from logistics.dim_geolocation as g
-where g.geolocation_zip_code_prefix like '01%'
+SELECT g.*
+FROM logistics.dim_geolocation AS g
+WHERE g.geolocation_zip_code_prefix LIKE '01%'
 
 -- analysis: distinct cities from zp 2 digits
-select distinct
-    g.geolocation_city
-from logistics.dim_geolocation as g
-where g.geolocation_zip_code_prefix like '01%'
+SELECT DISTINCT g.geolocation_city
+FROM logistics.dim_geolocation AS g
+WHERE g.geolocation_zip_code_prefix LIKE '01%'
 
 
 -- find distinct cities
 -- TODO: after cleaning
-select distinct
-    count(g.geolocation_city)
-from logistics.dim_geolocation as g
-where g.geolocation_zip_code_prefix like '01%'
-and g.geolocation_city in ('sao paulo', 'são paulo')
+SELECT DISTINCT COUNT(g.geolocation_city)
+FROM logistics.dim_geolocation AS g
+WHERE g.geolocation_zip_code_prefix LIKE '01%'
+AND g.geolocation_city IN ('sao paulo', 'são paulo')
 
 
 /*
 */
 
 -- ==================================================
-/* 
+/*
 want to create table distinct
 zip_code_prefix, city, state
 */
 -- view schema
-select *
-from INFORMATION_SCHEMA.columns
-where table_name = 'dim_geolocation'
+SELECT *
+FROM INFORMATION_SCHEMA.columns
+WHERE table_name = 'dim_geolocation'
 -- ==================================================
 -- get distinct regional codes, total: 19015
-select
-    distinct g.geolocation_zip_code_prefix as distinct_base_codes
-from logistics.dim_geolocation as g
-order by g.geolocation_zip_code_prefix
+SELECT DISTINCT g.geolocation_zip_code_prefix AS distinct_base_codes
+FROM logistics.dim_geolocation AS g
+ORDER BY g.geolocation_zip_code_prefix
 
 -- get distinct cities, total: 8010
-select
-    distinct g.geolocation_city as distinct_cities
-from logistics.dim_geolocation as g
-order by g.geolocation_city
+SELECT DISTINCT g.geolocation_city AS distinct_cities
+FROM logistics.dim_geolocation AS g
+ORDER BY g.geolocation_city
 
 -- get distinct states, total: 27
-select
-    distinct g.geolocation_state as distinct_states
-from logistics.dim_geolocation as g
-order by g.geolocation_state
+SELECT DISTINCT g.geolocation_state AS distinct_states
+FROM logistics.dim_geolocation AS g
+ORDER BY g.geolocation_state
 -- ==================================================
 
-drop table #dist_rc_city_state
+DROP TABLE #dist_rc_city_state
 
 -- get distinct (regional codes, cities, states)
-select distinct
-    g.geolocation_zip_code_prefix as regional_code,
-    g.geolocation_city as city,
-    g.geolocation_state as [state]
-into #dist_rc_city_state
-from logistics.dim_geolocation as g
+SELECT DISTINCT
+    g.geolocation_zip_code_prefix AS regional_code,
+    g.geolocation_city AS city,
+    g.geolocation_state AS [state]
+INTO #dist_rc_city_state
+FROM logistics.dim_geolocation AS g
 
 -- query table, total: 27911
-select *
-from #dist_rc_city_state as d
-order by
-    d.regional_code asc,
-    d.city asc,
-    d.state asc
+SELECT *
+FROM #dist_rc_city_state AS d
+ORDER BY
+    d.regional_code ASC,
+    d.city ASC,
+    d.state ASC
 
 -- change city to ascii
-select
-    d.*
-from #dist_rc_city_state as d
-order by 
-    d.regional_code asc,
-    d.city asc,
-    d.state asc
+SELECT d.*
+FROM #dist_rc_city_state AS d
+ORDER BY
+    d.regional_code ASC,
+    d.city ASC,
+    d.state ASC
 
 
 -- 
-select *
-from tempdb.sys.all_columns
-where object_id = (
-    select object_id
-    from tempdb.sys.tables
-    where name like '#tmp_dim_geolocation_canon_ascii%'
+SELECT *
+FROM tempdb.sys.all_columns
+WHERE object_id = (
+    SELECT object_id
+    FROM tempdb.sys.tables
+    WHERE name LIKE '#tmp_dim_geolocation_canon_ascii%'
 )
 
-select
-    d.*
-    
-from #dist_rc_city_state as d
-order by
-    d.regional_code asc,
-    d.city asc,
-    d.state asc
+SELECT d.*
 
-
-
-
+FROM #dist_rc_city_state AS d
+ORDER BY
+    d.regional_code ASC,
+    d.city ASC,
+    d.state ASC

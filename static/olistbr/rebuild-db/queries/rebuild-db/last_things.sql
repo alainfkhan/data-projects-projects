@@ -1,7 +1,7 @@
-use olist_stg
+USE olist_stg
 
 -- rename main cep
-if (object_id('logistics.dim_cep_iz_AuBmA')) is not null
-    begin
-        exec sp_rename 'logistics.dim_cep_iz_AuBmA', 'dim_cep'
-    end;
+IF (OBJECT_ID('logistics.dim_cep_iz_AuBmA')) IS NOT NULL
+    BEGIN
+        EXEC sp_rename 'logistics.dim_cep_iz_AuBmA', 'dim_cep'
+    END;
