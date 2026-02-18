@@ -1,0 +1,2 @@
+chmod 444 data/raw/*.csv
+ls -l data/raw > docs/permissions.txt

@@ -1,0 +1,3 @@
+total 3200
+-r--r--r--@ 1 alainkhan  staff  1612470 25 Jan 19:11 MA_Public_Schools_2017.csv
+-r--r--r--@ 1 alainkhan  staff    23155 25 Jan 19:11 MA_Public_Schools_datadict.csv
