@@ -258,11 +258,6 @@ def main() -> None:
         # console.print(schema_table)
         # console.print(tables_table)
 
-        # print(short_lines)
-        # print(f"!!! '{db}' subject to repeated rewrites.")
-        # print("!!! Remember to copy the database.")
-        # print(short_lines)
-
     return
 
     # # columns
@@ -324,3 +319,9 @@ if __name__ == "__main__":
     conn, cursor = dbm.connect()
     with conn:
         dbm.show_overview()
+
+    print(short_lines)
+    print(f"Successfully rebuilt '{db}'.")
+    print(f"!!! '{db}' subject to repeated rewrites.")
+    print("!!! Remember to copy the database.")
+    print(short_lines)

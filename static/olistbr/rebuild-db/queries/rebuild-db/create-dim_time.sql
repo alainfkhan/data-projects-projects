@@ -1,15 +1,14 @@
 use olist_stg;
 
--- if schema utils doest exist, create it
 if (schema_id('utils')) is null
     begin
         exec ('create schema utils');
     end;
 
--- if table exists drop
 if (object_id('utils.dim_time')) is not null
     begin
-        drop table utils.dim_time;
+        -- drop table utils.dim_time;
+        set noexec on;
     end;
 
 set nocount on;
@@ -180,13 +179,7 @@ while @i_second <= @end_second
             then '12'
             else @hour_part_12
         end,
-        ':',
-        @mm,
-        ':',
-        @ss,
-        ' ',
-        @am_pm
-    )
+        ':', @mm, ':', @ss, ' ', @am_pm)
 
     -- key
     set @time_key = @second_of_day
@@ -278,6 +271,7 @@ while @i_second <= @end_second
         -- @hour_bucket_1m
     end
 
+set noexec off;
 
 
 -- select top 1000

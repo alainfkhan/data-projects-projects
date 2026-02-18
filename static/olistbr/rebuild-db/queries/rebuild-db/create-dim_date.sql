@@ -22,13 +22,11 @@ USE olist_stg;
 
 -- TODO: change columns names: year_number to year etc
 
--- if schema utils doest exist, create it
 if (schema_id('utils')) is null
     begin
         exec ('create schema utils');
     end;
 
--- if table exists drop
 if (object_id('utils.dim_date')) is not null
     begin
         drop table utils.dim_date;

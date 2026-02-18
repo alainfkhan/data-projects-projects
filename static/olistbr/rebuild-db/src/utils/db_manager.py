@@ -37,7 +37,7 @@ class DBManager:
         self.default_db = "master"
         self.system_dbs = ["master", "model", "msdb", "tempdb"]
 
-    def connect(self) -> None | tuple[Connection, Cursor]:
+    def connect(self) -> tuple[Connection, Cursor]:
         """Connects to a database."""
         try:
             conn = pyodbc.connect(f"""
@@ -49,7 +49,7 @@ class DBManager:
         except Exception as e:
             print("db_manager.connect() execption message")
             print(e)
-            return None
+            return
 
         cursor = conn.cursor()
 
