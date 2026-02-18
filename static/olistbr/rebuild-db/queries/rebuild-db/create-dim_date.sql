@@ -1,4 +1,5 @@
 /*
+
 create dim_dates table
 choose 2016-01-01 to 2020-12-31 inclusive
 
@@ -13,7 +14,7 @@ follow iso 8601
     day 1: monday
     day 7: sunday
 
-select * from core.dim_date
+select * from utils.dim_date
 
 */
 
@@ -25,15 +26,15 @@ USE olist_stg;
 if (schema_id('utils')) is null
     begin
         exec ('create schema utils');
-    end
+    end;
 
 -- if table exists drop
 if (object_id('utils.dim_date')) is not null
     begin
         drop table utils.dim_date;
-    end
+    end;
 
-set nocount on
+set nocount on;
 
 -- settings
 -- set day1=monday

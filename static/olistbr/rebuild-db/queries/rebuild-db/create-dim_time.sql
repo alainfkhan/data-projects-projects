@@ -1,21 +1,18 @@
--- WARNING: do not run
--- broken need to fix while loop indexing
-use olist_stgas
-
+use olist_stg;
 
 -- if schema utils doest exist, create it
 if (schema_id('utils')) is null
     begin
         exec ('create schema utils');
-    end
+    end;
 
 -- if table exists drop
 if (object_id('utils.dim_time')) is not null
     begin
         drop table utils.dim_time;
-    end
+    end;
 
-set nocount on
+set nocount on;
 
 /*
 minute of day is floor, 0 indexed, is range
@@ -123,23 +120,19 @@ declare @hour_bucket_5m tinyint
 
 -- debugs
 declare @start_second int = 0
-declare @end_second int = 10
--- declare @end_second int = 60*60*24 - 1
+declare @end_second int = 60*60*24 - 1
 
-declare @i_second time = @start_second
+declare @i_second int = @start_second
 while @i_second <= @end_second
     begin
 
     set @time_key = @start_second
 
-    -- TODO:
-    -- set @hour_part = floor(@time_key / 60*60)
-    set @hour_part = @time_key % 60*60
-    set @minute_part = @time_key % 60
+    set @full_time = dateadd(second, @i_second, 0)
     
-    set @hour_part = datepart(hour, @i_second)
-    set @minute_part = datepart(minute, @i_second) 
-    set @second_part = datepart(second, @i_second) 
+    set @hour_part = datepart(hour, @full_time)
+    set @minute_part = datepart(minute, @full_time)
+    set @second_part = datepart(second, @full_time)
 
     set @am_pm =
         case when @hour_part < 12
@@ -170,43 +163,18 @@ while @i_second <= @end_second
 
     -- buckets
     set @day_bucket_12h = ((@hour_part / 12) % 12) + 1
-
-    -- TODO: fix verify
     set @day_bucket_8h = ((@hour_part / 8) % 12) + 1
     set @day_bucket_6h = ((@hour_part / 6) % 12) + 1
     set @day_bucket_4h = ((@hour_part / 4) % 12) + 1
     set @day_bucket_3h = ((@hour_part / 3) % 12) + 1
     set @day_bucket_2h = ((@hour_part / 2) % 12) + 1
 
-/*
-24 / 12
-mod (24/12)+1 = 0,1,2. reject 0
-12 * n
-
-@hour_part mod (24/12)
-23 = 1 mod2
-24 = 0 mod2
-0 = 0 mod2
-... = 0 mod2
-10 = 0 mod2
-11 = 0 mod2
-12 = 1 mod2
-13 = 1 mod2
-... = 1 mod2
-23 = 1 mod2
-24 = 0 mod2
-0 = 0 mod2
-*/
-    -- TODO: placeholder
     set @hour_bucket_30m = ((@minute_part / 30) % 12) + 1
-
-    -- TODO: fix verifyg
     set @hour_bucket_20m = ((@minute_part / 20) % 12) + 1
     set @hour_bucket_15m = ((@minute_part / 15) % 12) + 1
     set @hour_bucket_10m = ((@minute_part / 10) % 12) + 1
     set @hour_bucket_5m = ((@minute_part / 5) % 12) + 1
 
-    set @full_time = @i_second
     set @full_time_12 = concat(
         case when @hour_part_12 = 0
             then '12'
@@ -224,8 +192,9 @@ mod (24/12)+1 = 0,1,2. reject 0
     set @time_key = @second_of_day
     
     -- increment
-    set @i_second = dateadd(second, 1, @i_second)
+    set @i_second = @i_second + 1
 
+    -- inserts
     insert into utils.dim_time(
         time_key,
         am_pm,
@@ -310,34 +279,51 @@ mod (24/12)+1 = 0,1,2. reject 0
     end
 
 
+
+-- select top 1000
+-- *
+-- from utils.dim_time
+
 /*
 
-select
-    -- t.*,
-    t.time_key,
-    t.full_time,
-    t.hour_part,
-    t.day_bucket_12h
-from utils.dim_time as t
-
+select * from utils.dim_time
 */
 
-/*
+/* verify
 
+
+-- verify day_bucket
 select
     sub.hour_part,
-    sub.day_bucket_12h
+    sub.day_bucket_2h
 from (
     select
         t.hour_part,
         row_number() over (
             partition by t.hour_part
-            order by t.day_bucket_12h
+            order by t.day_bucket_2h
         ) as row_num,
-        t.day_bucket_12h
+        t.day_bucket_2h
     from utils.dim_time as t
 ) as sub
 where sub.row_num = 1
+order by sub.hour_part
+
+-- verify hour_bucket
+select
+    sub.minute_part,
+    sub.hour_bucket_5m
+from (
+    select
+        t.minute_part,
+        row_number() over (
+            partition by t.minute_part
+            order by t.hour_bucket_5m
+        ) as row_number,
+        t.hour_bucket_5m
+    from utils.dim_time as t
+) as sub
+where sub.row_number = 1
+order by sub.minute_part
 
 */
-
