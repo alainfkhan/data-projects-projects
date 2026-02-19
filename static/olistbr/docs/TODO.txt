@@ -1,8 +1,6 @@
 TODO:
     update erd
-    research what type of questions i would be asked
-    change all '' to null in new tables (from converter)
-    generate core.dim_time
-    change name cep_iz_AuBmA to just cep
+    find GMV in queries not programatically
+
 
 

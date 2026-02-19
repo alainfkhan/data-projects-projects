@@ -1,7 +1,7 @@
 Gross Merchandise Value/Volume (GMV)
 GMV = (sales price of goods) * (number of goods sold)
 
-
+good sold when order approved
 
 heard:
 GTV

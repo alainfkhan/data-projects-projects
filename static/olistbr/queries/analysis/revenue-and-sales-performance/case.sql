@@ -34,26 +34,57 @@ from sales.fact_order_items as ot
 where ot.order_id = '8272b63d03f5f79c56e9e4120aec44ef'
 */
 
+-- =========================================
+-- Choose initial values
+-- =========================================
 
 -- choose any order_id
 declare @order_id char(32)
+-- choose random
 -- set @order_id = '00010242fe8c5a6d1ba2dd792cb16214'
 -- set @order_id = '0010dedd556712d7bb69a19cb7bbd37a'
 -- set @order_id = '000e906b789b55f64edcb1f84030f90d'
-set @order_id = '0009c9a17f916a706d71784483a5d643'
+-- set @order_id = '0009c9a17f916a706d71784483a5d643'
+
+
 
 -- most order_item_id = 21
 -- set @order_id = '8272b63d03f5f79c56e9e4120aec44ef'
+-- order_item_id max = 20
 -- set @order_id = 'ab14fdcfbe524636d65ee38360e22ce8'
+-- order_item_id max = 9
+-- set @order_id = 'f5aa338a071dcf7d23d8e6b116bfcab5'
+-- order_item_id max = 7
+-- set @order_id = '7d316b369d4c6b0a4ebeebbff5f65466'
+-- order_item_id max = 5, 4 product_ids
+set @order_id = 'cb8a63e70a7f664281f701b6abd79fe5'
+
+-- if multiple product_ids choose which
+declare @choose_product_id tinyint = 1
 
 -- =========================================
 -- =========================================
+
 
 -- orders
 select top 1000
     o.*
 from sales.fact_orders as o
 where o.order_id = @order_id
+
+-- customers
+declare @customer_id char(32) = (
+    select
+        o.customer_id
+    from sales.fact_orders as o
+    where o.order_id = @order_id
+)
+
+select
+    c.*
+from sales.dim_customers as c
+where c.customer_id = @customer_id
+
 
 -- order_items
 select top 1000
@@ -78,6 +109,7 @@ set @product_id = (
     select
         choose.product_id
     from (
+        
         select
             distinct_product_ids.product_id,
             row_number () over (
@@ -88,14 +120,15 @@ set @product_id = (
                 repeat_orders.product_id
             from (
                 select top 1000
-                    ot.*
-                from sales.fact_order_items as ot
-                where ot.order_id = @order_id
-                -- where ot.order_id = '8272b63d03f5f79c56e9e4120aec44ef'
+                    oi.*
+                from sales.fact_order_items as oi
+                where oi.order_id = @order_id
+                -- where oi.order_id = '8272b63d03f5f79c56e9e4120aec44ef'
             ) as repeat_orders
         ) as distinct_product_ids
+
     ) as choose
-    where choose.choose_row = 1
+    where choose.choose_row = @choose_product_id
 
 )
 
