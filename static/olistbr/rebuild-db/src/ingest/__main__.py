@@ -96,13 +96,12 @@ def main() -> None:
             print("CEP tables not inserted.")
         else:
             # generate cep tables
-            # TODO: get schema name from where geolocation table is
-            geolocation_schema = "logistics"
+            cep_schema = "staging"
             cep1_short = "dim_cep_iz_AuBmA"
-            cep1_name = f"{geolocation_schema}.{cep1_short}"
+            cep1_name = f"{cep_schema}.{cep1_short}"
 
             cep2_short = "dim_cep_iz_B"
-            cep2_name = f"{geolocation_schema}.{cep2_short}"
+            cep2_name = f"{cep_schema}.{cep2_short}"
 
             # create cep tables
             dim_cep_path = gen_sql_path / "create-dim_cep_iz.sql"

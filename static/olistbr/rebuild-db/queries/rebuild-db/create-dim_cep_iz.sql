@@ -29,18 +29,18 @@ create tables
 */
 USE olist_stg;
 
-IF (SCHEMA_ID('logistics')) IS NULL
+IF (SCHEMA_ID('staging')) IS NULL
     BEGIN
-        EXEC ('create schema logistics')
+        EXEC ('create schema staging')
     END
 
 -- first table
-IF (OBJECT_ID('logistics.dim_cep_iz_AuBmA')) IS NOT NULL
+IF (OBJECT_ID('staging.dim_cep_iz_AuBmA')) IS NOT NULL
     BEGIN
         SET NOEXEC ON;
     END
 
-CREATE TABLE logistics.dim_cep_iz_AuBmA (
+CREATE TABLE staging.dim_cep_iz_AuBmA (
     cep CHAR(8) NOT NULL,
     uf VARCHAR(20) NOT NULL,
     cidade NVARCHAR(70) NOT NULL,
@@ -55,12 +55,12 @@ CREATE TABLE logistics.dim_cep_iz_AuBmA (
 SET NOEXEC OFF;
 
 -- second table
-IF (OBJECT_ID('logistics.dim_cep_iz_B')) IS NOT NULL
+IF (OBJECT_ID('staging.dim_cep_iz_B')) IS NOT NULL
     BEGIN
         SET NOEXEC ON;
     END
 
-CREATE TABLE logistics.dim_cep_iz_B (
+CREATE TABLE staging.dim_cep_iz_B (
     cep CHAR(8) NOT NULL,
     uf VARCHAR(20) NOT NULL,
     cidade NVARCHAR(70) NOT NULL,
