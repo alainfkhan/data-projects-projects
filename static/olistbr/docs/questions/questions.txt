@@ -1,0 +1,143 @@
+
+1 Revenue and sales performance
+using:
+    olist_orders_dataset.csv
+    olist_order_items_dataset.csv
+    olist_order_payments_dataset.csv
+    olist_products_dataset.csv
+
+simple questions:
+    what is total gmv (gross merchandise value)
+    monthly revenue trend
+    average order value (aov)
+    revenue by product category
+    revenue by state
+    which sellers generate the most revenue
+    what is the cancellation rate
+
+advanced questions:
+    revenue growth MoM
+    revenue by business segment (joining closed deals)
+    cohort-based revenue ()
+
+2 customer analytics
+using:
+    olist_customers_dataset.csv
+    olist_orders_dataset.csv
+    olist_order_reviews_dataset.csv
+
+simple questions:
+    how many active customers do we have?
+    new vs returning customer ratio?
+    customer lifetime value (clv)?
+    average number of orders per customer?
+    customer retention rate?
+    which states have highest repeat value?
+
+advanced questions:
+    build RFM segmentation (recency, frequency, monetary)
+    which segments drive most revenue?
+    predict repeat purchase probability
+
+3 logistics and delivery performance
+using:
+    purchase timestamp
+    delivered_customer_date
+    estimated_delivery_date
+    geolocation
+
+questions
+    average delivery time?
+    % of late deliveries?
+    delivery time by state?
+    freight cost vs distance?
+    does delivery time affect review score?
+
+4 product analysis
+    olist_products_dataset
+    category translation
+
+questions:
+    which product categories sell most?
+    which categories have highest margins? (price - freight proxy)
+    does product weight affect freight?
+    does number of photoes influence review score?
+    do longer descriptiongs correlate with higher sales?
+
+5 seller performace:
+using:
+    olist_sellers_dataset.csv
+    olist_closed_deals_dataset.csv
+
+questions:
+    top sellers by revenue?
+    seller concentration (pareto 80/20)?
+    revenue by seller date?
+    do certain business segments convert beterr?
+    sdr/sr performance (sales reps effectiveness)?
+    which sdr has the highest win rate?
+
+6 marketing and funnel analysis
+using:
+    olist_marketing_qualified_leads_dataset
+    olist_closed_deals_dataset
+
+questions:
+    convertion rate: mql -> closed deals
+    conversion by origin (organic vs paid vs social)
+    time from first contact to close
+    which channels bring highest revenue sellers?
+    which acquisition channel produces the highest ltv sellers
+
+7 payment analysis
+using: olist_order_payments_dataset
+
+questions:
+    payment method distribution?
+    do credit card installments increase order value?
+    are installments orders more likely to default/cancel?
+    payment type vs review score?
+
+8 review and quality analytics
+using olist_order_reviews_dataset
+
+questions:
+    average review score?
+    review score by category?
+    review score vs delivery delay?
+    what drives 1-star reviews?
+    build a model explaining review score drivers
+
+9 geographic analysis
+using:
+    customer + seller states
+    geolocation
+
+questions:
+    revenue by state
+    shipping distance analysis
+    do customers buy more from nearby sellers?
+    regional profitability?
+    a heatmap of brazil states
+    revenue density by zip prefix
+
+10 executive-level questions
+    why are cancellations increasing?
+    why did revenue drop in Q2
+    which levers should we pull to grow 20%
+    show we invest more in paid search?
+
+11
+    build a churn prediction model
+    predict delivery delays
+    forcast motnhly sales
+    detect fraudulent orders
+    cluster customers
+
+12
+    we want to reduce 1-star reviews by 10%. what would you analyse?
+    check delivery delays
+    freight cost impact
+    category-level complaints
+    seller-level patterns
+    

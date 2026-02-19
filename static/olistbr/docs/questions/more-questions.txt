@@ -1,0 +1,13 @@
+hazard model on customer churn
+survival analysis on repeat purcahse
+multivariate regression: review score ~ delivery delay + price + category
+hierarchical model: seller performance
+network graph: customer-seller interactions
+
+define aov and calculate it
+how would you measure retention?
+how would you detect outliers in seller performance?
+explain why correlation between freight and review may be spurious
+how would you design an experiment to improve delivery times?
+
+
