@@ -1,0 +1,17 @@
+a sale occured if
+    order_status: approved, delivered, invoiced, processing, or shipped
+    and price is not null
+
+order_purchase_timestamp
+    marketing date
+    the moment the customer clicked 'buy'
+    marketing performance
+    website conversion rates
+    customer behaviour
+order_approved_at
+    accounting date
+    calculate revenue
+    report sales
+    when
+
+1 order id means 1 order

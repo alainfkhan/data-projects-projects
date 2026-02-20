@@ -1,0 +1,5 @@
+Gross Merchandise Value/Volume (GMV)
+GMV = (sales price of goods) * (number of goods sold)
+
+Average Order Value
+AOV = (total revenue) / (total number of orders)

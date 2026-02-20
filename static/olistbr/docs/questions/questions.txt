@@ -7,9 +7,9 @@ using:
     olist_products_dataset.csv
 
 simple questions:
-    what is total gmv (gross merchandise value)
+    [x] what is total gmv (gross merchandise value)
     monthly revenue trend
-    average order value (aov)
+    [x] average order value (aov)
     revenue by product category
     revenue by state
     which sellers generate the most revenue

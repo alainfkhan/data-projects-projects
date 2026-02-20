@@ -1,6 +1,8 @@
 use olist_stg
 
--- find GMV over a period
+-- ==================================================
+-- find GMV over any period
+
 -- [)
 declare @start_date datetime2 = '2018-01-01'
 declare @end_date datetime2 = '2019-01-01'
@@ -95,11 +97,20 @@ from (
     left join sales.fact_order_items as oi
         on o.order_id = oi.order_id
     where oi.price is not null
+        and o.order_status in (
+            'approved',
+            'delivered',
+            'invoiced',
+            'processing',
+            'shipped'
+        )
     -- order by o.order_approved_at
 ) as sub
 right join utils.dim_date as d
     on sub.full_date = d.full_date
-order by d.full_date
+order by d.full_date;
+
+select * from #order_sales
 
 select * from utils.dim_date
 
@@ -133,7 +144,6 @@ order by os.year_number asc, os.month_number asc
 
 -- GMV week
 select
-    -- os.*
     os.year_number,
     os.week_number,
     sum(os.order_price) as GMV_week
