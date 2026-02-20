@@ -1,6 +1,6 @@
 TODO:
-    update erd
     find GMV in queries not programatically
-
+    get full cep from coordinates using python brazilcep
+    update erd
 
 

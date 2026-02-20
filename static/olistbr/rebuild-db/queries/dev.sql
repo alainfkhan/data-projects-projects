@@ -16,6 +16,8 @@ drop table staging.dim_cep_iz_B
 -- drop table logistics.dim_cep_iz_B;
 -- drop table logistics.dim_cep;
 
+select datepart(week, '2016-01-01')
+
 select
     count(*)
 from logistics.fact_geolocation

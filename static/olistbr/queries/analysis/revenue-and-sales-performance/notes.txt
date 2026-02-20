@@ -1,0 +1,30 @@
+Gross Merchandise Value/Volume (GMV)
+GMV = (sales price of goods) * (number of goods sold)
+
+good sold when order approved
+price has to exist, cannot be null, else cannot calculate GMV
+
+order_status values:
+    when price null:
+        canceled 
+        created
+        invoiced
+        shipped
+        unavailable
+    when price not null:
+        approved
+        delivered
+        invoiced
+        processing
+        unavailable
+        canceled
+        shipped
+    appears in price null and not null:
+        approved
+        delivered
+        processing
+
+    
+    
+
+

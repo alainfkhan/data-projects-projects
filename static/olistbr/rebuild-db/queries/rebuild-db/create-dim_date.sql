@@ -77,8 +77,8 @@ DECLARE @quarter_number TINYINT
 DECLARE @year_number SMALLINT
 
 -- determined from analysis
-DECLARE @first_date DATE = '2016-01-01'
-DECLARE @end_date DATE = '2020-12-31'
+DECLARE @first_date DATE = '2015-01-01'
+DECLARE @end_date DATE = '2021-12-31'
 
 DECLARE @i_date DATE = @first_date
 WHILE @i_date <= @end_date
@@ -102,7 +102,7 @@ WHILE @i_date <= @end_date
         END;
 
     SET @day_of_year = DATEPART(DAYOFYEAR, @i_date)
-    SET @week_number = DATEPART(WEEK, @i_date)
+    SET @week_number = DATEPART(ISO_WEEK, @i_date)
     SET @month_number = DATEPART(MONTH, @i_date)
     SET @month_name = DATENAME(MONTH, @i_date)
     SET @month_name_short = LEFT(@month_name, 3)
