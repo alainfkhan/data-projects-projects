@@ -12,6 +12,5 @@ order_approved_at
     accounting date
     calculate revenue
     report sales
-    when
 
 1 order id means 1 order

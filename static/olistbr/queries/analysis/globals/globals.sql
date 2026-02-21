@@ -1,1 +1,1 @@
-use olist_stg;
+USE olist_stg;

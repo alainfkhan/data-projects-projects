@@ -1,25 +1,25 @@
-use olist_stg;
+USE olist_stg;
 
 -- redo
 -- join relevant tables, filter, aggregate revenue, join date
-select
+SELECT
     d.*,
     sub.*
-into #order_revenue
-from (
-    select
+INTO #order_revenue
+FROM (
+    SELECT
         -- o.*,
         -- oi.*
         -- cast(o.order_purchase_timestamp as date) as order_purchase_date,
-        cast(o.order_approved_at as date) as order_approved_date,
-        sum(oi.price) as total_product_revenue,
-        sum(oi.freight_value) as total_freight_revenue,
-        count(distinct o.order_id) as order_count
-    from sales.fact_orders as o
-    left join sales.fact_order_items as oi
-        on o.order_id = oi.order_id
-    where oi.price is not null
-        and o.order_status in (
+        CAST(o.order_approved_at AS DATE) AS order_approved_date,
+        SUM(oi.price) AS total_product_revenue,
+        SUM(oi.freight_value) AS total_freight_revenue,
+        COUNT(DISTINCT o.order_id) AS order_count
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.fact_order_items AS oi
+        ON o.order_id = oi.order_id
+    WHERE oi.price IS NOT NULL
+        AND o.order_status IN (
             'approved',
             'delivered',
             'invoiced',
@@ -27,35 +27,33 @@ from (
             'shipped'
         )
     -- group by cast(o.order_purchase_timestamp as date)
-    group by cast(o.order_approved_at as date)
-) as sub
-right join utils.dim_date as d
-    on sub.order_approved_date = d.full_date
-order by d.date_key
+    GROUP BY CAST(o.order_approved_at AS DATE)
+) AS sub
+RIGHT JOIN utils.dim_date AS d
+    ON sub.order_approved_date = d.full_date
+ORDER BY d.date_key
 
 /*
 drop table #order_revenue
 */
 
 -- verify distinct count
-select
-    count(distinct o.order_id)
-from sales.fact_orders as o
-where cast(o.order_approved_at as date) = '2018-04-18'
+SELECT COUNT(DISTINCT o.order_id)
+FROM sales.fact_orders AS o
+WHERE CAST(o.order_approved_at AS DATE) = '2018-04-18'
 -- 275 (correct)
 
 -- 293 distinct sales in 2016 (correct)
 -- 44304 distinct sales in 2017 (correct)
 -- 53588 disintct sales in 2018 (correct)
-select
+SELECT COUNT(DISTINCT o.order_id)
     -- o.*
-    count(distinct o.order_id)
-from sales.fact_orders as o
-left join sales.fact_order_items as oi
-    on o.order_id = oi.order_id
-where datepart(year, o.order_approved_at) = '2018'
-    and oi.price is not null
-    and o.order_status in (
+FROM sales.fact_orders AS o
+LEFT JOIN sales.fact_order_items AS oi
+    ON o.order_id = oi.order_id
+WHERE DATEPART(YEAR, o.order_approved_at) = '2018'
+    AND oi.price IS NOT NULL
+    AND o.order_status IN (
         'approved',
         'delivered',
         'invoiced',
@@ -64,84 +62,125 @@ where datepart(year, o.order_approved_at) = '2018'
     )
 
 -- view created table
-select *
-from #order_revenue as r
-order by r.date_key
+SELECT *
+FROM #order_revenue AS r
+ORDER BY r.date_key
 
 -- ==================================================
 -- NEW ATTEMPT
 -- same result as old attempt, better intelisense
--- filter, aggregate, aggregate at query
+-- filter, aggregate, aggregate again at query
 -- aggregation happens twice
 -- smallest grain defined at table creation, less versitile
+-- sufficient if smallest grain: day
 -- ==================================================
 
--- AOV
+-- AOV and GMV
+-- GMV = total product_revenue
+-- AOV = product_revenue / order_count = GMV / order_count
 
 -- year
-select
+SELECT
     sub.*,
-    sub.year_product_revenue/sub.year_order_count as AOV,
-    sub.year_freight_revenue/sub.year_order_count as avg_shipping_income,
-    sub.year_freight_revenue/sub.year_product_revenue as freight_to_product_ratio,
-    sub.year_product_revenue+sub.year_freight_revenue as total_revenue
-from (
-    select
+    sub.year_product_revenue + sub.year_freight_revenue AS total_revenue,
+    sub.year_product_revenue / sub.year_order_count AS aov,
+    sub.year_freight_revenue / sub.year_order_count AS avg_shipping_income,
+    sub.year_freight_revenue
+    / sub.year_product_revenue AS freight_to_product_ratio
+FROM (
+    SELECT
         -- r.*,
         r.year_number,
         -- r.total_product_revenue,
         -- r.total_freight_revenue
-        sum(r.total_product_revenue) as year_product_revenue,
-        sum(r.total_freight_revenue) as year_freight_revenue,
-        sum(r.order_count) as year_order_count
-    from #order_revenue as r
-    group by r.year_number
-) as sub
-order by sub.year_number
+        SUM(r.order_count) AS year_order_count,
+        SUM(r.total_product_revenue) AS year_product_revenue,
+        SUM(r.total_freight_revenue) AS year_freight_revenue
+    FROM #order_revenue AS r
+    GROUP BY r.year_number
+) AS sub
+ORDER BY sub.year_number
 
 -- quarter
 select
-    r.year_number,
-    r.quarter_number,
-    sum(r.total_product_revenue) as quarter_product_revenue,
-    sum(r.total_freight_revenue) as quarter_freight_revenue,
-    sum(r.order_count) as quarter_order_count
-from #order_revenue as r
-group by r.year_number, r.quarter_number
-order by r.year_number, r.quarter_number
+    sub.*,
+    sub.quarter_product_revenue + sub.quarter_freight_revenue AS total_revenue,
+    sub.quarter_product_revenue / sub.quarter_order_count AS aov,
+    sub.quarter_freight_revenue / sub.quarter_order_count AS avg_shipping_income,
+    sub.quarter_freight_revenue
+    / sub.quarter_product_revenue AS freight_to_product_ratio
+from (
+    SELECT
+        r.year_number,
+        r.quarter_number,
+        SUM(r.order_count) AS quarter_order_count,
+        SUM(r.total_product_revenue) AS quarter_product_revenue,
+        SUM(r.total_freight_revenue) AS quarter_freight_revenue
+    FROM #order_revenue AS r
+    GROUP BY r.year_number, r.quarter_number
+) as sub
+ORDER BY sub.year_number, sub.quarter_number
 
 -- month
 select
-    r.year_number,
-    r.month_number,
-    sum(r.total_product_revenue) as month_product_revenue,
-    sum(r.total_freight_revenue) as month_freight_revenue,
-    sum(r.order_count) as month_order_count
-from #order_revenue as r
-group by r.year_number, r.month_number
-order by r.year_number, r.month_number
+    sub.*,
+    sub.month_product_revenue + sub.month_freight_revenue AS total_revenue,
+    sub.month_product_revenue / sub.month_order_count AS aov,
+    sub.month_freight_revenue / sub.month_order_count AS avg_shipping_income,
+    sub.month_freight_revenue
+    / sub.month_product_revenue AS freight_to_product_ratio
+from (
+    SELECT
+        r.year_number,
+        r.month_number,
+        SUM(r.order_count) AS month_order_count,
+        SUM(r.total_product_revenue) AS month_product_revenue,
+        SUM(r.total_freight_revenue) AS month_freight_revenue
+    FROM #order_revenue AS r
+    GROUP BY r.year_number, r.month_number
+) as sub
+ORDER BY sub.year_number, sub.month_number
 
 -- week
 select
-    r.year_number,
-    r.week_number,
-    sum(r.total_product_revenue) as week_product_revenue,
-    sum(r.total_freight_revenue) as week_freight_revenue,
-    sum(r.order_count) as week_order_count
-from #order_revenue as r
-group by r.year_number, r.week_number
-order by r.year_number, r.week_number
+    sub.*,
+    sub.week_product_revenue + sub.week_freight_revenue AS total_revenue,
+    sub.week_product_revenue / sub.week_order_count AS aov,
+    sub.week_freight_revenue / sub.week_order_count AS avg_shipping_income,
+    sub.week_freight_revenue
+    / sub.week_product_revenue AS freight_to_product_ratio
+from (
+    SELECT
+        r.year_number,
+        r.week_number,
+        SUM(r.order_count) AS week_order_count,
+        SUM(r.total_product_revenue) AS week_product_revenue,
+        SUM(r.total_freight_revenue) AS week_freight_revenue
+    FROM #order_revenue AS r
+    GROUP BY r.year_number, r.week_number
+) as sub
+ORDER BY sub.year_number, sub.week_number
 
 -- day
 select
-    r.year_number,
-    r.day_of_year,
-    sum(r.total_product_revenue) as day_product_revenue,
-    sum(r.total_freight_revenue) as day_freight_revenue,
-    sum(r.order_count) as day_order_count
-from #order_revenue as r
-group by r.year_number, r.day_of_year
-order by r.year_number, r.day_of_year
+    sub.*,
+    sub.day_product_revenue + sub.day_freight_revenue AS total_revenue,
+    sub.day_product_revenue / sub.day_order_count AS aov,
+    sub.day_freight_revenue / sub.day_order_count AS avg_shipping_income,
+    sub.day_freight_revenue
+    / sub.day_product_revenue AS freight_to_product_ratio
+from (
+    SELECT
+        r.full_date,
+        r.year_number,
+        r.day_of_year,
+        SUM(r.total_product_revenue) AS day_product_revenue,
+        SUM(r.total_freight_revenue) AS day_freight_revenue,
+        SUM(r.order_count) AS day_order_count
+    FROM #order_revenue AS r
+    GROUP BY r.year_number, r.day_of_year, r.full_date
+) as sub
+order by sub.full_date
 
 -- ==================================================
 -- OLD ATTEMPT
@@ -151,12 +190,12 @@ order by r.year_number, r.day_of_year
 -- ==================================================
 
 -- get obt order sales
-select 
+SELECT
     d.*,
     sub.*
-into #order_sales
-from (
-    select
+INTO #order_sales
+FROM (
+    SELECT
         -- o.*,
         -- oi.*
         o.order_id,
@@ -164,15 +203,16 @@ from (
         o.order_status,
         -- o.order_purchase_timestamp,
         o.order_approved_at,
-        cast(datetrunc(day, o.order_approved_at) as date) as order_purchase_date,
-        convert(time, o.order_approved_at) as order_purchase_time,
-        oi.price as order_price,
-        oi.freight_value as order_freight_value
-    from sales.fact_orders as o
-    left join sales.fact_order_items as oi
-        on o.order_id = oi.order_id
-    where oi.price is not null
-        and o.order_status in (
+        CAST(DATETRUNC(DAY, o.order_approved_at) AS DATE)
+            AS order_purchase_date,
+        CONVERT(TIME, o.order_approved_at) AS order_purchase_time,
+        oi.price AS order_price,
+        oi.freight_value AS order_freight_value
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.fact_order_items AS oi
+        ON o.order_id = oi.order_id
+    WHERE oi.price IS NOT NULL
+        AND o.order_status IN (
             'approved',
             'delivered',
             'invoiced',
@@ -182,17 +222,16 @@ from (
     -- order by o.order_approved_at
         -- and o.order_id = '8272b63d03f5f79c56e9e4120aec44ef'
         -- and oi.order_item_id = 21
-) as sub
-right join utils.dim_date as d
-    on sub.order_purchase_date = d.full_date
-order by d.full_date;
+) AS sub
+RIGHT JOIN utils.dim_date AS d
+    ON sub.order_purchase_date = d.full_date
+ORDER BY d.full_date;
 
-drop table #order_sales
+DROP TABLE #order_sales
 
 -- find distinct order statuses
-select distinct
-    o.order_status
-from sales.fact_orders as o
+SELECT DISTINCT o.order_status
+FROM sales.fact_orders AS o
 
 /*
 approved
@@ -205,81 +244,79 @@ canceled
 shipped
 */
 
-select *
-from #order_sales as os
-order by os.full_date
+SELECT *
+FROM #order_sales AS os
+ORDER BY os.full_date
 
 -- AOV year
-select
-    os.year_number as [year],
-    sum(os.order_price) as year_product_revenue,
-    sum(os.order_freight_value) as year_freight_revenue,
-    sum(os.order_price + os.order_freight_value) as year_gross_revenue,
-    count(distinct os.order_id) as year_order_count,
-    sum(os.order_price)/count(distinct os.order_id) as something
-from #order_sales as os
-group by os.year_number
-order by os.year_number
+SELECT
+    os.year_number AS [year],
+    SUM(os.order_price) AS year_product_revenue,
+    SUM(os.order_freight_value) AS year_freight_revenue,
+    SUM(os.order_price + os.order_freight_value) AS year_gross_revenue,
+    COUNT(DISTINCT os.order_id) AS year_order_count,
+    SUM(os.order_price) / COUNT(DISTINCT os.order_id) AS something
+FROM #order_sales AS os
+GROUP BY os.year_number
+ORDER BY os.year_number
 
 -- AOV quarter
-select
+SELECT
     -- os.year_number,
     -- os.quarter_number,
-    concat(
-        'FY', right(os.year_number, 2), ' Q', os.quarter_number
-    ) as quarter,
-    sum(os.order_price) as total_revenue,
-    count(distinct os.order_id) as total_distinct_orders,
-    sum(os.order_price)/count(distinct os.order_id) as AOV_per_quarter
-from #order_sales as os
-group by os.year_number, os.quarter_number
-order by os.year_number, os.quarter_number
+    CONCAT(
+        'FY', RIGHT(os.year_number, 2), ' Q', os.quarter_number
+    ) AS quarter,
+    SUM(os.order_price) AS total_revenue,
+    COUNT(DISTINCT os.order_id) AS total_distinct_orders,
+    SUM(os.order_price) / COUNT(DISTINCT os.order_id) AS aov_per_quarter
+FROM #order_sales AS os
+GROUP BY os.year_number, os.quarter_number
+ORDER BY os.year_number, os.quarter_number
 
 
 -- AOV month
-select
+SELECT
     -- os.year_number as [year],
-    concat(
-        format(datefromparts(1900, os.month_number, 1), 'MMM'),
+    CONCAT(
+        FORMAT(DATEFROMPARTS(1900, os.month_number, 1), 'MMM'),
         ' ',
         os.year_number
-    ) as [month],
-    sum(os.order_price) as total_revenue,
-    count(distinct os.order_id) as total_distinct_orders,
-    sum(os.order_price)/count(distinct os.order_id) as AOV_per_month
-from #order_sales as os
-group by os.year_number, os.month_number
-order by os.year_number, os.month_number
+    ) AS [month],
+    SUM(os.order_price) AS total_revenue,
+    COUNT(DISTINCT os.order_id) AS total_distinct_orders,
+    SUM(os.order_price) / COUNT(DISTINCT os.order_id) AS aov_per_month
+FROM #order_sales AS os
+GROUP BY os.year_number, os.month_number
+ORDER BY os.year_number, os.month_number
 
 -- AOV week
 -- want to say week comencing
 -- YYwWW
-select
+SELECT
     -- os.year_number,
     -- os.week_number,
     -- datetrunc(week, os.full_date) as full_date,
-    concat(
-        right(os.year_number, 2),
+    CONCAT(
+        RIGHT(os.year_number, 2),
         'w',
-        format(os.week_number, '00')
-    ) as [week],
-    sum(os.order_price) as total_revenue,
-    count(distinct os.order_id) as total_distinct_orders,
-    sum(os.order_price)/count(distinct os.order_id) as AOV
-from #order_sales as os
-group by os.year_number, os.week_number
-order by os.year_number, os.week_number
+        FORMAT(os.week_number, '00')
+    ) AS [week],
+    SUM(os.order_price) AS total_revenue,
+    COUNT(DISTINCT os.order_id) AS total_distinct_orders,
+    SUM(os.order_price) / COUNT(DISTINCT os.order_id) AS aov
+FROM #order_sales AS os
+GROUP BY os.year_number, os.week_number
+ORDER BY os.year_number, os.week_number
 
 
 -- AOV day
-select
+SELECT
     os.year_number,
     os.day_of_year,
-    sum(os.order_price) as total_revenue,
-    count(distinct os.order_id) as total_distinct_orders,
-    sum(os.order_price)/count(distinct os.order_id) as AOV_per_day
-from #order_sales as os
-group by os.year_number, os.day_of_year
-order by os.year_number, os.day_of_year
-
-
+    SUM(os.order_price) AS total_revenue,
+    COUNT(DISTINCT os.order_id) AS total_distinct_orders,
+    SUM(os.order_price) / COUNT(DISTINCT os.order_id) AS aov_per_day
+FROM #order_sales AS os
+GROUP BY os.year_number, os.day_of_year
+ORDER BY os.year_number, os.day_of_year

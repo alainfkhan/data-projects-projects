@@ -1,4 +1,4 @@
-use olist_stg;
+USE olist_stg;
 
 /*
 -- scratchwork
@@ -39,13 +39,12 @@ where ot.order_id = '8272b63d03f5f79c56e9e4120aec44ef'
 -- =========================================
 
 -- choose any order_id
-declare @order_id char(32)
+DECLARE @order_id CHAR(32)
 -- choose random
 -- set @order_id = '00010242fe8c5a6d1ba2dd792cb16214'
 -- set @order_id = '0010dedd556712d7bb69a19cb7bbd37a'
 -- set @order_id = '000e906b789b55f64edcb1f84030f90d'
 -- set @order_id = '0009c9a17f916a706d71784483a5d643'
-
 
 
 -- most order_item_id = 21
@@ -57,78 +56,69 @@ declare @order_id char(32)
 -- order_item_id max = 7
 -- set @order_id = '7d316b369d4c6b0a4ebeebbff5f65466'
 -- order_item_id max = 5, 4 product_ids
-set @order_id = 'cb8a63e70a7f664281f701b6abd79fe5'
+SET @order_id = 'cb8a63e70a7f664281f701b6abd79fe5'
 
 -- if multiple product_ids choose which
-declare @choose_product_id tinyint = 1
+DECLARE @choose_product_id TINYINT = 1
 
 -- =========================================
 -- =========================================
 
 
 -- orders
-select top 1000
-    o.*
-from sales.fact_orders as o
-where o.order_id = @order_id
+SELECT TOP 1000 o.*
+FROM sales.fact_orders AS o
+WHERE o.order_id = @order_id
 
 -- customers
-declare @customer_id char(32) = (
-    select
-        o.customer_id
-    from sales.fact_orders as o
-    where o.order_id = @order_id
+DECLARE @customer_id CHAR(32) = (
+    SELECT o.customer_id
+    FROM sales.fact_orders AS o
+    WHERE o.order_id = @order_id
 )
 
-select
-    c.*
-from sales.dim_customers as c
-where c.customer_id = @customer_id
+SELECT c.*
+FROM sales.dim_customers AS c
+WHERE c.customer_id = @customer_id
 
 
 -- order_items
-select top 1000
-    ot.*
-from sales.fact_order_items as ot
-where ot.order_id = @order_id
+SELECT TOP 1000 ot.*
+FROM sales.fact_order_items AS ot
+WHERE ot.order_id = @order_id
 
 -- get unique product_ids 
-select distinct
-    sub.product_id as product_ids
-from (
-    select top 1000
-        ot.*
-    from sales.fact_order_items as ot
-    where ot.order_id = @order_id
-) as sub
+SELECT DISTINCT sub.product_id AS product_ids
+FROM (
+    SELECT TOP 1000 ot.*
+    FROM sales.fact_order_items AS ot
+    WHERE ot.order_id = @order_id
+) AS sub
 
-declare @product_id char(32)
+DECLARE @product_id CHAR(32)
 -- choose row for 1 product id. default 1
-set @product_id = (
+SET @product_id = (
 
-    select
-        choose.product_id
-    from (
-        
-        select
+    SELECT choose.product_id
+    FROM (
+
+        SELECT
             distinct_product_ids.product_id,
-            row_number () over (
-                order by distinct_product_ids.product_id
-            ) as choose_row
-        from (
-            select distinct
-                repeat_orders.product_id
-            from (
-                select top 1000
-                    oi.*
-                from sales.fact_order_items as oi
-                where oi.order_id = @order_id
+            ROW_NUMBER() OVER (
+                ORDER BY distinct_product_ids.product_id
+            ) AS choose_row
+        FROM (
+            SELECT DISTINCT repeat_orders.product_id
+            FROM (
+                SELECT TOP 1000 oi.*
+                FROM sales.fact_order_items AS oi
+                WHERE oi.order_id = @order_id
                 -- where oi.order_id = '8272b63d03f5f79c56e9e4120aec44ef'
-            ) as repeat_orders
-        ) as distinct_product_ids
+            ) AS repeat_orders
+        ) AS distinct_product_ids
 
-    ) as choose
-    where choose.choose_row = @choose_product_id
+    ) AS choose
+    WHERE choose.choose_row = @choose_product_id
 
 )
 
@@ -143,34 +133,27 @@ set @product_id = (
 */
 
 -- order_payments
-select top 1000
-    op.*
-from sales.fact_order_payments as op
-where op.order_id = @order_id
+SELECT TOP 1000 op.*
+FROM sales.fact_order_payments AS op
+WHERE op.order_id = @order_id
 
 -- products
-select top 1000
-    p.*
-from sales.dim_products as p
-where p.product_id = @product_id
+SELECT TOP 1000 p.*
+FROM sales.dim_products AS p
+WHERE p.product_id = @product_id
 
-declare @product_category_name varchar(50)
-set @product_category_name = (
-    select top 1000
-        p.product_category_name
-    from sales.dim_products as p
-    where p.product_id = @product_id
+DECLARE @product_category_name VARCHAR(50)
+SET @product_category_name = (
+    SELECT TOP 1000 p.product_category_name
+    FROM sales.dim_products AS p
+    WHERE p.product_id = @product_id
 )
 
-print @product_category_name
+PRINT @product_category_name
 
 -- translation
-select
-    t.product_category_name_english
-from sales.dim_product_category_name_translation as t
-where t.product_category_name = @product_category_name
+SELECT t.product_category_name_english
+FROM sales.dim_product_category_name_translation AS t
+WHERE t.product_category_name = @product_category_name
 -- where t.product_category_name = 'automotivo'
 -- where t.product_category_name = 'beleza_saude'
-
-
-
