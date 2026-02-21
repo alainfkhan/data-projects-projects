@@ -16,6 +16,8 @@ follow iso 8601
 
 select * from utils.dim_date
 
+TODO: add index on full_date
+
 */
 
 USE olist_stg;

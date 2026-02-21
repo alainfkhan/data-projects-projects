@@ -1,6 +1,6 @@
 TODO:
-    find GMV in queries not programatically
     get full cep from coordinates using python brazilcep
+    add index to full_date in dim_date
     update erd
 
 

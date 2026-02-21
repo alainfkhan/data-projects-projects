@@ -11,8 +11,8 @@ simple questions:
     monthly revenue trend
     [x] average order value (aov)
     [x] revenue by product category
-    revenue by state
-    which sellers generate the most revenue
+    [x] revenue by state
+    [x] which sellers generate the most revenue
     what is the cancellation rate
 
 advanced questions:
