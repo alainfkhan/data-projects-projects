@@ -1,5 +1,10 @@
-a sale occured if
-    order_status: approved, delivered, invoiced, processing, or shipped
+a sale (and hence revenue generated) occured if
+    order_status:
+        approved,
+        delivered,
+        invoiced,
+        processing,
+        shipped
     and price is not null
 
 order_purchase_timestamp
