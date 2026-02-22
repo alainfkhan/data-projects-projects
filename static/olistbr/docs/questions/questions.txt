@@ -13,7 +13,7 @@ simple questions:
     [x] revenue by product category
     [x] revenue by state
     [x] which sellers generate the most revenue
-    what is the cancellation rate
+    [x] what is the cancellation rate
 
 advanced questions:
     revenue growth MoM
