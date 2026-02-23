@@ -52,6 +52,7 @@ CREATE TABLE utils.dim_date (
     is_end_of_month BIT,
     day_of_year SMALLINT,
     week_number TINYINT,
+    week_commencing DATE,
     month_number TINYINT,
     month_name VARCHAR(20),
     month_name_short VARCHAR(10),
@@ -72,6 +73,7 @@ DECLARE @day_of_month TINYINT
 DECLARE @is_end_of_month BIT
 DECLARE @day_of_year SMALLINT
 DECLARE @week_number TINYINT
+DECLARE @week_commencing DATE
 DECLARE @month_number TINYINT
 DECLARE @month_name VARCHAR(20)
 DECLARE @month_name_short VARCHAR(10)
@@ -105,6 +107,7 @@ WHILE @i_date <= @end_date
 
     SET @day_of_year = DATEPART(DAYOFYEAR, @i_date)
     SET @week_number = DATEPART(ISO_WEEK, @i_date)
+    SET @week_commencing = DATEADD(DAY, -(@day_of_week - 1), @i_date)
     SET @month_number = DATEPART(MONTH, @i_date)
     SET @month_name = DATENAME(MONTH, @i_date)
     SET @month_name_short = LEFT(@month_name, 3)
@@ -112,12 +115,12 @@ WHILE @i_date <= @end_date
     SET @year_number = DATEPART(YEAR, @i_date)
 
     -- key
-    DECLARE @zero_padded_month_number CHAR(2) = FORMAT(@month_number, '00')
-    DECLARE @zero_padded_day_of_month CHAR(2) = FORMAT(@day_of_month, '00')
     SET @date_key = CAST(
         CONCAT(
-            @year_number, @zero_padded_month_number, @zero_padded_day_of_month
-        ) AS INT
+            FORMAT(@year_number, '0000'),
+            FORMAT(@month_number, '00'),
+            FORMAT(@day_of_month, '00')
+        ) AS CHAR(8)
     )
 
     -- increment
@@ -134,6 +137,7 @@ WHILE @i_date <= @end_date
         is_end_of_month,
         day_of_year,
         week_number,
+        week_commencing,
         month_number,
         month_name,
         month_name_short,
@@ -151,6 +155,7 @@ WHILE @i_date <= @end_date
         @is_end_of_month AS is_end_of_month,
         @day_of_year AS day_of_year,
         @week_number AS week_number,
+        @week_commencing AS week_commencing,
         @month_number AS month_number,
         @month_name AS month_name,
         @month_name_short AS month_name_short,

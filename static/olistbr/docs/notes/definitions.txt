@@ -1,11 +1,11 @@
-a sale (and hence revenue generated) occured if
-    order_status:
+a sale (and hence revenue generated) occured and is measurable/realised if
+    (occured) order_status:
         approved,
         delivered,
         invoiced,
         processing,
         shipped
-    and price is not null
+    and (measurable) price is not null
 
 order_purchase_timestamp
     marketing date
@@ -18,4 +18,4 @@ order_approved_at
     calculate revenue
     report sales
 
-1 order id means 1 order
+one order id means one order

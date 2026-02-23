@@ -48,8 +48,8 @@ go;
 select
     d.year_number,
     -- d.quarter_number,
-    -- d.month_number,
-    d.week_number,
+    d.month_number,
+    -- d.week_number,
     -- d.full_date,
     sum(cr.cancelled_count) as cancelled_count,
     sum(cr.non_cancelled_count) as non_cancelled_count,
@@ -61,14 +61,14 @@ left join utils.dim_date as d
 group by
     d.year_number,
     -- d.quarter_number
-    -- d.month_number
-    d.week_number
+    d.month_number
+    -- d.week_number
     -- d.full_date
 order by
     d.year_number,
     -- d.quarter_number
-    -- d.month_number
-    d.week_number
+    d.month_number
+    -- d.week_number
     -- d.full_date
 
 

@@ -16,7 +16,7 @@ simple questions:
     [x] what is the cancellation rate
 
 advanced questions:
-    revenue growth MoM
+    [x] revenue growth MoM
     revenue by business segment (joining closed deals)
     cohort-based revenue ()
 
