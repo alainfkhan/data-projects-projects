@@ -1,0 +1,2 @@
+dim_customers and fact_orders on customer_id is coincidentally a 1-1 relationship
+    all customers in the dataset have ordered at most once
