@@ -27,8 +27,16 @@ shipped
 unavailable
 */
 
--- start
--- mom total revenue
+-- ==================================================
+-- date on date revenue growth
+/*
+vim example:
+    :s/month/quarter/g
+    :s/month/week/g
+    :s/month_number/full_date/g
+*/
+-- ==================================================
+
 with agg as (
     select
         d.year_number,
@@ -39,7 +47,8 @@ with agg as (
         sum(s.price + s.freight_value) as total_revenue
     from sales.vw_sales as s
     right join utils.dim_date as d
-        on s.full_date = d.full_date
+        -- vim: keep s date key = d date key
+        on s.date_key = d.date_key
     group by
         d.year_number,
         d.month_number

@@ -17,7 +17,7 @@ simple questions:
 
 advanced questions:
     [x] revenue growth MoM
-    revenue by business segment (joining closed deals)
+    [x] revenue by business segment (joining closed deals)
     cohort-based revenue ()
 
 2 customer analytics

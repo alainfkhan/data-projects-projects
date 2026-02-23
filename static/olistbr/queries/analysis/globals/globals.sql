@@ -2,6 +2,15 @@ USE olist_stg;
 
 go;
 
+-- sales
+/*
+joins:
+    fact_orders
+    fact_order_items
+    dim_date
+
+*/
+
 create or alter view sales.vw_sales as 
 select
     d.*,
