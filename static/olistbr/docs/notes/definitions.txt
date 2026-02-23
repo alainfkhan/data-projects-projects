@@ -19,3 +19,16 @@ order_approved_at
     report sales
 
 one order id means one order
+
+active customer:
+    customers who have
+        made purchases
+        interacted with a tool
+        logged in
+        ...
+    in the last
+        year
+        month
+        week
+        ...
+        

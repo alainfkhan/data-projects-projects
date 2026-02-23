@@ -16,6 +16,8 @@ follow iso 8601
 
 select * from utils.dim_date
 
+drop table utils.dim_date
+
 TODO: add index on full_date
 
 */
@@ -115,12 +117,10 @@ WHILE @i_date <= @end_date
     SET @year_number = DATEPART(YEAR, @i_date)
 
     -- key
-    SET @date_key = CAST(
-        CONCAT(
-            FORMAT(@year_number, '0000'),
-            FORMAT(@month_number, '00'),
-            FORMAT(@day_of_month, '00')
-        ) AS CHAR(8)
+    SET @date_key = CONCAT(
+        @year_number,
+        FORMAT(@month_number, '00'),
+        FORMAT(@day_of_month, '00')
     )
 
     -- increment
@@ -162,3 +162,7 @@ WHILE @i_date <= @end_date
         @quarter_number AS quarter_number,
         @year_number AS year_number;
     END
+
+-- INDEXES
+CREATE INDEX idx_dim_date_full_date
+ON utils.dim_date (full_date);

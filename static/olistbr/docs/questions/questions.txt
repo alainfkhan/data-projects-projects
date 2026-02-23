@@ -27,7 +27,7 @@ using:
     olist_order_reviews_dataset.csv
 
 simple questions:
-    how many active customers do we have?
+    [x] how many active customers do we have?
     new vs returning customer ratio?
     customer lifetime value (clv)?
     average number of orders per customer?

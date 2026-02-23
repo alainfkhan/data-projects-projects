@@ -31,7 +31,7 @@ select
 from sales.fact_orders as o
 left join sales.fact_order_items as oi
     on o.order_id = oi.order_id
-right join utils.dim_date as d
+left join utils.dim_date as d
     on cast(o.order_approved_at as date) = d.full_date
 where
     -- a sale occured when:
@@ -47,3 +47,8 @@ where
 -- order by o.order_approved_at
 
 go;
+
+select
+    s.*
+from sales.vw_sales as s
+order by s.order_approved_at asc
