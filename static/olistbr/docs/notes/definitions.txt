@@ -20,6 +20,9 @@ order_approved_at
 
 one order id means one order
 
+customer:
+    someone who makes an order
+
 active customer:
     customers who have
         made purchases

@@ -28,7 +28,7 @@ using:
 
 simple questions:
     [x] how many active customers do we have?
-    new vs returning customer ratio?
+    [x] new vs returning customer ratio?
     customer lifetime value (clv)?
     average number of orders per customer?
     customer retention rate?
