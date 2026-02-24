@@ -1,4 +1,8 @@
-a sale (and hence revenue generated) occured and is measurable/realised if
+
+==================================================
+business
+==================================================
+a sale occured and is measurable if
     (occured) order_status:
         approved,
         delivered,
@@ -6,19 +10,6 @@ a sale (and hence revenue generated) occured and is measurable/realised if
         processing,
         shipped
     and (measurable) price is not null
-
-order_purchase_timestamp
-    marketing date
-    the moment the customer clicked 'buy'
-    marketing performance
-    website conversion rates
-    customer behaviour
-order_approved_at
-    accounting date
-    calculate revenue
-    report sales
-
-one order id means one order
 
 customer:
     someone who makes an order
@@ -34,4 +25,24 @@ active customer:
         month
         week
         ...
+
+==================================================
+dates
+==================================================
+marketing date:
+    order_purchase_timestamp
+    the moment the customer clicked 'buy'
+    marketing performance
+    website conversion rates
+    customer behaviour
+
+accounting date:
+    order_approved_at
+    calculate revenue
+    report sales
+    
+==================================================
+other
+==================================================
+one order id means one order
         

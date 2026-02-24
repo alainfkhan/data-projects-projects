@@ -1,4 +1,5 @@
-use olist_stg;
+USE olist_stg;
+-- NEED TO REDO
 
 /*
 on customer side
@@ -13,18 +14,18 @@ careful with find and replace join on date keep d full date
 */
 -- ==================================================
 
-select
+SELECT
     d.year_number,
     d.month_number,
-    count(distinct o.customer_id) as active_customers
-from sales.fact_orders as o
-right join utils.dim_date as d
-    on cast(o.order_purchase_timestamp as date) = d.full_date
+    COUNT(DISTINCT o.customer_id) AS active_customers
+FROM sales.fact_orders AS o
+RIGHT JOIN utils.dim_date AS d
+    ON CAST(o.order_purchase_timestamp AS DATE) = d.full_date
     -- -- using fn is 3x slower
     -- on utils.fn_datetime_to_datekey(o.order_purchase_timestamp) = d.date_key 
-group by
+GROUP BY
     d.year_number,
     d.month_number
-order by
+ORDER BY
     d.year_number,
     d.month_number

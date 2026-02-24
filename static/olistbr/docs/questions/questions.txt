@@ -1,14 +1,26 @@
+==================================================
+definitions:
+==================================================
+date segments:
+    yearly
+    quarterly
+    monthly
+    weekly
+    daily
 
+==================================================
 1 Revenue and sales performance
-using:
-    olist_orders_dataset.csv
-    olist_order_items_dataset.csv
-    olist_order_payments_dataset.csv
-    olist_products_dataset.csv
 
+orders
+order_items
+order_payments
+products
+==================================================
 simple questions:
     [x] what is total gmv (gross merchandise value)
     monthly revenue trend
+        will do later in visualisation,
+        total revenue found
     [x] average order value (aov)
     [x] revenue by product category
     [x] revenue by state
@@ -20,15 +32,16 @@ advanced questions:
     [x] revenue by business segment (joining closed deals)
     cohort-based revenue ()
 
+==================================================
 2 customer analytics
-using:
-    olist_customers_dataset.csv
-    olist_orders_dataset.csv
-    olist_order_reviews_dataset.csv
 
+customers
+orders
+order_reviews
+==================================================
 simple questions:
-    [x] how many active customers do we have?
-    [x] new vs returning customer ratio?
+    [] how many active customers do we have?
+    [] new vs returning customer ratio?
     customer lifetime value (clv)?
     average number of orders per customer?
     customer retention rate?
@@ -39,24 +52,27 @@ advanced questions:
     which segments drive most revenue?
     predict repeat purchase probability
 
+==================================================
 3 logistics and delivery performance
-using:
-    purchase timestamp
-    delivered_customer_date
-    estimated_delivery_date
-    geolocation
 
-questions
+purchase_timestamp
+delivered_customer_date
+estimated_delivery_date
+geolocation
+==================================================
+questions:
     average delivery time?
     % of late deliveries?
     delivery time by state?
     freight cost vs distance?
     does delivery time affect review score?
 
+==================================================
 4 product analysis
-    olist_products_dataset
-    category translation
 
+products
+product_category_name_translation
+==================================================
 questions:
     which product categories sell most?
     which categories have highest margins? (price - freight proxy)
@@ -64,10 +80,12 @@ questions:
     does number of photoes influence review score?
     do longer descriptiongs correlate with higher sales?
 
+==================================================
 5 seller performace:
-using:
-    olist_sellers_dataset.csv
-    olist_closed_deals_dataset.csv
+
+sellers
+closed_deals
+==================================================
 
 questions:
     top sellers by revenue?
@@ -77,10 +95,12 @@ questions:
     sdr/sr performance (sales reps effectiveness)?
     which sdr has the highest win rate?
 
+==================================================
 6 marketing and funnel analysis
-using:
-    olist_marketing_qualified_leads_dataset
-    olist_closed_deals_dataset
+
+marketing_qualified_leads
+closed_deals
+==================================================
 
 questions:
     convertion rate: mql -> closed deals
@@ -89,8 +109,11 @@ questions:
     which channels bring highest revenue sellers?
     which acquisition channel produces the highest ltv sellers
 
+==================================================
 7 payment analysis
-using: olist_order_payments_dataset
+
+order_payments
+==================================================
 
 questions:
     payment method distribution?
@@ -98,8 +121,11 @@ questions:
     are installments orders more likely to default/cancel?
     payment type vs review score?
 
+==================================================
 8 review and quality analytics
-using olist_order_reviews_dataset
+
+order_reviews
+==================================================
 
 questions:
     average review score?
@@ -108,10 +134,12 @@ questions:
     what drives 1-star reviews?
     build a model explaining review score drivers
 
+==================================================
 9 geographic analysis
-using:
-    customer + seller states
-    geolocation
+
+customer + seller states
+geolocation
+==================================================
 
 questions:
     revenue by state
@@ -121,20 +149,26 @@ questions:
     a heatmap of brazil states
     revenue density by zip prefix
 
+==================================================
 10 executive-level questions
+==================================================
     why are cancellations increasing?
     why did revenue drop in Q2
     which levers should we pull to grow 20%
     show we invest more in paid search?
 
+==================================================
 11
+==================================================
     build a churn prediction model
     predict delivery delays
     forcast motnhly sales
     detect fraudulent orders
     cluster customers
 
+==================================================
 12
+==================================================
     we want to reduce 1-star reviews by 10%. what would you analyse?
     check delivery delays
     freight cost impact

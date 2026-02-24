@@ -102,14 +102,15 @@ FROM (
 ORDER BY sub.year_number
 
 -- quarter
-select
+SELECT
     sub.*,
     sub.quarter_product_revenue + sub.quarter_freight_revenue AS total_revenue,
     sub.quarter_product_revenue / sub.quarter_order_count AS aov,
-    sub.quarter_freight_revenue / sub.quarter_order_count AS avg_shipping_income,
+    sub.quarter_freight_revenue
+    / sub.quarter_order_count AS avg_shipping_income,
     sub.quarter_freight_revenue
     / sub.quarter_product_revenue AS freight_to_product_ratio
-from (
+FROM (
     SELECT
         r.year_number,
         r.quarter_number,
@@ -118,18 +119,18 @@ from (
         SUM(r.total_freight_revenue) AS quarter_freight_revenue
     FROM #order_revenue AS r
     GROUP BY r.year_number, r.quarter_number
-) as sub
+) AS sub
 ORDER BY sub.year_number, sub.quarter_number
 
 -- month
-select
+SELECT
     sub.*,
     sub.month_product_revenue + sub.month_freight_revenue AS total_revenue,
     sub.month_product_revenue / sub.month_order_count AS aov,
     sub.month_freight_revenue / sub.month_order_count AS avg_shipping_income,
     sub.month_freight_revenue
     / sub.month_product_revenue AS freight_to_product_ratio
-from (
+FROM (
     SELECT
         r.year_number,
         r.month_number,
@@ -138,18 +139,18 @@ from (
         SUM(r.total_freight_revenue) AS month_freight_revenue
     FROM #order_revenue AS r
     GROUP BY r.year_number, r.month_number
-) as sub
+) AS sub
 ORDER BY sub.year_number, sub.month_number
 
 -- week
-select
+SELECT
     sub.*,
     sub.week_product_revenue + sub.week_freight_revenue AS total_revenue,
     sub.week_product_revenue / sub.week_order_count AS aov,
     sub.week_freight_revenue / sub.week_order_count AS avg_shipping_income,
     sub.week_freight_revenue
     / sub.week_product_revenue AS freight_to_product_ratio
-from (
+FROM (
     SELECT
         r.year_number,
         r.week_number,
@@ -158,18 +159,18 @@ from (
         SUM(r.total_freight_revenue) AS week_freight_revenue
     FROM #order_revenue AS r
     GROUP BY r.year_number, r.week_number
-) as sub
+) AS sub
 ORDER BY sub.year_number, sub.week_number
 
 -- day
-select
+SELECT
     sub.*,
     sub.day_product_revenue + sub.day_freight_revenue AS total_revenue,
     sub.day_product_revenue / sub.day_order_count AS aov,
     sub.day_freight_revenue / sub.day_order_count AS avg_shipping_income,
     sub.day_freight_revenue
     / sub.day_product_revenue AS freight_to_product_ratio
-from (
+FROM (
     SELECT
         r.full_date,
         r.year_number,
@@ -179,8 +180,8 @@ from (
         SUM(r.order_count) AS day_order_count
     FROM #order_revenue AS r
     GROUP BY r.year_number, r.day_of_year, r.full_date
-) as sub
-order by sub.full_date
+) AS sub
+ORDER BY sub.full_date
 
 -- ==================================================
 -- OLD ATTEMPT

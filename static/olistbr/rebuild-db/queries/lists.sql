@@ -1,23 +1,27 @@
 -- get current db
-select db_name()
+SELECT DB_NAME()
 
-use master
-use olist_stg
-use deletesoon
+USE master
+USE olist_stg
+USE deletesoon
 
-create schema some_schema;
+GO;
 
-create table some_schema.table_name (
+CREATE SCHEMA some_schema;
+
+GO;
+
+CREATE TABLE some_schema.table_name (
     a INT,
-    b varchar(20)
+    b VARCHAR(20)
 )
-insert into some_schema.table_name
-values (10, 'test')
+INSERT INTO some_schema.table_name
+VALUES (10, 'test')
 
-select * from some_schema.table_name
+SELECT * FROM some_schema.table_name
 
 -- list all dbs
-select name from master.sys.databases 
+SELECT name FROM master.sys.databases
 
 -- drop schemas
 /*
@@ -30,23 +34,25 @@ go
 */
 
 -- list all schemas in connected-to database
-select name
-from sys.schemas
-where schema_id between 5 and 16383;
-go
+SELECT name
+FROM sys.schemas
+WHERE schema_id BETWEEN 5 AND 16383;
+GO
 
 -- list schemas in any database
 
 -- list tables in connected-to database
-select TABLE_CATALOG, TABLE_SCHEMA, TABLE_NAME
-from INFORMATION_SCHEMA.TABLES
-go
+SELECT
+TABLE_CATALOG,
+TABLE_SCHEMA,
+TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+GO
 
 -- list tables in schema
-select TABLE_NAME
-from INFORMATION_SCHEMA.TABLES
-where TABLE_SCHEMA = 'sales'
-
+SELECT TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_SCHEMA = 'sales'
 
 
 --
@@ -67,12 +73,12 @@ select * from core.dim_date;
 */
 
 -- count rows
-select count(*) from sales.dim_customers
+SELECT COUNT(*) FROM sales.dim_customers
 
 -- count columns
-select count(*) from INFORMATION_SCHEMA.columns
-where TABLE_SCHEMA = 'sales'
-and TABLE_NAME = 'dim_customers'
+SELECT COUNT(*) FROM INFORMATION_SCHEMA.columns
+WHERE TABLE_SCHEMA = 'sales'
+AND TABLE_NAME = 'dim_customers'
 
 SELECT
     TABLE_SCHEMA,
@@ -84,17 +90,16 @@ SELECT
 FROM INFORMATION_SCHEMA.COLUMNS
 
 
-
 -- get total reviews by score
-select
+SELECT
     r.review_score,
-    count(*) as total_reviews
-from sales.fact_order_reviews as r
-group by r.review_score
-order by r.review_score desc;
-go
+    COUNT(*) AS total_reviews
+FROM sales.fact_order_reviews AS r
+GROUP BY r.review_score
+ORDER BY r.review_score DESC;
+GO
 
-use olist_stg
+USE olist_stg
 
-select top 1000 * from sales.dim_sellers s
-where s.seller_id = 'c0f3eea2e14555b6faeea3dd58c1b1c3'
+SELECT TOP 1000 * FROM sales.dim_sellers s
+WHERE s.seller_id = 'c0f3eea2e14555b6faeea3dd58c1b1c3'

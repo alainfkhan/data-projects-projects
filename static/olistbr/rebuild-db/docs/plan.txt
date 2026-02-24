@@ -7,8 +7,6 @@ create schemas
 create tables
 insert data into tables
 
-
-
 need
 tables config
     db

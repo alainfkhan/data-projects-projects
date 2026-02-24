@@ -1,19 +1,16 @@
-use olist_stg;
+USE olist_stg;
 -- ==================================================
 -- which sellers generate the most revenue?
 -- ==================================================
 
-select 
-    o.*
-from sales.fact_orders as o
+SELECT o.*
+FROM sales.fact_orders AS o
 
-select 
-    oi.*
-from sales.fact_order_items as oi
+SELECT oi.*
+FROM sales.fact_order_items AS oi
 
-select
-    s.*
-from sales.dim_sellers as s
+SELECT s.*
+FROM sales.dim_sellers AS s
 
 -- lifetime top sellers by product revenue
 /*
@@ -29,7 +26,7 @@ da8622b14eb17ae2831f4ac5b9dab84a, 160236.5700
 1025f0e2d44d7041d6cf58b6550e0bfa, 138968.5500
 955fee9216a65b617aa5c0531780ce60, 135159.7000
 */
-select top 10
+SELECT TOP 10
     -- o.*,
     -- oi.*,
     -- s.*
@@ -40,40 +37,37 @@ select top 10
     -- oi.price,
     -- oi.freight_value
     oi.seller_id,
-    count(distinct o.order_id) order_count,
-    sum(oi.price) as total_product_revenue,
-    sum(oi.freight_value) as total_freight_revenue
-from sales.fact_orders as o
-left join sales.fact_order_items as oi
-    on o.order_id = oi.order_id
-left join sales.dim_sellers as s
-    on oi.seller_id = s.seller_id
-where o.order_status in (
+    COUNT(DISTINCT o.order_id) order_count,
+    SUM(oi.price) AS total_product_revenue,
+    SUM(oi.freight_value) AS total_freight_revenue
+FROM sales.fact_orders AS o
+LEFT JOIN sales.fact_order_items AS oi
+    ON o.order_id = oi.order_id
+LEFT JOIN sales.dim_sellers AS s
+    ON oi.seller_id = s.seller_id
+WHERE o.order_status IN (
     'approved',
     'delivered',
     'invoiced',
     'processing',
     'shipped'
     )
-    and oi.price is not null
-group by oi.seller_id
-order by sum(oi.price) desc
+    AND oi.price IS NOT NULL
+GROUP BY oi.seller_id
+ORDER BY SUM(oi.price) DESC
 
 -- 3095 distinct sellers
-select
-    count(distinct seller_id)
-from sales.fact_order_items as oi
+SELECT COUNT(DISTINCT seller_id)
+FROM sales.fact_order_items AS oi
 
-select
-    count(*)
-from sales.fact_order_items as oi
-
+SELECT COUNT(*)
+FROM sales.fact_order_items AS oi
 
 
 -- ==================================================
 -- functional query to change grain
 /*
-three points to uncomment 
+three points to uncomment
     select, group by, order by
 
 group by values = order by values => <g/o>
@@ -101,7 +95,7 @@ feel free to choose options in where sub.seller_id in ()
 */
 -- ==================================================
 
-select
+SELECT
 
     -- year (always)
     d.year_number,
@@ -115,34 +109,34 @@ select
     d.full_date,
 
     sub.seller_id,
-    sum(sub.order_count) as total_order_count,
-    sum(sub.total_product_revenue) as total_product_revenue,
-    sum(sub.total_freight_revenue) as total_freight_revenue
-from (
-    select
-        cast(o.order_approved_at as date) as order_approved_date,
+    SUM(sub.order_count) AS total_order_count,
+    SUM(sub.total_product_revenue) AS total_product_revenue,
+    SUM(sub.total_freight_revenue) AS total_freight_revenue
+FROM (
+    SELECT
+        CAST(o.order_approved_at AS DATE) AS order_approved_date,
         oi.seller_id,
-        count(distinct o.order_id) order_count,
-        sum(oi.price) as total_product_revenue,
-        sum(oi.freight_value) as total_freight_revenue
-    from sales.fact_orders as o
-    left join sales.fact_order_items as oi
-        on o.order_id = oi.order_id
-    left join sales.dim_sellers as s
-        on oi.seller_id = s.seller_id
-    where o.order_status in (
+        COUNT(DISTINCT o.order_id) order_count,
+        SUM(oi.price) AS total_product_revenue,
+        SUM(oi.freight_value) AS total_freight_revenue
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.fact_order_items AS oi
+        ON o.order_id = oi.order_id
+    LEFT JOIN sales.dim_sellers AS s
+        ON oi.seller_id = s.seller_id
+    WHERE o.order_status IN (
         'approved',
         'delivered',
         'invoiced',
         'processing',
         'shipped'
         )
-        and oi.price is not null
-    group by cast(o.order_approved_at as date), oi.seller_id
-) as sub
-right join utils.dim_date as d
-    on sub.order_approved_date = d.full_date
-where sub.seller_id in (
+        AND oi.price IS NOT NULL
+    GROUP BY CAST(o.order_approved_at AS DATE), oi.seller_id
+) AS sub
+RIGHT JOIN utils.dim_date AS d
+    ON sub.order_approved_date = d.full_date
+WHERE sub.seller_id IN (
     '4869f7a5dfa277a7dca6462dcf3b52b2'
     -- '53243585a1d6dc2643021fd1853d8905',
     -- '4a3ca9315b744ce9f8e9374361493884',
@@ -154,18 +148,17 @@ where sub.seller_id in (
     -- '1025f0e2d44d7041d6cf58b6550e0bfa',
     -- '955fee9216a65b617aa5c0531780ce60'
     )
-group by
+GROUP BY
     d.year_number,
     -- d.quarter_number,
     -- d.month_number, 
     -- d.week_number,
     d.full_date,
     sub.seller_id
-order by 
-    d.year_number, 
+ORDER BY
+    d.year_number,
     -- d.quarter_number,
     -- d.month_number,
     -- d.week_number,
     d.full_date,
     sub.seller_id
-

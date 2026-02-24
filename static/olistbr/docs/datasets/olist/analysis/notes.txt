@@ -1,6 +1,9 @@
+decided not to clean this column
+added supplementary data as a single source of truth instead
+
 some repeats with accents
 
-what to do:
+what can do:
     replace all accents with ascii
     manual map from misspelled to correct
 
@@ -10,7 +13,6 @@ notable differences:
     d oeste = d`oeste = doeste = d'oeste
     d%26apos%3balho = d alho = dalho = d'alho
     some have names that need '-', others are copies (?)
-
 
 significant finds:
 0nnnn = SP

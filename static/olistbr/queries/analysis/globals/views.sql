@@ -1,18 +1,16 @@
 USE olist_stg;
 
-go;
+GO;
 
--- sales
 /*
-joins:
+sales joins:
     fact_orders
     fact_order_items
     dim_date
-
 */
 
-create or alter view sales.vw_sales as 
-select
+CREATE OR ALTER VIEW sales.vw_sales AS
+SELECT
     d.*,
     o.order_id,
     oi.order_item_id,
@@ -27,15 +25,16 @@ select
     oi.shipping_limit_date,
     o.order_delivered_carrier_date,
     o.order_delivered_customer_date,
-    cast(o.order_estimated_delivery_date as date) as order_estimated_delivery_date
-from sales.fact_orders as o
-left join sales.fact_order_items as oi
-    on o.order_id = oi.order_id
-left join utils.dim_date as d
-    on cast(o.order_approved_at as date) = d.full_date
-where
+    CAST(o.order_estimated_delivery_date AS DATE)
+        AS order_estimated_delivery_date
+FROM sales.fact_orders AS o
+LEFT JOIN sales.fact_order_items AS oi
+    ON o.order_id = oi.order_id
+LEFT JOIN utils.dim_date AS d
+    ON CAST(o.order_approved_at AS DATE) = d.full_date
+WHERE
     -- a sale occured when:
-    o.order_status in (
+    o.order_status IN (
         'approved',
         'delivered',
         'invoiced',
@@ -43,12 +42,11 @@ where
         'shipped'
     )
     -- a sale is realised when:
-    and oi.price is not null
+    AND oi.price IS NOT NULL
 -- order by o.order_approved_at
 
-go;
+GO;
 
-select
-    s.*
-from sales.vw_sales as s
-order by s.order_approved_at asc
+SELECT s.*
+FROM sales.vw_sales AS s
+ORDER BY s.order_approved_at ASC

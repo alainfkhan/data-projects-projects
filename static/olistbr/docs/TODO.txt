@@ -1,6 +1,6 @@
 TODO:
     get full cep from coordinates using python brazilcep
-    add index to full_date in dim_date
     update erd
+    redo customer-analytics, customer_id vs customer_unique_id
 
 

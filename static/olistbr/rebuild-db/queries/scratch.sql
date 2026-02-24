@@ -1,38 +1,38 @@
 -- get current db
-select db_name()
+SELECT DB_NAME()
 
-use olist_stg;
-use deletesoon;
-alter database deletesoon set multi_user
+USE olist_stg;
+USE deletesoon;
+ALTER DATABASE deletesoon SET multi_user
 
 -- list all dbs
-SELECT name FROM master.sys.databases 
+SELECT name FROM master.sys.databases
 
 -- list all tables in db
-select *
-from INFORMATION_SCHEMA.TABLES
-where TABLE_TYPE='BASE TABLE'
+SELECT *
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE'
 
-select * from marketing.fact_marketing_qualified_leads
+SELECT * FROM marketing.fact_marketing_qualified_leads
 
 -- check how many connected to dbs
-SELECT 
-    DB_NAME(dbid) as DBName, 
-    COUNT(dbid) as NumberOfConnections,
-    loginame as LoginName
+SELECT
+    DB_NAME(dbid) AS dbname,
+    COUNT(dbid) AS numberofconnections,
+    loginame AS loginname
 FROM
     sys.sysprocesses
-WHERE 
+WHERE
     dbid > 0
-GROUP BY 
+GROUP BY
     dbid, loginame
 ;
 
 -- whats actively executing
-exec sp_who2
+EXEC sp_who2
 
 -- check for active connections
-SELECT 
+SELECT
     session_id,
     login_name,
     host_name,
@@ -42,8 +42,7 @@ SELECT
 FROM sys.dm_exec_sessions
 WHERE is_user_process = 1
 
-SELECT 
-    *
+SELECT *
     -- session_id,
     -- login_name,
     -- host_name,
@@ -54,17 +53,17 @@ FROM sys.dm_exec_sessions
 WHERE is_user_process = 1
     AND program_name LIKE '%python%'
 
-select * from sys.sysprocesses
+SELECT * FROM sys.sysprocesses
 
-select * from sys.all_columns
+SELECT * FROM sys.all_columns
 
-use master
+USE master
 
-select db_name()
+SELECT DB_NAME()
 
-drop database olist_archived
+DROP DATABASE olist_archived
 
-SELECT 
+SELECT
     session_id,
     login_name,
     host_name,

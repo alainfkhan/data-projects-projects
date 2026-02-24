@@ -1,21 +1,20 @@
-use olist_stg;
+USE olist_stg;
 
--- datetime to datekey function (slow, dont use)
-go;
+-- datetime to datekey function (avoid using)
+GO;
 
-create or alter function utils.fn_datetime_to_datekey
-(
-    @i_date datetime2
+CREATE OR ALTER FUNCTION utils.fn_datetime_to_datekey(
+    @i_date DATETIME2
 )
-returns int
-as
-begin
-    declare @date_key int = concat(
-        datepart(year, @i_date),
-        format(datepart(month, @i_date), '00'),
-        format(datepart(day, @i_date), '00')
+RETURNS INT
+AS
+BEGIN
+    DECLARE @date_key INT = CONCAT(
+        DATEPART(YEAR, @i_date),
+        FORMAT(DATEPART(MONTH, @i_date), '00'),
+        FORMAT(DATEPART(DAY, @i_date), '00')
     )
-    return @date_key
-end
+    RETURN @date_key
+END
 
-go;
+GO;

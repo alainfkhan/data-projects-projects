@@ -1,43 +1,40 @@
-use olist_stg;
+USE olist_stg;
 
 
 -- list tables
-select
-    sa.*
-from sales.vw_sales as sa
+SELECT sa.*
+FROM sales.vw_sales AS sa
 
-select
-    se.*
-from sales.dim_sellers as se
+SELECT se.*
+FROM sales.dim_sellers AS se
 
-select
-    cd.*
-from marketing.fact_closed_deals as cd
+SELECT cd.*
+FROM marketing.fact_closed_deals AS cd
 
 -- ==================================================
 -- revenue by business segment through time
 -- ==================================================
 
-select 
+SELECT
     sa.year_number,
     sa.week_number,
     cd.business_segment,
-    count(distinct sa.order_id) as order_count,
-    sum(sa.price) as total_product_revenue,
-    sum(sa.freight_value) as total_freight_revenue
-from sales.vw_sales as sa
-left join sales.dim_sellers as se
-    on sa.seller_id = se.seller_id
-left join marketing.fact_closed_deals as cd
-    on se.seller_id = cd.seller_id
-where
-    cd.mql_id is not null
-    and cd.business_segment = 'computers'
-group by
+    COUNT(DISTINCT sa.order_id) AS order_count,
+    SUM(sa.price) AS total_product_revenue,
+    SUM(sa.freight_value) AS total_freight_revenue
+FROM sales.vw_sales AS sa
+LEFT JOIN sales.dim_sellers AS se
+    ON sa.seller_id = se.seller_id
+LEFT JOIN marketing.fact_closed_deals AS cd
+    ON se.seller_id = cd.seller_id
+WHERE
+    cd.mql_id IS NOT NULL
+    AND cd.business_segment = 'computers'
+GROUP BY
     sa.year_number,
     sa.week_number,
     cd.business_segment
-order by
+ORDER BY
     sa.year_number,
     sa.week_number,
     cd.business_segment
@@ -45,10 +42,9 @@ order by
 
 -- quick analysis
 -- unique business segments
-select distinct
-    cd.business_segment
-from marketing.fact_closed_deals as cd
-order by cd.business_segment asc
+SELECT DISTINCT cd.business_segment
+FROM marketing.fact_closed_deals AS cd
+ORDER BY cd.business_segment ASC
 /*
 NULL
 air_conditioning

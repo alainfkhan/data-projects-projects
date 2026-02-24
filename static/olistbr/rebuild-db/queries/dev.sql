@@ -1,31 +1,29 @@
-use olist_stg
+USE olist_stg
 
-select * from INFORMATION_SCHEMA.tables
+SELECT * FROM INFORMATION_SCHEMA.tables
 
-select * from utils.dim_date;
-select * from utils.dim_time;
-select top 1000 * from logistics.dim_cep;
-select top 1000 * from staging.dim_cep_iz_B;
+SELECT * FROM utils.dim_date;
+SELECT * FROM utils.dim_time;
+SELECT TOP 1000 * FROM logistics.dim_cep;
+SELECT TOP 1000 * FROM staging.dim_cep_iz_B;
 
-drop table utils.dim_date;
-drop table utils.dim_time;
-drop schema utils;
+DROP TABLE utils.dim_date;
+DROP TABLE utils.dim_time;
+DROP SCHEMA utils;
 -- drop table logistics.dim_cep_iz_AuBmA;
-drop table logistics.dim_cep
-drop table staging.dim_cep_iz_B
+DROP TABLE logistics.dim_cep
+DROP TABLE staging.dim_cep_iz_B
 -- drop table logistics.dim_cep_iz_B;
 -- drop table logistics.dim_cep;
 
-select datepart(week, '2016-01-01')
+SELECT DATEPART(WEEK, '2016-01-01')
 
-select
-    count(*)
-from logistics.fact_geolocation
+SELECT COUNT(*)
+FROM logistics.fact_geolocation
 
-select
-    st.row_count
-from sys.dm_db_partition_stats as st
-where st.object_id = object_id('logistics.fact_geolocation')
+SELECT st.row_count
+FROM sys.dm_db_partition_stats AS st
+WHERE st.object_id = OBJECT_ID('logistics.fact_geolocation')
 
-select object_id('logistics.fact_geolocation')
-select object_name(object_id('logistics.fact_geolocation'))
+SELECT OBJECT_ID('logistics.fact_geolocation')
+SELECT OBJECT_NAME(OBJECT_ID('logistics.fact_geolocation'))

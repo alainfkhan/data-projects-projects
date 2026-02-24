@@ -2,12 +2,11 @@ USE olist_stg;
 
 -- complemento had converter type str meaning any nulls = ''
 -- need to change all '' to null
-SELECT top 1000 *
+SELECT TOP 1000 *
 FROM logistics.dim_cep AS c
-WHERE c.COMPLEMENTO is not NULL;
+WHERE c.COMPLEMENTO IS NOT NULL;
 
-SELECT
-    c.*
+SELECT c.*
 FROM logistics.dim_cep AS c
 WHERE c.CEP LIKE '31170%';
 

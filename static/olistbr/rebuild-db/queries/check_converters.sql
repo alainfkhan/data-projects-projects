@@ -11,21 +11,17 @@ logistics.fact_geolocation
     geolocation_zip_code_prefix: str
 */
 
-use olist_stg
+USE olist_stg
 
-select top 1000
-*
-from sales.dim_customers;
+SELECT TOP 1000 *
+FROM sales.dim_customers;
 
-select top 1000
-*
-from sales.dim_sellers;
+SELECT TOP 1000 *
+FROM sales.dim_sellers;
 
-select
-    count(*)
-from logistics.dim_cep_iz_AuBmA;
+SELECT COUNT(*)
+FROM logistics.dim_cep_iz_AuBmA;
 
 
-select
-    count(*)
-from logistics.dim_cep_iz_B;
+SELECT COUNT(*)
+FROM logistics.dim_cep_iz_B;

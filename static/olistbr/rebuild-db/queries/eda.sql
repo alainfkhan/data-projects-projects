@@ -1,26 +1,23 @@
-use olist_stg;
+USE olist_stg;
 
-select *
-from INFORMATION_SCHEMA.tables
+SELECT *
+FROM INFORMATION_SCHEMA.tables
 
-select top 1000
-    *
-from sales.dim_customers
+SELECT TOP 1000 *
+FROM sales.dim_customers
 
-select top (1000)
-    *
-from logistics.dim_geolocation;
+SELECT TOP (1000) *
+FROM logistics.dim_geolocation;
 
-select top (1000)
-    *
-from marketing.fact_closed_deals;
+SELECT TOP (1000) *
+FROM marketing.fact_closed_deals;
 
 -- drop table marketing.fact_closed_deals
 
 -- truncate table marketing.fact_closed_deals
 
-select count(*)
-from marketing.fact_closed_deals;
+SELECT COUNT(*)
+FROM marketing.fact_closed_deals;
 /*
 inserted:
 49705 [9941, 5] sales.dim_customers
