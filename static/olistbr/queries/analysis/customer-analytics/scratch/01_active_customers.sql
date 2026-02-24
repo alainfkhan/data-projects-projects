@@ -1,5 +1,16 @@
 USE olist_stg;
--- NEED TO REDO
+
+-- short analysis
+select
+    c.*
+from sales.dim_customers as c
+
+-- 99441 distinct customer ids
+-- 96096 distinct customer unique id
+select
+    count(distinct c.customer_unique_id) as customer_unique_id_count,
+    count(distinct c.customer_id) as customer_id_count
+from sales.dim_customers as c
 
 /*
 on customer side
@@ -14,18 +25,23 @@ careful with find and replace join on date keep d full date
 */
 -- ==================================================
 
-SELECT
+select
     d.year_number,
     d.month_number,
-    COUNT(DISTINCT o.customer_id) AS active_customers
-FROM sales.fact_orders AS o
-RIGHT JOIN utils.dim_date AS d
-    ON CAST(o.order_purchase_timestamp AS DATE) = d.full_date
-    -- -- using fn is 3x slower
-    -- on utils.fn_datetime_to_datekey(o.order_purchase_timestamp) = d.date_key 
-GROUP BY
+    count(distinct c.customer_unique_id) as active_customers,
+    count(distinct o.order_id) as order_count
+from sales.fact_orders as o
+left join sales.dim_customers as c
+    on o.customer_id = c.customer_id
+right join utils.dim_date as d
+    on cast(o.order_purchase_timestamp as date) = d.full_date
+group by
     d.year_number,
     d.month_number
-ORDER BY
+order by
     d.year_number,
     d.month_number
+
+/*
+customer_unique_id_count is active customers
+*/

@@ -21,7 +21,8 @@ SELECT
     cd.business_segment,
     COUNT(DISTINCT sa.order_id) AS order_count,
     SUM(sa.price) AS total_product_revenue,
-    SUM(sa.freight_value) AS total_freight_revenue
+    SUM(sa.freight_value) AS total_freight_revenue,
+    SUM(sa.price + sa.freight_value) AS total_revenue
 FROM sales.vw_sales AS sa
 LEFT JOIN sales.dim_sellers AS se
     ON sa.seller_id = se.seller_id
@@ -29,7 +30,8 @@ LEFT JOIN marketing.fact_closed_deals AS cd
     ON se.seller_id = cd.seller_id
 WHERE
     cd.mql_id IS NOT NULL
-    AND cd.business_segment = 'computers'
+    -- AND cd.business_segment = 'computers'
+    AND cd.business_segment = 'health_beauty'
 GROUP BY
     sa.year_number,
     sa.week_number,
