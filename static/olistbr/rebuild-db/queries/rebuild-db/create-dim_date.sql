@@ -45,7 +45,8 @@ SET DATEFIRST 1;
 
 CREATE TABLE utils.dim_date (
     date_key INT,
-    full_date DATE,
+    key_date DATE,                  -- col for joins
+    full_date DATE,                 -- col for queries
     day_of_week TINYINT,
     day_name VARCHAR(20),
     day_name_short VARCHAR(10),
@@ -128,6 +129,7 @@ WHILE @i_date <= @end_date
 
     INSERT INTO utils.dim_date (
         date_key,
+        key_date,
         full_date,
         day_of_week,
         day_name,
@@ -146,6 +148,7 @@ WHILE @i_date <= @end_date
     )
     SELECT
         @date_key AS date_key,
+        @full_date AS key_date,
         @full_date AS full_date,
         @day_of_week AS day_of_week,
         @day_name AS day_name,
@@ -166,3 +169,7 @@ WHILE @i_date <= @end_date
 -- INDEXES
 CREATE INDEX idx_dim_date_full_date
 ON utils.dim_date (full_date);
+
+-- TODO: find if needed
+CREATE INDEX idx_dim_date_key_date
+ON utils.dim_date (key_date);

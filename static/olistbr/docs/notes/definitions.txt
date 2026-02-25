@@ -11,20 +11,16 @@ a sale occured and is measurable if
         shipped
     and (measurable) price is not null
 
-customer:
-    someone who makes an order
+customer has two meanings:
+    1. the human (customer_unique_id)
+    2. the transaction (customer_id)
+
+order_id 1-1 customer_id
 
 active customer:
-    customers who have
-        made purchases
-        interacted with a tool
-        logged in
-        ...
-    in the last
-        year
-        month
-        week
-        ...
+    customers who have placed an order in a timeframe
+    a row in orders
+
 
 ==================================================
 dates

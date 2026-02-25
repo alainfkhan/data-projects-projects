@@ -41,9 +41,9 @@ order_reviews
 ==================================================
 simple questions:
     [x] how many active customers do we have?
+    [x] average number of orders per customer?
     [x] new vs returning customer ratio?
     customer lifetime value (clv)?
-    average number of orders per customer?
     customer retention rate?
     which states have highest repeat value?
 
