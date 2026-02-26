@@ -1,5 +1,5 @@
 ==================================================
-definitions:
+kpi definitions:
 ==================================================
 
 Gross Merchandise Value/Volume (GMV):
@@ -7,3 +7,9 @@ Gross Merchandise Value/Volume (GMV):
 
 Average Order Value (AOV):
     AOV = (total revenue) / (total number of orders)
+        = GMV / (total number of orders)
+    
+Churn = (customers lost during period) / (customers at start of perdiod)
+    
+Customer Lifetime Value (CLV, LTV)
+    CLV = [(avg revenue per user) * (gross margin)] / (churn)

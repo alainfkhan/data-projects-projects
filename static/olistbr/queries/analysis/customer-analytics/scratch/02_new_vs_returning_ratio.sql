@@ -53,19 +53,19 @@ counts as (
         count(distinct case
             when ifod.is_first_order_date = 1
                 then ifod.customer_unique_id
-        end) as new_customers,
+        end) as new_users,
         count(distinct case
             when ifod.is_first_order_date = 0 
                 then ifod.customer_unique_id
-        end) as repeat_customers,
-        sum(ifod.is_first_order_date) as first_orders,
+        end) as repeat_users,
+        sum(ifod.is_first_order_date) as new_user_orders,
         sum(case
             -- when ifod.is_first_order_date is null
             --     then null
             when ifod.is_first_order_date = 0
                 then 1
                 else 0
-        end) as repeat_orders
+        end) as repeat_user_orders
     from ifod
     right join utils.dim_date as d
         on ifod.date_key = d.date_key
@@ -83,14 +83,14 @@ counts as (
 select
     c.year_number,
     c.month_number,
-    c.new_customers,
-    c.repeat_customers,
-    c.first_orders,
-    c.repeat_orders,
-    c.first_orders + c.repeat_orders as total_orders,
+    c.new_users,
+    c.repeat_users,
+    c.new_user_orders,
+    c.repeat_user_orders,
+    c.new_user_orders + c.repeat_user_orders as total_user_orders,
     1.0
-    * c.repeat_orders
-    / nullif(c.first_orders + c.repeat_orders, 0) as repeat_vs_total_orders
+    * c.repeat_user_orders
+    / nullif(c.new_user_orders + c.repeat_user_orders, 0) as repeat_vs_total_user_orders
 from counts as c
 where c.year_number between 2016 and 2018
 order by
@@ -104,34 +104,74 @@ go;
 /* explanation  
 customer side => use order_purcahse_timestamp as time customer made the order
 
-new_customers
+new_users
     humans who ordered, who have not ordered before
-    customers acquired
+    users acquired
     given is_first_order_date, count distinct customer_unique_ids
     the column sum is total distinct customer_unique_ids = 96096
     shows the distribution of new humans
-repeat_customers
+
+repeat_users
     humans who ordered, who have ordered before
-    customers retained
+    users retained
     given not is_first_order_date, count distinct customer_unique_ids
 
-first_orders
-    transactions made by new_customers
+first_user_orders
+    orders made by new_users
     is a partition of total_orders
 
-repeat_orders
-    transactions made by repeat_customers
+repeat_user_orders
+    orders made by repeat_users
     is a partition of total_orders
 
-total_orders
-    first_orders + repeat_orders = 99441
-    total transactions
+total_user_orders
+    first_user_orders + repeat_user_orders = 99441
+    = order_count
+
 */
 
+-- last orders
 
-
-
-
+with ro as (
+    select
+        d.*,
+        ro.*
+    from (
+        select
+            o.order_purchase_timestamp,
+            cast(o.order_purchase_timestamp as date) as order_purchase_date,
+            o.customer_id,
+            c.customer_unique_id,
+            c.customer_zip_code_prefix,
+            c.customer_city,
+            c.customer_state,
+            row_number() over (
+                partition by c.customer_unique_id
+                order by
+                    o.order_purchase_timestamp desc
+            ) as rn
+        from sales.fact_orders as o
+        left join sales.dim_customers as c
+            on o.customer_id = c.customer_id
+    ) as ro
+    left join utils.dim_date as d
+        on ro.order_purchase_date = d.key_date
+    where ro.rn = 1
+)
+select
+    -- ro.*
+    d.year_number,
+    d.month_number,
+    count(ro.customer_unique_id) as last_orders
+from ro
+right join utils.dim_date as d
+    on ro.date_key = d.date_key
+group by 
+    d.year_number,
+    d.month_number
+order by 
+    d.year_number,
+    d.month_number
 
 -- scratch
 

@@ -49,8 +49,8 @@ simple questions:
 
 advanced questions:
     build RFM segmentation (recency, frequency, monetary)
-    which segments drive most revenue?
-    predict repeat purchase probability
+    [x] which segments drive most revenue?
+    [x] predict repeat purchase probability
 
 ==================================================
 3 logistics and delivery performance
