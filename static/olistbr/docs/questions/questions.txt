@@ -61,9 +61,9 @@ estimated_delivery_date
 geolocation
 ==================================================
 questions:
-    average delivery time?
-    % of late deliveries?
-    delivery time by state?
+    [x] average delivery time?
+    [x] % of late deliveries?
+    [x] delivery time by state?
     freight cost vs distance?
     does delivery time affect review score?
 

@@ -32,8 +32,8 @@ select
     c.order_count,
     c.active_users,
     1.0 * c.order_count / nullif(c.active_users, 0) as avg_orders_per_user,
-    1.0 * c.total_product_revenue / nullif(c.active_users, 0) as avg_unrealised_product_revenue_per_user,
-    1.0 * c.total_freight_revenue / nullif(c.active_users, 0) as avg_unrealised_freight_revenue_per_user,
+    1.0 * c.total_product_revenue / nullif(c.active_users, 0) as avg_potential_product_revenue_per_user,
+    1.0 * c.total_freight_revenue / nullif(c.active_users, 0) as avg_potential_freight_revenue_per_user,
     1.0 * c.total_revenue / nullif(c.active_users, 0) as avg_unrealised_total_revenue_per_user
 from (
     select

@@ -19,6 +19,7 @@ END
 
 GO;
 
+
 create or alter function utils.fn_seconds_to_ddhhmmss (
     @total_seconds bigint
 )
@@ -30,7 +31,7 @@ begin
     declare @minutes tinyint
     declare @seconds tinyint
 
-    declare @remaining_seconds bigint = @total_seconds
+    declare @remaining_seconds bigint = abs(@total_seconds)
 
     set @days = @remaining_seconds / 86400
     set @remaining_seconds = @remaining_seconds % 86400
@@ -42,6 +43,9 @@ begin
     set @seconds = @remaining_seconds % 60
 
     declare @duration varchar(50) = ''
+    if @total_seconds < 0 
+        set @duration += '-'
+        
     if @days > 0
         set @duration = concat(
             @duration,
