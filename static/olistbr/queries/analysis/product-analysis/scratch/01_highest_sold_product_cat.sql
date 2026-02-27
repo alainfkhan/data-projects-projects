@@ -77,15 +77,19 @@ order by
 -- view table
 select *
 from #top_categories
+where product_category_name_english in ('pc_gamer')
 
--- which consistently appear in top three product categories?
+-- which consistently appear in top n product categories?
 select
     t.product_category_name_english,
-    count(t.product_category_name_english) as appearances
+    count(t.product_category_name_english) as appearances,
+    sum(t.total_revenue) as total_revenue
 from #top_categories as t
-where t.top_category_rank between 1 and 5
+where t.top_category_rank > 0
 group by t.product_category_name_english
-order by appearances desc
+order by
+    appearances desc,
+    total_revenue desc
 
 
 /*

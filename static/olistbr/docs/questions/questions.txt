@@ -88,7 +88,7 @@ closed_deals
 ==================================================
 
 questions:
-    top sellers by revenue?
+    [x] top sellers by revenue?
     seller concentration (pareto 80/20)?
     revenue by seller date?
     do certain business segments convert beterr?
