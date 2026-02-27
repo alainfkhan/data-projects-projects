@@ -1,4 +1,4 @@
-==================================================
+====================================================================================================
 definitions:
 ==================================================
 date segments:
@@ -8,9 +8,9 @@ date segments:
     weekly
     daily
 
-==================================================
+====================================================================================================
 1 Revenue and sales performance
-
+==================================================
 orders
 order_items
 order_payments
@@ -32,9 +32,9 @@ advanced questions:
     [x] revenue by business segment (joining closed deals)
     cohort-based revenue ()
 
-==================================================
+====================================================================================================
 2 customer analytics
-
+==================================================
 customers
 orders
 order_reviews
@@ -52,9 +52,9 @@ advanced questions:
     [x] which segments drive most revenue?
     [x] predict repeat purchase probability
 
-==================================================
+====================================================================================================
 3 logistics and delivery performance
-
+==================================================
 purchase_timestamp
 delivered_customer_date
 estimated_delivery_date
@@ -64,12 +64,12 @@ questions:
     [x] average delivery time?
     [x] % of late deliveries?
     [x] delivery time by state?
-    freight cost vs distance?
-    does delivery time affect review score?
+    [] freight cost vs distance?
+    [] does delivery time affect review score?
 
-==================================================
+====================================================================================================
 4 product analysis
-
+==================================================
 products
 product_category_name_translation
 ==================================================
@@ -80,28 +80,26 @@ questions:
     [] does number of photos influence review score?
     [x] do longer descriptions correlate with higher sales?
 
-==================================================
+====================================================================================================
 5 seller performace:
-
+==================================================
 sellers
 closed_deals
 ==================================================
-
 questions:
     [x] top sellers by revenue?
     seller concentration (pareto 80/20)?
     revenue by seller date?
-    do certain business segments convert beterr?
+    do certain business segments convert beter?
     sdr/sr performance (sales reps effectiveness)?
     which sdr has the highest win rate?
 
-==================================================
+====================================================================================================
 6 marketing and funnel analysis
-
+==================================================
 marketing_qualified_leads
 closed_deals
 ==================================================
-
 questions:
     convertion rate: mql -> closed deals
     conversion by origin (organic vs paid vs social)
@@ -109,24 +107,22 @@ questions:
     which channels bring highest revenue sellers?
     which acquisition channel produces the highest ltv sellers
 
-==================================================
+====================================================================================================
 7 payment analysis
-
+==================================================
 order_payments
 ==================================================
-
 questions:
     payment method distribution?
     do credit card installments increase order value?
     are installments orders more likely to default/cancel?
     payment type vs review score?
 
-==================================================
+====================================================================================================
 8 review and quality analytics
-
+==================================================
 order_reviews
 ==================================================
-
 questions:
     average review score?
     review score by category?
@@ -134,13 +130,12 @@ questions:
     what drives 1-star reviews?
     build a model explaining review score drivers
 
-==================================================
+====================================================================================================
 9 geographic analysis
-
+==================================================
 customer + seller states
 geolocation
 ==================================================
-
 questions:
     revenue by state
     shipping distance analysis
@@ -149,7 +144,7 @@ questions:
     a heatmap of brazil states
     revenue density by zip prefix
 
-==================================================
+====================================================================================================
 10 executive-level questions
 ==================================================
     why are cancellations increasing?
@@ -157,7 +152,7 @@ questions:
     which levers should we pull to grow 20%
     show we invest more in paid search?
 
-==================================================
+====================================================================================================
 11
 ==================================================
     build a churn prediction model
@@ -166,7 +161,7 @@ questions:
     detect fraudulent orders
     cluster customers
 
-==================================================
+====================================================================================================
 12
 ==================================================
     we want to reduce 1-star reviews by 10%. what would you analyse?
