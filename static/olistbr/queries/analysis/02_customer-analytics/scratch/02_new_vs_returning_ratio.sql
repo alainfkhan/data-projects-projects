@@ -9,35 +9,35 @@ USE olist_stg;
 
 -- start
 -- ================================================== 
-go;
+GO;
 
-with fod as (
-    select
+WITH fod AS (
+    SELECT
         c.customer_unique_id,
-        min(cast(o.order_purchase_timestamp as date)) as first_order_date
-    from sales.fact_orders as o
-    left join sales.dim_customers as c
-        on o.customer_id = c.customer_id
-    group by c.customer_unique_id
+        MIN(CAST(o.order_purchase_timestamp AS DATE)) AS first_order_date
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.dim_customers AS c
+        ON o.customer_id = c.customer_id
+    GROUP BY c.customer_unique_id
     -- order by first_order_date
 ),
 
-ifod as (
-    select
+ifod AS (
+    SELECT
         d.*,
         o.*,
         fod.*,
-        case when d.key_date = fod.first_order_date
-            then 1
-            else 0
-        end as is_first_order_date
-    from sales.fact_orders as o
-    left join sales.dim_customers as c
-        on o.customer_id = c.customer_id
-    left join fod
-        on fod.customer_unique_id = c.customer_unique_id
-    left join utils.dim_date as d
-        on cast(o.order_purchase_timestamp as date) = d.key_date
+        CASE WHEN d.key_date = fod.first_order_date
+            THEN 1
+            ELSE 0
+        END AS is_first_order_date
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.dim_customers AS c
+        ON o.customer_id = c.customer_id
+    LEFT JOIN fod
+        ON fod.customer_unique_id = c.customer_unique_id
+    LEFT JOIN utils.dim_date AS d
+        ON CAST(o.order_purchase_timestamp AS DATE) = d.key_date
 ),
 -- )
 -- select
@@ -46,30 +46,30 @@ ifod as (
 -- from ifod
 -- -- order by ifod.date_key
 
-counts as (
-    select
+counts AS (
+    SELECT
         d.year_number,
         d.month_number,
-        count(distinct case
-            when ifod.is_first_order_date = 1
-                then ifod.customer_unique_id
-        end) as new_users,
-        count(distinct case
-            when ifod.is_first_order_date = 0 
-                then ifod.customer_unique_id
-        end) as repeat_users,
-        sum(ifod.is_first_order_date) as new_user_orders,
-        sum(case
+        COUNT(DISTINCT CASE
+            WHEN ifod.is_first_order_date = 1
+                THEN ifod.customer_unique_id
+        END) AS new_users,
+        COUNT(DISTINCT CASE
+            WHEN ifod.is_first_order_date = 0
+                THEN ifod.customer_unique_id
+        END) AS repeat_users,
+        SUM(ifod.is_first_order_date) AS new_user_orders,
+        SUM(CASE
             -- when ifod.is_first_order_date is null
             --     then null
-            when ifod.is_first_order_date = 0
-                then 1
-                else 0
-        end) as repeat_user_orders
-    from ifod
-    right join utils.dim_date as d
-        on ifod.date_key = d.date_key
-    group by
+            WHEN ifod.is_first_order_date = 0
+                THEN 1
+                ELSE 0
+        END) AS repeat_user_orders
+    FROM ifod
+    RIGHT JOIN utils.dim_date AS d
+        ON ifod.date_key = d.date_key
+    GROUP BY
         d.year_number,
         d.month_number
 )
@@ -80,28 +80,29 @@ counts as (
 --     c.year_number,
 --     c.month_number
 
-select
+SELECT
     c.year_number,
     c.month_number,
     c.new_users,
     c.repeat_users,
     c.new_user_orders,
     c.repeat_user_orders,
-    c.new_user_orders + c.repeat_user_orders as total_user_orders,
+    c.new_user_orders + c.repeat_user_orders AS total_user_orders,
     1.0
     * c.repeat_user_orders
-    / nullif(c.new_user_orders + c.repeat_user_orders, 0) as repeat_vs_total_user_orders
-from counts as c
-where c.year_number between 2016 and 2018
-order by
+    / NULLIF(c.new_user_orders + c.repeat_user_orders, 0)
+        AS repeat_vs_total_user_orders
+FROM counts AS c
+WHERE c.year_number BETWEEN 2016 AND 2018
+ORDER BY
     c.year_number,
     c.month_number
 
-go;
+GO;
 -- ================================================== 
 -- end
 
-/* explanation  
+/* explanation
 customer side => use order_purcahse_timestamp as time customer made the order
 
 new_users
@@ -132,53 +133,53 @@ total_user_orders
 
 -- last orders
 
-with ro as (
-    select
+WITH ro AS (
+    SELECT
         d.*,
         ro.*
-    from (
-        select
+    FROM (
+        SELECT
             o.order_purchase_timestamp,
-            cast(o.order_purchase_timestamp as date) as order_purchase_date,
+            CAST(o.order_purchase_timestamp AS DATE) AS order_purchase_date,
             o.customer_id,
             c.customer_unique_id,
             c.customer_zip_code_prefix,
             c.customer_city,
             c.customer_state,
-            row_number() over (
-                partition by c.customer_unique_id
-                order by
-                    o.order_purchase_timestamp desc
-            ) as rn
-        from sales.fact_orders as o
-        left join sales.dim_customers as c
-            on o.customer_id = c.customer_id
-    ) as ro
-    left join utils.dim_date as d
-        on ro.order_purchase_date = d.key_date
-    where ro.rn = 1
+            ROW_NUMBER() OVER (
+                PARTITION BY c.customer_unique_id
+                ORDER BY
+                    o.order_purchase_timestamp DESC
+            ) AS rn
+        FROM sales.fact_orders AS o
+        LEFT JOIN sales.dim_customers AS c
+            ON o.customer_id = c.customer_id
+    ) AS ro
+    LEFT JOIN utils.dim_date AS d
+        ON ro.order_purchase_date = d.key_date
+    WHERE ro.rn = 1
 )
-select
+
+SELECT
     -- ro.*
     d.year_number,
     d.month_number,
-    count(ro.customer_unique_id) as last_orders
-from ro
-right join utils.dim_date as d
-    on ro.date_key = d.date_key
-group by 
+    COUNT(ro.customer_unique_id) AS last_orders
+FROM ro
+RIGHT JOIN utils.dim_date AS d
+    ON ro.date_key = d.date_key
+GROUP BY
     d.year_number,
     d.month_number
-order by 
+ORDER BY
     d.year_number,
     d.month_number
 
 -- scratch
 
 -- 96096 distinct customer_unique_ids
-select
-    count(distinct c.customer_unique_id)
-from sales.dim_customers as c
+SELECT COUNT(DISTINCT c.customer_unique_id)
+FROM sales.dim_customers AS c
 
 -- 2997 distinct customer_unique_ids that have ordered more than once
 -- 252 distinct customer_unique_ids that have ordered more than twice
@@ -186,19 +187,18 @@ from sales.dim_customers as c
 -- 19 distinct customer_unique_ids that have ordered more than four times
 -- 11 distinct customer_unique_ids that have ordered more than five times
 -- 5 distinct customer_unique_ids that have ordered more than six times
-select
+SELECT COUNT(DISTINCT sub.customer_unique_id)
     -- count(sub.customer_unique_id)
-    count(distinct sub.customer_unique_id)
-from (
-    select
+FROM (
+    SELECT
         c.customer_unique_id,
-        row_number() over (
-            partition by c.customer_unique_id
-            order by c.customer_unique_id
-        ) as rn
-    from sales.dim_customers as c
-) as sub
-where sub.rn > 1
+        ROW_NUMBER() OVER (
+            PARTITION BY c.customer_unique_id
+            ORDER BY c.customer_unique_id
+        ) AS rn
+    FROM sales.dim_customers AS c
+) AS sub
+WHERE sub.rn > 1
 
 /*
 count no dist: 3345
@@ -217,8 +217,8 @@ WITH fod AS (
         c.customer_unique_id,
         MIN(CAST(o.order_purchase_timestamp AS DATE)) AS first_order_date
     FROM sales.fact_orders AS o
-    left join sales.dim_customers as c
-        on o.customer_id = c.customer_id
+    LEFT JOIN sales.dim_customers AS c
+        ON o.customer_id = c.customer_id
     GROUP BY c.customer_unique_id
     -- order by first_order_date asc
 )
@@ -251,22 +251,22 @@ FROM (
             ELSE 0
         END AS is_first_order_date
     FROM sales.fact_orders AS o
-    left join sales.dim_customers as c
-        on o.customer_id = c.customer_id
+    LEFT JOIN sales.dim_customers AS c
+        ON o.customer_id = c.customer_id
     -- LEFT JOIN fod
     --     ON fod.customer_unique_id = c.customer_unique_id
-    left join (
+    LEFT JOIN (
 
         SELECT
             c.customer_unique_id,
             MIN(CAST(o.order_purchase_timestamp AS DATE)) AS first_order_date
         FROM sales.fact_orders AS o
-        left join sales.dim_customers as c
-            on o.customer_id = c.customer_id
+        LEFT JOIN sales.dim_customers AS c
+            ON o.customer_id = c.customer_id
         GROUP BY c.customer_unique_id
 
-    ) as fod
-        on fod.customer_unique_id = c.customer_unique_id
+    ) AS fod
+        ON fod.customer_unique_id = c.customer_unique_id
     LEFT JOIN utils.dim_date AS d
         ON CAST(o.order_purchase_timestamp AS DATE) = d.full_date
     -- where d.full_date != fod.first_order_date
@@ -283,16 +283,16 @@ ORDER BY
     d.month_number
 
 -- rough analysis
-select
+SELECT
     c.*,
     o.*,
     oi.*
-from sales.dim_customers as c
-left join sales.fact_orders as o
-    on c.customer_id = o.customer_id
-left join sales.fact_order_items as oi
-    on o.order_id = oi.order_id
-where c.customer_unique_id = 'e23daf58ce481f3d38066e654ef610cb'
+FROM sales.dim_customers AS c
+LEFT JOIN sales.fact_orders AS o
+    ON c.customer_id = o.customer_id
+LEFT JOIN sales.fact_order_items AS oi
+    ON o.order_id = oi.order_id
+WHERE c.customer_unique_id = 'e23daf58ce481f3d38066e654ef610cb'
 
 /*
 customer unique ids with repeat orders:

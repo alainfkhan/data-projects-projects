@@ -1,33 +1,37 @@
-use olist_stg;
+USE olist_stg;
 
 -- does photos qty affect review score?
 /*
 
 */
 
-with tbl_xy as (
-    select distinct
+WITH tbl_xy AS (
+    SELECT DISTINCT
         -- p.product_id,
-        p.product_photos_qty as x,
-        r.review_score as y
-    from sales.fact_orders as o
-    left join sales.fact_order_reviews as r
-        on o.order_id = r.order_id
-    left join sales.fact_order_items as oi
-        on o.order_id = oi.order_id
-    left join sales.dim_products as p
-        on oi.product_id = p.product_id
-    left join sales.dim_product_category_name_translation as pt
-        on p.product_category_name = pt.product_category_name
-    where
-        p.product_photos_qty is not null
-        and r.review_score is not null
+        p.product_photos_qty AS x,
+        r.review_score AS y
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.fact_order_reviews AS r
+        ON o.order_id = r.order_id
+    LEFT JOIN sales.fact_order_items AS oi
+        ON o.order_id = oi.order_id
+    LEFT JOIN sales.dim_products AS p
+        ON oi.product_id = p.product_id
+    LEFT JOIN sales.dim_product_category_name_translation AS pt
+        ON p.product_category_name = pt.product_category_name
+    WHERE
+        p.product_photos_qty IS NOT NULL
+        AND r.review_score IS NOT NULL
 )
-select
+
+SELECT
     -- t.*,
-    (count(*) * sum(x*y) - sum(x)*sum(y))
-    / (sqrt(count(*) * sum(square(x)) - square(sum(x))) * sqrt(count(*) * sum(square(y)) - square(sum(y)))) as corr_photos_qty_review_score
-from tbl_xy as t
+    (COUNT(*) * SUM(x * y) - SUM(x) * SUM(y))
+    / (
+        SQRT(COUNT(*) * SUM(SQUARE(x)) - SQUARE(SUM(x)))
+        * SQRT(COUNT(*) * SUM(SQUARE(y)) - SQUARE(SUM(y)))
+    ) AS corr_photos_qty_review_score
+FROM tbl_xy AS t
 -- order by
 --     t.x,
 --     t.y

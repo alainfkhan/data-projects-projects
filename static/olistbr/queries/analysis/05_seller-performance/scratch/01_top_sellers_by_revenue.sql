@@ -1,27 +1,25 @@
-use olist_stg;
+USE olist_stg;
 
 -- top sellers by revenue
 
-select top 10
+SELECT TOP 10
     s.seller_id,
-    sum(s.price) as total_product_revenue,
-    sum(s.freight_value) as total_freight_revenue,
-    sum(s.price + s.freight_value) as total_revenue
-from sales.vw_sales as s
-left join sales.dim_sellers as m
-    on s.seller_id = m.seller_id
-group by s.seller_id
-order by total_revenue desc
+    SUM(s.price) AS total_product_revenue,
+    SUM(s.freight_value) AS total_freight_revenue,
+    SUM(s.price + s.freight_value) AS total_revenue
+FROM sales.vw_sales AS s
+LEFT JOIN sales.dim_sellers AS m
+    ON s.seller_id = m.seller_id
+GROUP BY s.seller_id
+ORDER BY total_revenue DESC
 
 -- distinct sellers count = 3095
-select 
-    count(distinct m.seller_id)
-from sales.dim_sellers as m
+SELECT COUNT(DISTINCT m.seller_id)
+FROM sales.dim_sellers AS m
 
 -- no sellers have changed their location
-select distinct
-    m.*
-from sales.dim_sellers as m
+SELECT DISTINCT m.*
+FROM sales.dim_sellers AS m
 
 /*
 top sellers:
@@ -39,28 +37,27 @@ da8622b14eb17ae2831f4ac5b9dab84a, 160236.5700, 24955.7500, 185192.3200
 */
 
 -- what product categories do they sell?
-select
-    left(s.seller_id, 8) as seller_id_prefix,
+SELECT
+    LEFT(s.seller_id, 8) AS seller_id_prefix,
     pt.product_category_name_english,
-    count(distinct s.order_id) as order_count,
-    sum(s.price) as total_product_revenue,
-    sum(s.freight_value) as total_freight_revenue,
-    sum(s.price + s.freight_value) as total_revenue
-from sales.vw_sales as s
-left join sales.dim_products as p
-    on s.product_id= p.product_id
-left join sales.dim_product_category_name_translation as pt
-    on p.product_category_name = pt.product_category_name
-where s.seller_id in (
+    COUNT(DISTINCT s.order_id) AS order_count,
+    SUM(s.price) AS total_product_revenue,
+    SUM(s.freight_value) AS total_freight_revenue,
+    SUM(s.price + s.freight_value) AS total_revenue
+FROM sales.vw_sales AS s
+LEFT JOIN sales.dim_products AS p
+    ON s.product_id = p.product_id
+LEFT JOIN sales.dim_product_category_name_translation AS pt
+    ON p.product_category_name = pt.product_category_name
+WHERE s.seller_id IN (
     '4869f7a5dfa277a7dca6462dcf3b52b2',
     '7c67e1448b00f6e969d365cea6b010ab',
     '53243585a1d6dc2643021fd1853d8905'
 )
-group by
+GROUP BY
     s.seller_id,
     pt.product_category_name_english
-order by
+ORDER BY
     s.seller_id,
     pt.product_category_name_english,
-    total_revenue desc
-
+    total_revenue DESC

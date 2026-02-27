@@ -1,9 +1,9 @@
-use olist_stg;
+USE olist_stg;
 
 -- one off analysis
 -- 2017-01-05
 
-select
+SELECT
     -- d.*,
     -- o.*,
     -- c.*,
@@ -13,43 +13,43 @@ select
     o.order_id,
     o.customer_id,
     c.customer_unique_id,
-    cast(o.order_purchase_timestamp as date) as order_purchase_date,
+    CAST(o.order_purchase_timestamp AS DATE) AS order_purchase_date,
     fod.first_order_date,
-    case when cast(o.order_purchase_timestamp as date) = fod.first_order_date
-        then 1
-        else 0
-    end as is_first_order_date
-from sales.fact_orders as o
-left join sales.dim_customers as c
-    on o.customer_id = c.customer_id
-left join utils.dim_date as d
-    on cast(o.order_purchase_timestamp as date) = d.key_date
-left join (
+    CASE WHEN CAST(o.order_purchase_timestamp AS DATE) = fod.first_order_date
+        THEN 1
+        ELSE 0
+    END AS is_first_order_date
+FROM sales.fact_orders AS o
+LEFT JOIN sales.dim_customers AS c
+    ON o.customer_id = c.customer_id
+LEFT JOIN utils.dim_date AS d
+    ON CAST(o.order_purchase_timestamp AS DATE) = d.key_date
+LEFT JOIN (
 
-    select
+    SELECT
         c.customer_unique_id,
-        min(cast(o.order_purchase_timestamp as date)) as first_order_date
-    from sales.fact_orders as o
-    left join sales.dim_customers as c
-        on o.customer_id = c.customer_id
-    left join utils.dim_date as d
-        on cast(o.order_purchase_timestamp as date) = d.key_date
-    group by c.customer_unique_id
+        MIN(CAST(o.order_purchase_timestamp AS DATE)) AS first_order_date
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.dim_customers AS c
+        ON o.customer_id = c.customer_id
+    LEFT JOIN utils.dim_date AS d
+        ON CAST(o.order_purchase_timestamp AS DATE) = d.key_date
+    GROUP BY c.customer_unique_id
 
-) as fod
-    on c.customer_unique_id = fod.customer_unique_id
-where d.key_date = '2017-01-05'
+) AS fod
+    ON c.customer_unique_id = fod.customer_unique_id
+WHERE d.key_date = '2017-01-05'
 
-select
+SELECT
     -- d.*,
     -- o.*
     d.full_date,
     o.order_id,
     o.customer_id,
     c.customer_unique_id
-from sales.fact_orders as o
-left join sales.dim_customers as c
-    on o.customer_id = c.customer_id
-left join utils.dim_date as d
-    on cast(o.order_purchase_timestamp as date) = d.key_date
-where d.full_date = '2017-01-05'
+FROM sales.fact_orders AS o
+LEFT JOIN sales.dim_customers AS c
+    ON o.customer_id = c.customer_id
+LEFT JOIN utils.dim_date AS d
+    ON CAST(o.order_purchase_timestamp AS DATE) = d.key_date
+WHERE d.full_date = '2017-01-05'

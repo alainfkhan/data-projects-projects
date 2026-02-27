@@ -1,4 +1,4 @@
-use olist_stg;
+USE olist_stg;
 /*
 can i infer the product category type from the orders its grouped with (in the same basket)
 */
@@ -10,7 +10,7 @@ orders made more than 1 items in the basket
 where the product category name is null
 */
 -- grouped orders with orders with missing product categories
-select
+SELECT
     o.order_purchase_timestamp,
     o.order_id,
     oi.order_item_id,
@@ -26,33 +26,33 @@ select
     p.product_width_cm,
     oi.price,
     oi.freight_value
-from sales.fact_orders as o
-left join sales.fact_order_items as oi
-    on o.order_id = oi.order_id
-left join sales.dim_products as p
-    on oi.product_id = p.product_id
-left join sales.dim_product_category_name_translation as pt
-    on p.product_category_name = pt.product_category_name
-where o.order_id in (
+FROM sales.fact_orders AS o
+LEFT JOIN sales.fact_order_items AS oi
+    ON o.order_id = oi.order_id
+LEFT JOIN sales.dim_products AS p
+    ON oi.product_id = p.product_id
+LEFT JOIN sales.dim_product_category_name_translation AS pt
+    ON p.product_category_name = pt.product_category_name
+WHERE o.order_id IN (
     /*
     order ids that have more than 1 items in basket
     and null product category names on products
     */
-    select distinct o.order_id
-    from sales.fact_orders as o
-    left join sales.fact_order_items as oi
-        on o.order_id = oi.order_id
-    left join sales.dim_products as p
-        on oi.product_id = p.product_id
-    where
+    SELECT DISTINCT o.order_id
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.fact_order_items AS oi
+        ON o.order_id = oi.order_id
+    LEFT JOIN sales.dim_products AS p
+        ON oi.product_id = p.product_id
+    WHERE
         oi.order_item_id > 1
-        and oi.product_id in (
+        AND oi.product_id IN (
             -- null product category
-            select distinct p.product_id
-            from sales.dim_products as p
-            where p.product_category_name is null
+            SELECT DISTINCT p.product_id
+            FROM sales.dim_products AS p
+            WHERE p.product_category_name IS NULL
         )
 )
-order by
+ORDER BY
     o.order_purchase_timestamp,
     oi.order_item_id

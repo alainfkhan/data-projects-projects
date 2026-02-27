@@ -1,4 +1,4 @@
-use olist_stg;
+USE olist_stg;
 
 -- which product categories sell the most
 /*
@@ -13,83 +13,83 @@ a sale is defined as
 */
 
 
-go;
+GO;
 
 -- top 3 highest grossing product categories
 
-with rev_by_pt as (
-    select
+WITH rev_by_pt AS (
+    SELECT
         d.year_number,
         d.month_number,
         pt.product_category_name_english,
-        count(distinct s.order_id) as order_count,
-        sum(s.price) as total_product_revenue,
-        sum(s.freight_value) as total_freight_revenue,
-        sum(s.price + s.freight_value) as total_revenue
-    from sales.vw_sales as s
-    left join sales.dim_products as p
-        on s.product_id = p.product_id
-    left join sales.dim_product_category_name_translation as pt
-        on p.product_category_name = pt.product_category_name
-    right join utils.dim_date as d
-        on s.date_key = d.date_key
-    group by 
+        COUNT(DISTINCT s.order_id) AS order_count,
+        SUM(s.price) AS total_product_revenue,
+        SUM(s.freight_value) AS total_freight_revenue,
+        SUM(s.price + s.freight_value) AS total_revenue
+    FROM sales.vw_sales AS s
+    LEFT JOIN sales.dim_products AS p
+        ON s.product_id = p.product_id
+    LEFT JOIN sales.dim_product_category_name_translation AS pt
+        ON p.product_category_name = pt.product_category_name
+    RIGHT JOIN utils.dim_date AS d
+        ON s.date_key = d.date_key
+    GROUP BY
         d.year_number,
         d.month_number,
         pt.product_category_name_english
 ),
 
-rn_rev as (
-    select
+rn_rev AS (
+    SELECT
         -- r.year_number,
         -- r.month_number,
         -- r.product_category_name_english,
         r.*,
-        row_number() over (
-            partition by
+        ROW_NUMBER() OVER (
+            PARTITION BY
                 r.year_number,
                 r.month_number
-            order by 
-                r.total_revenue desc
-        ) as rn
-    from rev_by_pt as r
+            ORDER BY
+                r.total_revenue DESC
+        ) AS rn
+    FROM rev_by_pt AS r
 )
 -- select
 --     r.*
 -- from rn_rev as r
 
-select
+SELECT
     r.year_number,
     r.month_number,
-    r.rn as top_category_rank,
+    r.rn AS top_category_rank,
     r.product_category_name_english,
     -- r.total_product_revenue,
     -- r.total_freight_revenue,
     r.total_revenue
-into #top_categories
-from rn_rev as r
+INTO #top_categories
+FROM rn_rev AS r
 -- where r.rn between 1 and 3
-order by 
+ORDER BY
     r.year_number,
     r.month_number,
     r.rn
 
 -- view table
-select *
-from #top_categories
-where product_category_name_english in ('pc_gamer')
+SELECT *
+FROM #top_categories
+WHERE product_category_name_english IN ('pc_gamer')
 
 -- which consistently appear in top n product categories?
-select
+SELECT
     t.product_category_name_english,
-    count(t.product_category_name_english) as appearances,
-    sum(t.total_revenue) as total_revenue
-from #top_categories as t
-where t.top_category_rank > 0
-group by t.product_category_name_english
-order by
-    appearances desc,
-    total_revenue desc
+    COUNT(t.product_category_name_english) AS appearances,
+    SUM(t.total_revenue) AS total_revenue
+FROM #top_categories AS t
+WHERE t.top_category_rank > 0
+GROUP BY t.product_category_name_english
+ORDER BY
+    appearances DESC,
+    total_revenue DESC
 
 
 /*
@@ -97,9 +97,4 @@ health_beauty has consistently appeared the most out of all categories
 */
 
 
-
-
-
-go;
-
-
+GO;

@@ -1,16 +1,15 @@
 USE olist_stg;
 
 -- short analysis
-select
-    c.*
-from sales.dim_customers as c
+SELECT c.*
+FROM sales.dim_customers AS c
 
 -- 99441 distinct customer ids
 -- 96096 distinct customer unique ids
-select
-    count(distinct c.customer_unique_id) as customer_unique_id_count,
-    count(distinct c.customer_id) as customer_id_count
-from sales.dim_customers as c
+SELECT
+    COUNT(DISTINCT c.customer_unique_id) AS customer_unique_id_count,
+    COUNT(DISTINCT c.customer_id) AS customer_id_count
+FROM sales.dim_customers AS c
 
 /*
 on customer side
@@ -26,37 +25,43 @@ can find yau, qau, mau, wau, dau
 */
 -- ==================================================
 
-select
+SELECT
     c.year_number,
     c.month_number,
     c.order_count,
     c.active_users,
-    1.0 * c.order_count / nullif(c.active_users, 0) as avg_orders_per_user,
-    1.0 * c.total_product_revenue / nullif(c.active_users, 0) as avg_potential_product_revenue_per_user,
-    1.0 * c.total_freight_revenue / nullif(c.active_users, 0) as avg_potential_freight_revenue_per_user,
-    1.0 * c.total_revenue / nullif(c.active_users, 0) as avg_unrealised_total_revenue_per_user
-from (
-    select
+    1.0 * c.order_count / NULLIF(c.active_users, 0) AS avg_orders_per_user,
+    1.0
+    * c.total_product_revenue
+    / NULLIF(c.active_users, 0) AS avg_potential_product_revenue_per_user,
+    1.0
+    * c.total_freight_revenue
+    / NULLIF(c.active_users, 0) AS avg_potential_freight_revenue_per_user,
+    1.0
+    * c.total_revenue
+    / NULLIF(c.active_users, 0) AS avg_unrealised_total_revenue_per_user
+FROM (
+    SELECT
         d.year_number,
         d.month_number,
-        count(distinct o.order_id) as order_count,
-        count(distinct c.customer_unique_id) as active_users,
-        sum(oi.price) as total_product_revenue,
-        sum(oi.freight_value) as total_freight_revenue,
-        sum(oi.price + oi.freight_value) as total_revenue
-    from sales.fact_orders as o
-    left join sales.fact_order_items as oi
-        on o.order_id = oi.order_id
-    left join sales.dim_customers as c
-        on o.customer_id = c.customer_id
-    right join utils.dim_date as d
-        on cast(o.order_purchase_timestamp as date) = d.key_date
-    where d.year_number between 2016 and 2018
-    group by
+        COUNT(DISTINCT o.order_id) AS order_count,
+        COUNT(DISTINCT c.customer_unique_id) AS active_users,
+        SUM(oi.price) AS total_product_revenue,
+        SUM(oi.freight_value) AS total_freight_revenue,
+        SUM(oi.price + oi.freight_value) AS total_revenue
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.fact_order_items AS oi
+        ON o.order_id = oi.order_id
+    LEFT JOIN sales.dim_customers AS c
+        ON o.customer_id = c.customer_id
+    RIGHT JOIN utils.dim_date AS d
+        ON CAST(o.order_purchase_timestamp AS DATE) = d.key_date
+    WHERE d.year_number BETWEEN 2016 AND 2018
+    GROUP BY
         d.year_number,
         d.month_number
-) as c
-order by
+) AS c
+ORDER BY
     c.year_number,
     c.month_number
 
@@ -67,43 +72,39 @@ customer_unique_id_count is active customers
 
 -- validation
 
-select
-    sum(sub.d_cuid) as total_d_cuid,    -- 98046
-    sum(sub.cuid) as total_cuid         -- 99441
-from (
-    select
+SELECT
+    SUM(sub.d_cuid) AS total_d_cuid,    -- 98046
+    SUM(sub.cuid) AS total_cuid         -- 99441
+FROM (
+    SELECT
         -- o.*,
         -- c.*
         d.year_number,
         d.month_number,
-        count(distinct c.customer_unique_id) as d_cuid,
-        count(c.customer_unique_id) as cuid
-    from sales.fact_orders as o
-    left join sales.dim_customers as c
-        on o.customer_id = c.customer_id
-    left join utils.dim_date as d
-        on cast(o.order_purchase_timestamp as date) = d.full_date
-    group by 
+        COUNT(DISTINCT c.customer_unique_id) AS d_cuid,
+        COUNT(c.customer_unique_id) AS cuid
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.dim_customers AS c
+        ON o.customer_id = c.customer_id
+    LEFT JOIN utils.dim_date AS d
+        ON CAST(o.order_purchase_timestamp AS DATE) = d.full_date
+    GROUP BY
         d.year_number,
         d.month_number
-    order by 
+    ORDER BY
         d.year_number,
         d.month_number
-) as sub
+) AS sub
 
 -- 96096 total customer_unique_ids
-select
-    count(distinct c.customer_unique_id)
-from sales.dim_customers as c
+SELECT COUNT(DISTINCT c.customer_unique_id)
+FROM sales.dim_customers AS c
 
-select
+SELECT COUNT(DISTINCT c.customer_unique_id)
     -- o.customer_id,
     -- c.customer_id,
     -- c.customer_unique_id
-    count(distinct c.customer_unique_id)    -- 96096
-from sales.fact_orders as o
-full outer join sales.dim_customers as c
-    on o.customer_id = c.customer_id
-
-
-
+    -- 96096
+FROM sales.fact_orders AS o
+FULL OUTER JOIN sales.dim_customers AS c
+    ON o.customer_id = c.customer_id

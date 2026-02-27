@@ -20,54 +20,53 @@ END
 GO;
 
 
-create or alter function utils.fn_seconds_to_ddhhmmss (
-    @total_seconds bigint
+CREATE OR ALTER FUNCTION utils.fn_seconds_to_ddhhmmss(
+    @total_seconds BIGINT
 )
-returns varchar(50)
-as
-begin
-    declare @days smallint
-    declare @hours tinyint
-    declare @minutes tinyint
-    declare @seconds tinyint
+RETURNS VARCHAR(50)
+AS
+BEGIN
+    DECLARE @days SMALLINT
+    DECLARE @hours TINYINT
+    DECLARE @minutes TINYINT
+    DECLARE @seconds TINYINT
 
-    declare @remaining_seconds bigint = abs(@total_seconds)
+    DECLARE @remaining_seconds BIGINT = ABS(@total_seconds)
 
-    set @days = @remaining_seconds / 86400
-    set @remaining_seconds = @remaining_seconds % 86400
+    SET @days = @remaining_seconds / 86400
+    SET @remaining_seconds = @remaining_seconds % 86400
 
-    set @hours = @remaining_seconds / 3600
-    set @remaining_seconds = @remaining_seconds % 3600
+    SET @hours = @remaining_seconds / 3600
+    SET @remaining_seconds = @remaining_seconds % 3600
 
-    set @minutes = @remaining_seconds / 60
-    set @seconds = @remaining_seconds % 60
+    SET @minutes = @remaining_seconds / 60
+    SET @seconds = @remaining_seconds % 60
 
-    declare @duration varchar(50) = ''
-    if @total_seconds < 0 
-        set @duration += '-'
-        
-    if @days > 0
-        set @duration = concat(
+    DECLARE @duration VARCHAR(50) = ''
+    IF @total_seconds < 0
+        SET @duration += '-'
+
+    IF @days > 0
+        SET @duration = CONCAT(
             @duration,
-            cast(@days as varchar),
-            case when @days > 1
-                then ' days '
-                else ' day '
-            end
+            CAST(@days AS VARCHAR),
+            CASE WHEN @days > 1
+                THEN ' days '
+                ELSE ' day '
+            END
     )
 
-    set @duration = concat(
+    SET @duration = CONCAT(
         @duration,
-        format(@hours, '00'), ':',
-        format(@minutes, '00'), ':',
-        format(@seconds, '00')
+        FORMAT(@hours, '00'), ':',
+        FORMAT(@minutes, '00'), ':',
+        FORMAT(@seconds, '00')
     )
 
-    if @total_seconds is null
-        set @duration = null
+    IF @total_seconds IS NULL
+        SET @duration = NULL
 
-    return @duration
-end
+    RETURN @duration
+END
 
-go;
-
+GO;

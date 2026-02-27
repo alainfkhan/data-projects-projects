@@ -1,41 +1,49 @@
-use olist_stg;
+USE olist_stg;
 
 
 -- ==================================================
 -- average delivery time?
 -- ==================================================
 
-select
+SELECT
     sub.*,
-    1.0 * sub.avg_purchase_to_customer_duration_s / 86400 as avg_purchase_to_customer_duration_days,
-    utils.fn_seconds_to_ddhhmmss(sub.avg_purchase_to_customer_duration_s) as avg_purchase_to_customer_duration_format
-from (
-    select
+    1.0
+    * sub.avg_purchase_to_customer_duration_s
+    / 86400 AS avg_purchase_to_customer_duration_days,
+    utils.fn_seconds_to_ddhhmmss(sub.avg_purchase_to_customer_duration_s)
+        AS avg_purchase_to_customer_duration_format
+FROM (
+    SELECT
         -- sub.*
         d.year_number,
         d.week_number,
-        count(distinct sub.order_id) as order_count,
-        avg(sub.purchase_to_customer_duration_s) as avg_purchase_to_customer_duration_s
-    from (
-        select
+        COUNT(DISTINCT sub.order_id) AS order_count,
+        AVG(sub.purchase_to_customer_duration_s)
+            AS avg_purchase_to_customer_duration_s
+    FROM (
+        SELECT
             d.*,
             o.*,
-            datediff_big(second, o.order_purchase_timestamp, o.order_delivered_customer_date) as purchase_to_customer_duration_s
-        from sales.fact_orders as o
-        left join utils.dim_date as d
-            on cast(o.order_purchase_timestamp as date) = d.key_date
+            DATEDIFF_BIG(
+                SECOND,
+                o.order_purchase_timestamp,
+                o.order_delivered_customer_date
+            ) AS purchase_to_customer_duration_s
+        FROM sales.fact_orders AS o
+        LEFT JOIN utils.dim_date AS d
+            ON CAST(o.order_purchase_timestamp AS DATE) = d.key_date
         -- that are sales
-        where o.order_id in (
-            select distinct s.order_id
-            from sales.vw_sales as s)
-    ) as sub
-    right join utils.dim_date as d
-        on sub.date_key = d.date_key
-    group by 
+        WHERE o.order_id IN (
+            SELECT DISTINCT s.order_id
+            FROM sales.vw_sales AS s)
+    ) AS sub
+    RIGHT JOIN utils.dim_date AS d
+        ON sub.date_key = d.date_key
+    GROUP BY
         d.year_number,
         d.week_number
-) as sub
-order by 
+) AS sub
+ORDER BY
     sub.year_number,
     sub.week_number
 
@@ -96,20 +104,19 @@ want to look at cols:
     order_estimated_delivery_date is never null
 */
 
-select
-    -- o.*,
+SELECT DISTINCT o.order_status    -- o.*,
     -- oi.*
-    distinct o.order_status
-from sales.fact_orders as o
-left join sales.fact_order_items as oi
-    on o.order_id = oi.order_id
-where
+
+FROM sales.fact_orders AS o
+LEFT JOIN sales.fact_order_items AS oi
+    ON o.order_id = oi.order_id
+WHERE
     -- o.order_purchase_timestamp is null
     -- o.order_approved_at is null
     -- o.order_delivered_carrier_date is null
     -- o.order_delivered_customer_date is null
-    o.order_estimated_delivery_date is null
-order by o.order_status
+    o.order_estimated_delivery_date IS NULL
+ORDER BY o.order_status
 
 
 -- ==================================================
@@ -132,22 +139,28 @@ is_delivered_after_estimated_date if arrives 1 or more days after estimated date
 
 */
 
-select
+SELECT
     -- o.*,
     o.order_id,
     -- o.order_delivered_customer_date,
     -- o.order_estimated_delivery_date,
     o.lateness_s,
     -- utils.fn_seconds_to_ddhhmmss(o.lateness_s) as lateness_format_duration,
-    case
-        when cast(o.order_delivered_customer_date as date) < cast(o.order_estimated_delivery_date as date)
-            then 'early'
-        when cast(o.order_delivered_customer_date as date) = cast(o.order_estimated_delivery_date as date)
-            then 'on_time'
-        when cast(o.order_delivered_customer_date as date) > cast(o.order_estimated_delivery_date as date)
-            then 'late'
-            else 'unkown'
-    end as delivery_status
+    CASE
+        WHEN
+            CAST(o.order_delivered_customer_date AS DATE)
+            < CAST(o.order_estimated_delivery_date AS DATE)
+            THEN 'early'
+        WHEN
+            CAST(o.order_delivered_customer_date AS DATE)
+            = CAST(o.order_estimated_delivery_date AS DATE)
+            THEN 'on_time'
+        WHEN
+            CAST(o.order_delivered_customer_date AS DATE)
+            > CAST(o.order_estimated_delivery_date AS DATE)
+            THEN 'late'
+            ELSE 'unkown'
+    END AS delivery_status
     -- case
     --     when o.order_delivered_customer_date is null or o.order_estimated_delivery_date is null
     --         then null
@@ -169,51 +182,63 @@ select
     --         then 1
     --         else 0
     -- end as is_delivered_late
-into #delivery_lateness
-from (
-    select
+INTO #delivery_lateness
+FROM (
+    SELECT
         -- o.order_id,
         -- o.order_delivered_customer_date,
         -- o.order_estimated_delivery_date,
         o.*,
-        - datediff_big(second, o.order_delivered_customer_date, o.order_estimated_delivery_date) as lateness_s
-    from sales.fact_orders as o
+        -DATEDIFF_BIG(
+            SECOND,
+            o.order_delivered_customer_date,
+            o.order_estimated_delivery_date
+        ) AS lateness_s
+    FROM sales.fact_orders AS o
     -- where
     --     o.order_delivered_customer_date is not null
     --     and o.order_estimated_delivery_date is not null
-) as o
-order by o.order_purchase_timestamp
+) AS o
+ORDER BY o.order_purchase_timestamp
 
-drop table #delivery_lateness
+DROP TABLE #delivery_lateness
 
-select
+SELECT
     d.*,
-    1.0 * d.early_deliveries / nullif(d.total_deliveries, 0) as pc_early_deliveries,
-    1.0 * d.on_time_deliveries / nullif(d.total_deliveries, 0) as pc_on_time_deliveries,
-    1.0 * d.late_deliveries / nullif(d.total_deliveries, 0) as pc_late_deliveries,
-    1.0 * (d.early_deliveries + d.on_time_deliveries) / nullif(d.total_deliveries, 0) as pc_not_late_deliveries
-from (
-    select
+    1.0
+    * d.early_deliveries
+    / NULLIF(d.total_deliveries, 0) AS pc_early_deliveries,
+    1.0
+    * d.on_time_deliveries
+    / NULLIF(d.total_deliveries, 0) AS pc_on_time_deliveries,
+    1.0
+    * d.late_deliveries
+    / NULLIF(d.total_deliveries, 0) AS pc_late_deliveries,
+    1.0
+    * (d.early_deliveries + d.on_time_deliveries)
+    / NULLIF(d.total_deliveries, 0) AS pc_not_late_deliveries
+FROM (
+    SELECT
         d.year_number,
         d.month_number,
-        sum(case when l.delivery_status = 'early'
-            then 1
-            else 0
-        end) as early_deliveries,
-        sum(case when l.delivery_status = 'on_time'
-            then 1
-            else 0
-        end) as on_time_deliveries,
-        sum(case when l.delivery_status = 'late'
-            then 1
-            else 0
-        end) as late_deliveries,
-        sum(case when l.delivery_status in ('early', 'on_time', 'late')
-            then 1
-            else 0
-        end) as total_deliveries
-    from (
-        select
+        SUM(CASE WHEN l.delivery_status = 'early'
+            THEN 1
+            ELSE 0
+        END) AS early_deliveries,
+        SUM(CASE WHEN l.delivery_status = 'on_time'
+            THEN 1
+            ELSE 0
+        END) AS on_time_deliveries,
+        SUM(CASE WHEN l.delivery_status = 'late'
+            THEN 1
+            ELSE 0
+        END) AS late_deliveries,
+        SUM(CASE WHEN l.delivery_status IN ('early', 'on_time', 'late')
+            THEN 1
+            ELSE 0
+        END) AS total_deliveries
+    FROM (
+        SELECT
             o.order_id,
             o.order_status,
             o.order_purchase_timestamp,
@@ -223,39 +248,38 @@ from (
             l.delivery_status,
             oi.price,
             oi.freight_value
-        from sales.fact_orders as o
-        left join sales.fact_order_items as oi
-            on o.order_id = oi.order_id
-        left join #delivery_lateness as l
-            on o.order_id = l.order_id
-    ) as l
-    right join utils.dim_date as d
-        on cast(l.order_purchase_timestamp as date) = d.key_date
-    group by 
+        FROM sales.fact_orders AS o
+        LEFT JOIN sales.fact_order_items AS oi
+            ON o.order_id = oi.order_id
+        LEFT JOIN #delivery_lateness AS l
+            ON o.order_id = l.order_id
+    ) AS l
+    RIGHT JOIN utils.dim_date AS d
+        ON CAST(l.order_purchase_timestamp AS DATE) = d.key_date
+    GROUP BY
         d.year_number,
         d.month_number
-) as d
-order by 
+) AS d
+ORDER BY
     d.year_number,
     d.month_number
 
 -- analysis
 
 -- 96476
-select distinct o.order_id
-from sales.fact_orders as o
-where o.order_delivered_customer_date is not null
+SELECT DISTINCT o.order_id
+FROM sales.fact_orders AS o
+WHERE o.order_delivered_customer_date IS NOT NULL
 
-select
-    o.*
-from sales.fact_orders as o
-where o.order_delivered_customer_date is null
+SELECT o.*
+FROM sales.fact_orders AS o
+WHERE o.order_delivered_customer_date IS NULL
 
 -- 98199
-select distinct o.order_id
-from sales.fact_orders as o
-left join sales.fact_order_items as oi
-    on o.order_id = oi.order_id
+SELECT DISTINCT o.order_id
+FROM sales.fact_orders AS o
+LEFT JOIN sales.fact_order_items AS oi
+    ON o.order_id = oi.order_id
 WHERE
     o.order_status IN (
         'approved',
@@ -264,55 +288,55 @@ WHERE
         'processing',
         'shipped'
     )
-    and oi.price is not null
+    AND oi.price IS NOT NULL
 
 
-select
-    o.*
-from sales.fact_orders as o
+SELECT o.*
+FROM sales.fact_orders AS o
 
 -- ==================================================
 -- delivery time by state?
 -- ==================================================
 
-select
+SELECT
     -- sub.*
     d.year_number,
     d.month_number,
     sub.customer_state,
-    count(distinct sub.order_id) as order_count,
+    COUNT(DISTINCT sub.order_id) AS order_count,
     -- avg(sub.purchase_to_customer_duration_s) as avg_purchase_to_customer_duration_s,
-    utils.fn_seconds_to_ddhhmmss(avg(sub.purchase_to_customer_duration_s)) as avg_purchase_to_customer_duration_format,
-    avg(sub.freight_value) as avg_freight_revenue
-from (
-    select
+    utils.fn_seconds_to_ddhhmmss(AVG(sub.purchase_to_customer_duration_s))
+        AS avg_purchase_to_customer_duration_format,
+    AVG(sub.freight_value) AS avg_freight_revenue
+FROM (
+    SELECT
         -- o.*,
         -- c.*
         o.order_id,
         c.customer_state,
         o.order_purchase_timestamp,
         o.order_delivered_customer_date,
-        datediff_big(second, o.order_purchase_timestamp, o.order_delivered_customer_date) as purchase_to_customer_duration_s,
+        DATEDIFF_BIG(
+            SECOND, o.order_purchase_timestamp, o.order_delivered_customer_date
+        ) AS purchase_to_customer_duration_s,
         oi.price,
         oi.freight_value
-    from sales.fact_orders as o
-    left join sales.fact_order_items as oi
-        on o.order_id = oi.order_id
-    left join sales.dim_customers as c
-        on o.customer_id = c.customer_id
-) as sub
-right join utils.dim_date as d
-    on cast(sub.order_purchase_timestamp as date) = d.key_date
-group by 
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.fact_order_items AS oi
+        ON o.order_id = oi.order_id
+    LEFT JOIN sales.dim_customers AS c
+        ON o.customer_id = c.customer_id
+) AS sub
+RIGHT JOIN utils.dim_date AS d
+    ON CAST(sub.order_purchase_timestamp AS DATE) = d.key_date
+GROUP BY
     d.year_number,
     d.month_number,
     sub.customer_state
-order by 
+ORDER BY
     d.year_number,
     d.month_number,
     sub.customer_state
-
-
 
 -- freight cost vs distance?
 -- does delivery time affect review score?

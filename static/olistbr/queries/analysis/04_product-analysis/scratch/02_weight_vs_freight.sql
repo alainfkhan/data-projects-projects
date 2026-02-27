@@ -1,54 +1,59 @@
-use olist_stg;
+USE olist_stg;
 
 -- does weight affect freight
 -- ie. does weight cause freight
 -- correlation !=> causation
 
-go;
+GO;
 
-with cov_part_values as (
-    select distinct
+WITH cov_part_values AS (
+    SELECT DISTINCT
         pt.product_category_name_english,
         -- p.product_weight_g,
         -- oi.freight_value
-        count(*) as n,
-        sum(1.0 * p.product_weight_g) as sum_x,
-        sum(square(1.0 * p.product_weight_g)) as sum_sq_x,
-        sum(1.0 * oi.freight_value) as sum_y,
-        sum(square(1.0 * oi.freight_value)) as sum_sq_y,
-        sum(1.0 * p.product_weight_g * oi.freight_value) as sum_xy
-    from sales.fact_orders as o
-    left join sales.fact_order_items as oi
-        on o.order_id = oi.order_id
-    left join sales.dim_products as p
-        on oi.product_id = p.product_id
-    left join sales.dim_product_category_name_translation as pt
-        on p.product_category_name = pt.product_category_name
-    where
-        pt.product_category_name_english is not null
-        and p.product_weight_g is not null
-        and oi.freight_value is not null
-    group by
+        COUNT(*) AS n,
+        SUM(1.0 * p.product_weight_g) AS sum_x,
+        SUM(SQUARE(1.0 * p.product_weight_g)) AS sum_sq_x,
+        SUM(1.0 * oi.freight_value) AS sum_y,
+        SUM(SQUARE(1.0 * oi.freight_value)) AS sum_sq_y,
+        SUM(1.0 * p.product_weight_g * oi.freight_value) AS sum_xy
+    FROM sales.fact_orders AS o
+    LEFT JOIN sales.fact_order_items AS oi
+        ON o.order_id = oi.order_id
+    LEFT JOIN sales.dim_products AS p
+        ON oi.product_id = p.product_id
+    LEFT JOIN sales.dim_product_category_name_translation AS pt
+        ON p.product_category_name = pt.product_category_name
+    WHERE
+        pt.product_category_name_english IS NOT NULL
+        AND p.product_weight_g IS NOT NULL
+        AND oi.freight_value IS NOT NULL
+    GROUP BY
         pt.product_category_name_english
 )
 
-select
+SELECT
     -- c.*,
     c.product_category_name_english,
     c.n,
     (c.n * c.sum_xy - sum_x * sum_y)
-    / nullif((sqrt(c.n * c.sum_sq_x - square(sum_x)) * sqrt(c.n * c.sum_sq_y - square(sum_y))), 0) as corr_weight_freight
-into #corr_weight_freight
-from cov_part_values as c
-order by corr_weight_freight desc
+    / NULLIF(
+        (
+            SQRT(c.n * c.sum_sq_x - SQUARE(sum_x))
+            * SQRT(c.n * c.sum_sq_y - SQUARE(sum_y))
+        ),
+        0
+    ) AS corr_weight_freight
+INTO #corr_weight_freight
+FROM cov_part_values AS c
+ORDER BY corr_weight_freight DESC
 
-go;
+GO;
 
-drop table #corr_weight_freight
+DROP TABLE #corr_weight_freight
 
-select
-    c.*
-from #corr_weight_freight as c
+SELECT c.*
+FROM #corr_weight_freight AS c
 
 /*
 product_category_name_english, n, corr_weight_freight
@@ -69,18 +74,18 @@ n, corr_weight_freight
 111022, 0.6113323281612338
 */
 
-select
+SELECT
     pt.product_category_name_english,
     p.product_weight_g,
     oi.freight_value
-from sales.fact_orders as o
-left join sales.fact_order_items as oi
-    on o.order_id = oi.order_id
-left join sales.dim_products as p
-    on oi.product_id = p.product_id
-left join sales.dim_product_category_name_translation as pt
-    on p.product_category_name = pt.product_category_name
-where pt.product_category_name_english = 'arts_and_craftmanship'
-order by
+FROM sales.fact_orders AS o
+LEFT JOIN sales.fact_order_items AS oi
+    ON o.order_id = oi.order_id
+LEFT JOIN sales.dim_products AS p
+    ON oi.product_id = p.product_id
+LEFT JOIN sales.dim_product_category_name_translation AS pt
+    ON p.product_category_name = pt.product_category_name
+WHERE pt.product_category_name_english = 'arts_and_craftmanship'
+ORDER BY
     p.product_weight_g,
     oi.freight_value

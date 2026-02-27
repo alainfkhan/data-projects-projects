@@ -1,4 +1,4 @@
-use olist_stg;
+USE olist_stg;
 
 /*
 distinct product_category_names in table products
@@ -24,33 +24,38 @@ rollback transaction t
 
 */
 
-begin transaction t
+BEGIN TRANSACTION t
 
 
-if (
-    select pt.product_category_name
-    from sales.dim_product_category_name_translation as pt
-    where pt.product_category_name = 'pc_gamer'
-) is null
-begin
-    insert into sales.dim_product_category_name_translation
+IF (
+    SELECT pt.product_category_name
+    FROM sales.dim_product_category_name_translation AS pt
+    WHERE pt.product_category_name = 'pc_gamer'
+) IS NULL
+BEGIN
+    INSERT INTO sales.dim_product_category_name_translation
         (product_category_name, product_category_name_english)
-    values
+    VALUES
         ('pc_gamer', 'pc_gamer')
-end;
+END;
 
 
-if (
-    select pt.product_category_name
-    from sales.dim_product_category_name_translation as pt
-    where pt.product_category_name = 'portateis_cozinha_e_preparadores_de_alimentos'
-) is null
-begin
-    insert into sales.dim_product_category_name_translation
+IF (
+    SELECT pt.product_category_name
+    FROM sales.dim_product_category_name_translation AS pt
+    WHERE
+        pt.product_category_name
+        = 'portateis_cozinha_e_preparadores_de_alimentos'
+) IS NULL
+BEGIN
+    INSERT INTO sales.dim_product_category_name_translation
         (product_category_name, product_category_name_english)
-    values
-        ('portateis_cozinha_e_preparadores_de_alimentos', 'small_appliances_kitchen_and_food_preparation')
-end;
+    VALUES
+        (
+            'portateis_cozinha_e_preparadores_de_alimentos',
+            'small_appliances_kitchen_and_food_preparation'
+        )
+END;
 
 /*
 commit transaction
