@@ -63,6 +63,10 @@ construction_tools_lights, 304, 0.6993337682135085
 health_beauty, 9670, 0.696506374281815
 furniture_living_room, 503, 0.6959616992931418
 agro_industry_and_commerce, 212, 0.6822100050805389
+
+all
+n, corr_weight_freight
+111022, 0.6113323281612338
 */
 
 select

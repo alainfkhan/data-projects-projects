@@ -74,6 +74,10 @@ order by
     r.month_number,
     r.rn
 
+-- view table
+select *
+from #top_categories
+
 -- which consistently appear in top three product categories?
 select
     t.product_category_name_english,
