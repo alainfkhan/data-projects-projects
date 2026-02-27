@@ -76,7 +76,7 @@ product_category_name_translation
 questions:
     [x] which product categories sell most?
     which categories have highest margins? (price - freight proxy)
-    does product weight affect freight?
+    [x] does product weight affect freight?
     does number of photos influence review score?
     do longer descriptiongs correlate with higher sales?
 

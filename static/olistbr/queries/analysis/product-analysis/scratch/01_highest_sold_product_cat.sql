@@ -66,9 +66,9 @@ select
     -- r.total_product_revenue,
     -- r.total_freight_revenue,
     r.total_revenue
-into #top_three_categories
+into #top_categories
 from rn_rev as r
-where r.rn between 1 and 3
+-- where r.rn between 1 and 3
 order by 
     r.year_number,
     r.month_number,
@@ -78,9 +78,11 @@ order by
 select
     t.product_category_name_english,
     count(t.product_category_name_english) as appearances
-from #top_three_categories as t
+from #top_categories as t
+where t.top_category_rank between 1 and 5
 group by t.product_category_name_english
 order by appearances desc
+
 
 /*
 health_beauty has consistently appeared the most out of all categories
