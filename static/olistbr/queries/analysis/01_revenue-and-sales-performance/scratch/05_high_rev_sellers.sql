@@ -36,7 +36,8 @@ SELECT TOP 10
     -- oi.seller_id,
     -- oi.price,
     -- oi.freight_value
-    oi.seller_id,
+    -- oi.seller_id,
+    mn.seller_gen_name,
     COUNT(DISTINCT o.order_id) order_count,
     SUM(oi.price) AS total_product_revenue,
     SUM(oi.freight_value) AS total_freight_revenue
@@ -45,6 +46,8 @@ LEFT JOIN sales.fact_order_items AS oi
     ON o.order_id = oi.order_id
 LEFT JOIN sales.dim_sellers AS s
     ON oi.seller_id = s.seller_id
+left join sales.dim_seller_gen_names as mn
+    on oi.seller_id = mn.seller_id
 WHERE o.order_status IN (
     'approved',
     'delivered',
@@ -53,7 +56,8 @@ WHERE o.order_status IN (
     'shipped'
     )
     AND oi.price IS NOT NULL
-GROUP BY oi.seller_id
+-- GROUP BY oi.seller_id
+group by mn.seller_gen_name
 ORDER BY SUM(oi.price) DESC
 
 -- 3095 distinct sellers
