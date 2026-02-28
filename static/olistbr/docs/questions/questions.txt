@@ -81,14 +81,14 @@ questions:
     [x] do longer descriptions correlate with higher sales?
 
 ====================================================================================================
-5 seller performace:
+5 seller performance:
 ==================================================
 sellers
 closed_deals
 ==================================================
 questions:
     [x] top sellers by revenue?
-    seller concentration (pareto 80/20)?
+    [x] seller concentration (pareto 80/20)?
     revenue by seller date?
     do certain business segments convert beter?
     sdr/sr performance (sales reps effectiveness)?

@@ -144,7 +144,9 @@ select
     cm.product_category_name,
     pt.product_category_name_english,
     cm.product_weight_g,
-    cm.price
+    cm.price,
+    cm.review_comment_title,
+    cm.review_comment_message
 from #context_sellers as cm
 left join sales.dim_seller_gen_names as mn
     on cm.seller_id = mn.seller_id
