@@ -28,10 +28,10 @@ SELECT
     CAST(o.order_estimated_delivery_date AS DATE)
         AS order_estimated_delivery_date
 FROM sales.fact_orders AS o
-LEFT JOIN sales.fact_order_items AS oi
-    ON o.order_id = oi.order_id
-LEFT JOIN utils.dim_date AS d
-    ON CAST(o.order_approved_at AS DATE) = d.full_date
+    LEFT JOIN sales.fact_order_items AS oi
+        ON o.order_id = oi.order_id
+    LEFT JOIN utils.dim_date AS d
+        ON CAST(o.order_approved_at AS DATE) = d.full_date
 WHERE
     -- a sale occured when:
     o.order_status IN (

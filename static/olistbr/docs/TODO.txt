@@ -2,5 +2,5 @@ TODO:
     get full cep from coordinates using python brazilcep
     update erd
     redo product-analysis in python (correlation !=> causation)
-
+    find freight cost vs distance
 

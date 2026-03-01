@@ -1,0 +1,88 @@
+====================================================================================================
+definitions:
+==================================================
+    user: the human
+    customer: an instance of a user who has placed an order
+        placing an order means adding a row in orders
+    loosely, user = customer
+        a customer is a user who places an order from some location
+        it is possible to see many locations from the same user
+    order = basket of items
+        contains items (products)
+        products are from sellers
+        sellers are from some location
+    realised sale (accounting):
+        order status:
+            approved
+            delivered
+            invoiced
+            processing
+            shipped
+        price not null
+    unrealised sale (marketing):
+        order_status: any
+        price: any
+    active user:
+        any user activity
+            any order placed = a row in orders
+            a review made at some time
+
+====================================================================================================
+report structure
+==================================================
+
+
+revenue and sales performance
+    gmv
+    total sales
+    aov
+    revenue by product category
+    revenue by business segment
+    revenue by state
+    rank top sellers by total revenue
+    revenue pc share
+    revenue growth mom
+
+
+customer analytics
+    cancellation rate
+    distinguish customer and user
+    lifetime users
+    average order per user
+    new vs returning user ratio
+    which states have the highest returning customers
+
+    average review score
+    reveiw score by product category
+    review score vs delivery delay
+
+    payment method distribution
+    payment type vs review score
+
+
+seller analytics
+    top sellers by revenue
+    seller conentration pareto (80/20)?
+    revenue by seller date (revenue per date per seller)
+    ? sdr/sr performance (sales reps effectiveness)
+    which sdr has the highest win rate?
+
+
+
+marketing and funnel analysis TODO
+    convertion rate: mql -> closed deals
+    conversion by origin (organic vs paid vs social)
+    time from first contact to close
+    which channels bring highest revenue sellers?
+    which acquisition channel produces the highest ltv sellers
+    
+
+logistics and delivery performance TODO
+    average delivery time
+    % of late deliveries
+    delivery time by state
+    freight cost vs distance
+    correlate product weight vs freight value
+    shipping distance analysis
+    do customers buy more from nearby sellers?
+    revenue
