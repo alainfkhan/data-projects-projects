@@ -2,9 +2,6 @@ using driver: 17 works
 
 cannot have fks on tables with references to rows that don't exist
 tables with incomplete fks:
-    dim_products
-    fact_order_payments
-    fact_order_reviews
-    fact_closed_deals
+
 
 unique constraint expensive

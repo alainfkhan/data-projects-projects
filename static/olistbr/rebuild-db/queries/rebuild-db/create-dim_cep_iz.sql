@@ -27,7 +27,8 @@ create tables
     AuBmA = Au(B\A) = A union (B set minus A)
     B
 */
-USE olist_stg;
+
+-- USE olist_stg;
 
 IF (SCHEMA_ID('staging')) IS NULL
     BEGIN

@@ -1,6 +1,7 @@
 TODO:
-    get full cep from coordinates using python brazilcep
-    update erd
-    redo product-analysis in python (correlation !=> causation)
     find freight cost vs distance
-
+    update erd
+        geolocation lat lng data types
+        geolocation zip code prefix many-many sellers, customers
+    redo product-analysis in python (correlation !=> causation)
+    get full cep from coordinates using python brazilcep

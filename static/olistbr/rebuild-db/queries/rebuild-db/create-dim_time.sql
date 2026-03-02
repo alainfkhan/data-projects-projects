@@ -1,4 +1,4 @@
-USE olist_stg;
+-- USE olist_stg;
 
 IF (SCHEMA_ID('utils')) IS NULL
     BEGIN

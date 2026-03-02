@@ -1,4 +1,4 @@
-USE olist_stg;
+-- USE olist_stg;
 
 /*
 distinct product_category_names in table products

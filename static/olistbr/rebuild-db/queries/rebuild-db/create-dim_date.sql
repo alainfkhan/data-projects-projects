@@ -22,7 +22,7 @@ TODO: add index on full_date
 
 */
 
-USE olist_stg;
+-- USE olist_stg;
 
 -- TODO: change columns names: year_number to year etc
 
