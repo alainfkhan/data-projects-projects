@@ -1,6 +1,9 @@
 USE olist;
 GO
 
+-- ====================================================================================================
+-- FORMATS
+
 -- ==================================================
 -- datetime to datekey function (avoid using)
 CREATE OR ALTER FUNCTION utils.fn_datetime_to_datekey(
@@ -68,6 +71,9 @@ BEGIN
     RETURN @duration
 END;
 GO
+
+-- ====================================================================================================
+-- CALCULATIONS
 
 -- ================================================== 
 CREATE OR ALTER FUNCTION utils.fn_pcc(

@@ -13,7 +13,9 @@ WITH cte_sales AS (
         COUNT(DISTINCT s.order_id) AS order_count,
         SUM(s.price) AS product_revenue,
         SUM(s.freight_value) AS freight_revenue
-    FROM sales.vw_orders AS s
+    FROM sales.vw_sales AS s
+    -- practicality
+    WHERE s.key_date BETWEEN '2017-01-09' AND '2018-08-21'
     GROUP BY
         s.year_number,
         s.month_number
@@ -46,14 +48,27 @@ lag_sales AS (
                 s.month_number
         ) AS lag_aov
     FROM agg_sales AS s
+),
+
+growth_sales AS (
+    SELECT
+        s.*,
+        utils.fn_pcc(s.lag_order_count, s.order_count) AS order_count_pc_growth,
+        utils.fn_pcc(s.lag_gmv, s.gmv) AS gmv_pc_growth,
+        utils.fn_pcc(s.lag_aov, s.aov) AS aov_pc_growth
+    FROM lag_sales AS s
 )
 
 SELECT
-    s.*,
-    utils.fn_pcc(s.lag_order_count, s.order_count) AS order_count_pc_growth,
-    utils.fn_pcc(s.lag_gmv, s.gmv) AS gmv_pc_growth,
-    utils.fn_pcc(s.lag_aov, s.aov) AS aov_pc_growth
-FROM lag_sales AS s
+    s.year_number,
+    s.month_number,
+    s.order_count AS total_sales,
+    -- s.product_revenue,
+    -- s.freight_revenue,
+    FORMAT(s.gmv, 'R$0,K') AS gmv,
+    FORMAT(s.aov, 'R$0,K') AS aov,
+    FORMAT(s.aov_pc_growth, 'P') AS aov_periodic
+FROM growth_sales AS s
 ORDER BY
     s.year_number,
     s.month_number

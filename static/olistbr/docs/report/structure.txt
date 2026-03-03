@@ -33,15 +33,16 @@ report structure
 
 
 revenue and sales performance
-    gmv
-    total sales
-    aov
+    [x] gmv
+    [x] total sales
+    [x] aov
+    [x] revenue growth mom
+    
     revenue by product category
     revenue by business segment
     revenue by state
     rank top sellers by total revenue
     revenue pc share
-    revenue growth mom
 
 
 customer analytics

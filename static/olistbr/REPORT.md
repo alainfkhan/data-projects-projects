@@ -18,7 +18,7 @@ For any analysis that require practicality choose:
 - Snapshot start date: `2017-01-09`
 - Snapshot end date: `2018-08-21`
 
-For any practicality analysis, suppose then, that today is `2018-08-22`,
+For any practical analyses, suppose then, that today is `2018-08-22`,
 and we have no knowledge of data beyond that date, and before the snapshot start date.
 
 <details>
