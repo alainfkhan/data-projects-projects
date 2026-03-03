@@ -33,4 +33,4 @@ SELECT
     m.*
 FROM sales.dim_seller_gen_names AS n
     LEFT JOIN sales.dim_sellers AS m
-        ON n.seller_id = m.seller_id
+        ON n.seller_id = m.seller_id;

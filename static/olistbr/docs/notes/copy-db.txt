@@ -1,0 +1,15 @@
+in ssms 22.3.2 (copy db wizard unavailable)
+
+backup:
+    right click 'olist_stg' > tasks > back up
+    pick a destination
+
+restore:
+    right click 'Databases' folder > restore database
+        source database: olist_stg
+        destination database: olist
+
+    
+
+        
+

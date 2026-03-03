@@ -1,4 +1,4 @@
-USE olist_stg;
+USE olist;
 
 -- datetime to datekey function (avoid using)
 GO;

@@ -1,4 +1,5 @@
 TODO:
+    start reporting
     find freight cost vs distance
     update erd
         geolocation lat lng data types

@@ -1,4 +1,4 @@
-USE olist_stg;
+USE olist;
 
 
 /*
@@ -154,6 +154,10 @@ FROM #context_sellers AS cm
     LEFT JOIN sales.dim_product_category_name_translation AS pt
         ON cm.product_category_name = pt.product_category_name
 
+/*
+the output of this query is in data/external/queries
+*/
+
 /* prompt:
 there are 3095 distinct seller_ids
 generate corresponding seller names
@@ -200,4 +204,6 @@ link to chat: https://claude.ai/share/bce2de4d-2c2c-49b0-8800-197221f6f91b
 
 claude: data/external/interim/claude_seller_names_260228.csv
 chatgpt: data/external/interim/cgpt_seller_names_260328.csv
+
+can use this data to iterate and create better names
 */

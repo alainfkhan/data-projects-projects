@@ -1,4 +1,4 @@
-USE olist_stg;
+USE olist;
 
 WITH sym_diff AS (
     SELECT DISTINCT
@@ -15,7 +15,7 @@ WITH sym_diff AS (
 SELECT
     COUNT(DISTINCT s.mql_mql_id) AS unique_mql_mql_ids,
     COUNT(DISTINCT s.cd_mql_id) AS unique_cd_mql_ids
-FROM sym_diff AS s
+FROM sym_diff AS s;
 
 /*
 7158 unique mql_ids exist in marketing_qualifed_leads but not in closed_deals

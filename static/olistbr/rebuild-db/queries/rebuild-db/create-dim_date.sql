@@ -18,13 +18,7 @@ select * from utils.dim_date
 
 drop table utils.dim_date
 
-TODO: add index on full_date
-
 */
-
--- USE olist_stg;
-
--- TODO: change columns names: year_number to year etc
 
 IF (SCHEMA_ID('utils')) IS NULL
     BEGIN

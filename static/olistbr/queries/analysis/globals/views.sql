@@ -1,4 +1,4 @@
-USE olist_stg;
+USE olist;
 
 GO;
 

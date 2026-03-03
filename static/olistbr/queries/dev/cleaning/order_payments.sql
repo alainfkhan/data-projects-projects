@@ -1,4 +1,4 @@
-USE olist_stg;
+USE olist;
 
 /*
 find incomplete mappings
@@ -12,7 +12,7 @@ FROM sales.fact_orders AS o
         ON o.order_id = op.order_id
 WHERE
     o.order_id IS NULL
-    OR op.order_id IS NULL
+    OR op.order_id IS NULL;
 
 /*
 orders_order_id, order_payments_order_id
@@ -22,4 +22,4 @@ bfbd0f9bdef84302105ad712db648a6c, NULL
 -- analysis
 SELECT o.*
 FROM sales.fact_orders AS o
-WHERE o.order_id = 'bfbd0f9bdef84302105ad712db648a6c'
+WHERE o.order_id = 'bfbd0f9bdef84302105ad712db648a6c';

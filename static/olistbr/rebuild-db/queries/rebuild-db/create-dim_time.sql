@@ -1,5 +1,3 @@
--- USE olist_stg;
-
 IF (SCHEMA_ID('utils')) IS NULL
     BEGIN
         EXEC ('create schema utils');

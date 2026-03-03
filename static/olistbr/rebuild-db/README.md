@@ -6,18 +6,29 @@
   - [**rebuild-db**](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/rebuild-db/README.md)
 - [Restaurant Business Online](https://github.com/alainfkhan/data-projects-projects/blob/main/macos/bogacz-res/README.md)
 
----
+## Project overview
+
+1. [`Run rebuild-db`](#rebuild-the-database-by-running-src)
+1. [`Copy the database`](#copy-the-database)
 
 Running `rebuild-db`:
-  1. Rebuilds a staging database `olist_stg`.
-      - Drops a database `olist_stg` if it exists.
-      - Creates a new empty database `olist_stg`.
-  2. Creates the schema and tables.
-      - As defined by the configuration file.
-  3. Inserts data into the tables.
-      - From the datasets in [`olistbr/data/raw`](../data/raw/) 
 
-The created staging database `olist_stg` is intended to be copied and should not be used for analysis since it's susceptible to frequent rewrites and hence also to potential data loss.
+1. Rebuilds a staging database `olist_stg` in SQL Server.
+   - Drops a database `olist_stg` if it exists.
+   - Creates a new empty database `olist_stg`.
+2. Creates the schema and tables,
+   - as defined by [`src/configs/db_config.yml`](src/configs/db_config.yml)
+3. Inserts the project data into the tables.
+   - From the dataset in [`../data/raw`](../data/raw/)
+4. Creates supplementary tables:
+   - [`utils.dim_date`](queries/rebuild-db/create-dim_date.sql)
+   - [`utils.dim_time`](queries/rebuild-db/create-dim_time.sql)
+5. Ingests supplementary geolocation data:
+   - `logistics.dim_cep`
+   - `staging.dim_cep_iz_B`
+
+> [!IMPORTANT]
+> The created staging database `olist_stg` is intended to be copied and saved as `olist`, and should not be used for analysis since it's susceptible to frequent rewrites and hence also to potential data loss.
 
 `rebuild-db` uses `uv` as the python package manager.
 
@@ -58,12 +69,12 @@ uv run src
 >
 > - You could be on debug mode.
 > - To exit debug mode:
->   1. Go to [`src/__main__.py`](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/rebuild-db/src/__main__.py).
+>   1. Go to [`src/__main__.py`](src/__main__.py)
 >   2. Find the variable `execute` just after imports and before `def main() -> None:`.
 >   3. Change the bool of `execute` from `False` to `True`.
 >   4. Change the bools of any of the other debug variables as required.
 >   5. Run `src` to rebuild the database.
->   6. Revert `execute` back to `False` to avoid any accidental rebuilds.
+>   6. You can choose to revert `execute` back to `False` to avoid any accidental rebuilds.
 > - Do not use the created staging database for analysis.
 > - Copy the staging database and use that for analysis.
 
@@ -110,9 +121,10 @@ Overview of database: 'olist_stg'
 - View an example output at [`docs/stdout/cmd_execute.txt`](docs/stdout/cmd_execute.txt).
 - Running `src` generates dynamic sql commands that is sent to the connected database.
 - The connection configuration file [`src/configs/connection.yml`](src/configs/connection.yml) defines the connection variables used to connect to a server.
-  - This can be configured by the user.
+  - This project currently depends on SQL Server Windows Authentication to connect to the server.
 - The database configuration file [`src/configs/db_config.yml`](src/configs/db_config.yml) defines the table schemas for this dataset.
-  - The information in this configuration file was manually typed. Column data types, and constraints were determined from a preliminary analysis on the dataset.
+  - The information in this configuration file was manually typed.
+  - Column data types, and constraints were determined from a [`preliminary analysis`](#data-type-validation) on this dataset.
 - The database overview queries the database as it is.
 - Notice the file `olist_geolocation_dataset.csv` takes the longest time to process since it has the table with the most rows with `1000163` rows.
 
@@ -120,7 +132,7 @@ Overview of database: 'olist_stg'
 
 <summary>View the debug mode</summary>
 
-#### In debug mode:
+### Running this program (in debug mode)
 
 ![](../img/cmd_debug.gif)
 
@@ -137,16 +149,16 @@ Overview of database: 'olist_stg'
 
 </details>
 
-### Data type validation
+### Data-type validation
 
-- An inference function was used to help determine the SQL server data type of the columns that optimise storage.
-- The `infer_dtypes()` function from [`src/utils/infer.py`](src/utils/infer.py) inputs a pandas dataframe and outputs an attributes table that describes each column.
-- View a current example in [`notebooks/table_attrs.ipynb`](notebooks/table_attrs.ipynb)
-- Other [functions](src/utils/measures.py) were used to determine other attributes like:
+- An inference function was used to help determine the SQL server column data types that optimise storage.
+- The `infer_dtypes()` function from [`src/utils/infer.py`](src/utils/infer.py) inputs a pandas dataframe and outputs an attributes table that describe each column.
+- View an example in [`notebooks/table_attrs.ipynb`](notebooks/table_attrs.ipynb)
+- Other functions in [`src/utils/measures.py`](src/utils/measures.py) were used to determine other attributes like:
   - finding the max `precision` and `scale` of a supposed `DECIMAL` datatype.
-  - how similar a string is from another using dice similarity.
+  - how similar a string is from another using the [Dice-Sørensen coefficient](https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient).
 
-Suppose we would like to find the SQL server data types of columns from `olist_customers_dataset.csv` that optimise storage.
+Suppose we would like to find the SQL server data types of the columns from `olist_customers_dataset.csv` that optimise storage.
 We consider using a `.ipynb` jupyter notebook for analysis.
 
 ```py
@@ -440,18 +452,18 @@ CREATE TABLE sales.dim_customers(
 )
 ```
 
-- Repeat the data type analysis for the other columns in this table.
+- Analyse the other columns in this table.
 - Repeat for all other tables.
 
-Q: Why not just write the sql directly?
+**Q**: Why not just write the sql directly?
 
-A: In future iterations the inference would be automatic. The yaml configuration file would act as a storage space for table schemas, that communicates to the program.
+**A**: We would like the data-type inferencing to be automated in future iterations of a flavour of this project. The yaml configuration file would act as a storage space for table schemas, that communicates to the program.
 
 #### A note on forgone constraints:
 
 - A `FOREIGN KEY` constraint requires a 1-1 or 1-many relationship.
 - Columns with entries that cannot be reached cannot have the `FOREIGN KEY` constraint.
-- Some foreign keys defined by the entity relationship diagram (ERD) provided by Olist were not implemented since it breaks the requirement.
+- Some foreign keys as defined by the [`Olist entity relationship diagram`](../references/img/HRhd2Y0%20-%20Imgur.png) (ERD) were not implemented since it breaks the requirement.
 - The relationship is noted but is not coded in creating the tables.
 - Tables that didn't implement foreign keys:
   - `dim_products`
@@ -461,6 +473,12 @@ A: In future iterations the inference would be automatic. The yaml configuration
 
 #### A note on data integrity:
 
-- Column names: `product_name_lenght` and `product_description_lenght` from table `dim_products` were purposely not corrected.
-- Columns: `geolocation_lat` and `geolocation_lng` from table `fact_geolocation` containing latitudinal and longitudinal coordinates were truncated from having at most 18 decimal places down to at most 6.
+- Column names: `product_name_lenght` and `product_description_lenght` from table `dim_products` were purposefully not corrected.
+- Columns: `geolocation_lat` and `geolocation_lng` from table `fact_geolocation` containing latitudinal and longitudinal coordinates were truncated from having at most 18 decimal places down to now at most 6.
 - Columns with payment values needing at most 2 decimal places were given more decimal places (at most 4) for free (without any negative effect on storage since the `DECIMAL` data type is binned).
+
+## Copy the database
+
+For the last step, manually copy the created database `olist_stg` and save it as `olist` and continue with the analysis.
+
+Some tables that are cleaned further in analysis.

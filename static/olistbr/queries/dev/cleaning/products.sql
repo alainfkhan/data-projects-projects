@@ -1,4 +1,4 @@
-USE olist_stg;
+USE olist;
 /*
 can i infer the product category type from the orders its grouped with (in the same basket)
 */
@@ -55,4 +55,4 @@ WHERE o.order_id IN (
 )
 ORDER BY
     o.order_purchase_timestamp,
-    oi.order_item_id
+    oi.order_item_id;

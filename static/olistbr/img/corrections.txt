@@ -8,7 +8,3 @@ constraints not implemented (show exists but not implemented):
     fk_fact_order_reviews_fact_orders__order_id
     fk_fact_closed_deals_fact_marketing_qualified_leads__mql_id
     uq_dim_geolocation_zip_lat_lng
-
-need to add external tables
-    dim_date
-    dim_cep (complete brazilian postal codes dataset)

@@ -28,8 +28,6 @@ create tables
     B
 */
 
--- USE olist_stg;
-
 IF (SCHEMA_ID('staging')) IS NULL
     BEGIN
         EXEC ('create schema staging')

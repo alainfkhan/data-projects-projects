@@ -1,1 +1,3 @@
-queries/build-db/00*
+rebuild-db/queries/rebuild-db/last_things.sql
+queries/analysis/eda/
+queries/analysis/report/_scratch
