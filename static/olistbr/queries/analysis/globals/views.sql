@@ -1,17 +1,10 @@
 USE olist;
+GO
 
-GO;
-
-/*
-sales joins:
-    fact_orders
-    fact_order_items
-    dim_date
-*/
-
-CREATE OR ALTER VIEW sales.vw_sales AS
+-- ==================================================
+-- prerequisite table join
+CREATE OR ALTER VIEW sales.vw_join_orders AS
 SELECT
-    d.*,
     o.order_id,
     oi.order_item_id,
     oi.product_id,
@@ -29,24 +22,62 @@ SELECT
         AS order_estimated_delivery_date
 FROM sales.fact_orders AS o
     LEFT JOIN sales.fact_order_items AS oi
-        ON o.order_id = oi.order_id
-    LEFT JOIN utils.dim_date AS d
-        ON CAST(o.order_approved_at AS DATE) = d.full_date
-WHERE
-    -- a sale occured when:
-    o.order_status IN (
-        'approved',
-        'delivered',
-        'invoiced',
-        'processing',
-        'shipped'
-    )
-    -- a sale is realised when:
-    AND oi.price IS NOT NULL
--- order by o.order_approved_at
+        ON o.order_id = oi.order_id;
+GO
 
-GO;
+/*
+select *
+from sales.vw_join_orders
+*/
 
-SELECT s.*
-FROM sales.vw_sales AS s
-ORDER BY s.order_approved_at ASC
+-- ==================================================
+-- orders
+CREATE OR ALTER VIEW sales.vw_orders AS
+SELECT
+    d.*,
+    o.*
+FROM sales.vw_join_orders AS o
+    RIGHT JOIN utils.dim_date AS d
+        -- an order occurs at purchase date
+        ON CAST(o.order_purchase_timestamp AS DATE) = d.key_date;
+GO
+
+/*
+select o.*
+from sales.vw_orders as o
+order by o.date_key, o.order_purchase_timestamp
+*/
+
+-- ==================================================
+-- sales
+CREATE OR ALTER VIEW sales.vw_sales AS
+WITH cte_sales AS (
+    SELECT o.*
+    FROM sales.vw_join_orders AS o
+    WHERE
+        -- a sale occurs when:
+        o.order_status IN (
+            'approved',
+            'delivered',
+            'invoiced',
+            'processing',
+            'shipped'
+        )
+        -- a sale is measurable when:
+        AND o.price IS NOT NULL
+)
+
+SELECT
+    d.*,
+    s.*
+FROM cte_sales AS s
+    RIGHT JOIN utils.dim_date AS d
+        -- a realised and measurable sale occurs at approved date
+        ON CAST(s.order_approved_at AS DATE) = d.key_date;
+GO
+
+/*
+select s.*
+from sales.vw_sales as s
+order by s.date_key, s.order_approved_at
+*/

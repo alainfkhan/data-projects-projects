@@ -53,7 +53,7 @@ customer analytics
     which states have the highest returning customers
 
     average review score
-    reveiw score by product category
+    review score by product category
     review score vs delivery delay
 
     payment method distribution

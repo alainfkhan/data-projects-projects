@@ -1,8 +1,8 @@
 USE olist;
+GO
 
+-- ==================================================
 -- datetime to datekey function (avoid using)
-GO;
-
 CREATE OR ALTER FUNCTION utils.fn_datetime_to_datekey(
     @i_date DATETIME2
 )
@@ -15,11 +15,10 @@ BEGIN
         FORMAT(DATEPART(DAY, @i_date), '00')
     )
     RETURN @date_key
-END
+END;
+GO
 
-GO;
-
-
+-- ==================================================
 CREATE OR ALTER FUNCTION utils.fn_seconds_to_ddhhmmss(
     @total_seconds BIGINT
 )
@@ -67,6 +66,17 @@ BEGIN
         SET @duration = NULL
 
     RETURN @duration
-END
+END;
+GO
 
-GO;
+-- ================================================== 
+CREATE OR ALTER FUNCTION utils.fn_pcc(
+    @old REAL,
+    @new REAL
+)
+RETURNS REAL
+AS
+BEGIN
+    RETURN 1.0 * (@new - @old) / NULLIF(@old, 0)
+END;
+GO
