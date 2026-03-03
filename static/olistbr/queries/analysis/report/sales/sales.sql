@@ -1,12 +1,7 @@
 USE olist;
 GO
 
--- select o.month_number, o.order_id
--- from sales.vw_orders as o
--- -- where o.order_id is not null
--- order by o.key_date, o.order_purchase_timestamp
-
-WITH cte_sales AS (
+WITH agg_sales AS (
     SELECT
         s.year_number,
         s.month_number,
@@ -14,19 +9,17 @@ WITH cte_sales AS (
         SUM(s.price) AS product_revenue,
         SUM(s.freight_value) AS freight_revenue
     FROM sales.vw_sales AS s
-    -- practicality
-    WHERE s.key_date BETWEEN '2017-01-09' AND '2018-08-21'
     GROUP BY
         s.year_number,
         s.month_number
 ),
 
-agg_sales AS (
+calculated_sales AS (
     SELECT
         s.*,
         s.product_revenue + s.freight_revenue AS gmv,
         s.product_revenue + s.freight_revenue / s.order_count AS aov
-    FROM cte_sales AS s
+    FROM agg_sales AS s
 ),
 
 lag_sales AS (
@@ -47,7 +40,7 @@ lag_sales AS (
                 s.year_number,
                 s.month_number
         ) AS lag_aov
-    FROM agg_sales AS s
+    FROM calculated_sales AS s
 ),
 
 growth_sales AS (

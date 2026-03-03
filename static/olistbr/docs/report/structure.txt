@@ -32,18 +32,14 @@ report structure
 ==================================================
 
 
-revenue and sales performance
+[x] revenue and sales performance
     [x] gmv
     [x] total sales
     [x] aov
     [x] revenue growth mom
     
-    revenue by product category
-    revenue by business segment
-    revenue by state
-    rank top sellers by total revenue
-    revenue pc share
-
+    [x] revenue by product category
+    [x] revenue by business segment
 
 customer analytics
     cancellation rate
@@ -63,7 +59,7 @@ customer analytics
 
 seller analytics
     top sellers by revenue
-    seller conentration pareto (80/20)?
+    seller conentration (pc share)
     revenue by seller date (revenue per date per seller)
     ? sdr/sr performance (sales reps effectiveness)
     which sdr has the highest win rate?

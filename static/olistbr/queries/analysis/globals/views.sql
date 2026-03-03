@@ -81,3 +81,17 @@ select s.*
 from sales.vw_sales as s
 order by s.date_key, s.order_approved_at
 */
+
+-- ==================================================
+-- practical dates
+DECLARE @practical_start_date DATE = '2017-01-08';
+DECLARE @practical_end_date DATE = '2018-08-21';
+GO
+
+-- ==================================================
+-- sales practical dates
+CREATE OR ALTER VIEW sales.vw_sales_practical AS
+SELECT s.*
+FROM sales.vw_sales AS s
+WHERE s.full_date BETWEEN '2017-01-08' AND '2018-08-21';
+GO
