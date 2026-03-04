@@ -79,7 +79,7 @@ CREATE OR ALTER FUNCTION utils.fn_format_brl(
 RETURNS NVARCHAR(50)
 AS
 BEGIN
-    RETURN FORMAT(@value, 'R$0,.0K')
+    RETURN FORMAT(@value, 'C', 'pt-BR')
 END;
 GO
 

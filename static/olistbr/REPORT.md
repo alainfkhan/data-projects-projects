@@ -4,6 +4,38 @@
 
 ## Definitions
 
+### Brazilian currency
+
+Summary:
+
+|                     |                  |
+| ------------------- | ---------------- |
+| Symbol              | `R$`           |
+| ISO Code            | `BRL`          |
+| Decimal Separator   | Comma `,`      |
+| Thousands Separator | Period `.`     |
+| Example             | `R$ 10.000,00` |
+
+Exchange rate at time of project:
+
+| `2018-01-01` [BRL to GBP](https://www.exchangerates.org.uk/BRL-GBP-spot-exchange-rates-history-2018.html) |
+| :------------------------------------------------------------------------------------------------------: |
+|                                        `1 BRL` = `0.2234 GBP`                                        |
+
+Common values:
+
+| BRL        | GBP        |
+| ---------- | ---------- |
+| `50,00`  | `11.17`  |
+| `100,00` | `22.34`  |
+| `150,00` | `33.51`  |
+| `200,00` | `44.68`  |
+| `250,00` | `55.85`  |
+| `500,00` | `111.70` |
+
+- Banknotes: `R$ 2`, `R$ 5`, `R$ 10`, `R$ 20`, `R$ 50`, `R$ 100`, `R$ 200`
+- Coins (centavos): `R$ 0.01`, `R$ 0.05`, `R$ 0.10`, `R$ 0.25`, `R$ 0.50`, `R$ 1.00`
+
 ### Practical project scope
 
 The dataset provided by Olist shows a growth and decay of captured data.
@@ -19,7 +51,7 @@ For any analysis that require practicality choose:
 - Snapshot end date: `2018-08-21`
 
 For any practical analyses, suppose then, that today is `2018-08-22`,
-and we have no knowledge of data beyond that date, and before the snapshot start date.
+and we have no knowledge of data beyond that dated.
 
 <details>
 

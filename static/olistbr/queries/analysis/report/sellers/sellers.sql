@@ -9,12 +9,13 @@ SELECT
     s.seller_id,
     n.seller_gen_name,
     COUNT(DISTINCT s.order_id) AS order_count,
-    SUM(s.price) AS product_revenue,
-    SUM(s.freight_value) AS freight_revenue,
-    SUM(s.price + s.freight_value) AS total_revenue
+    utils.fn_format_brl(SUM(s.price)) AS product_revenue,
+    utils.fn_format_brl(SUM(s.freight_value)) AS freight_revenue,
+    utils.fn_format_brl(SUM(s.price + s.freight_value)) AS total_revenue
 FROM sales.vw_sales_practical AS s
     LEFT JOIN sales.dim_seller_gen_names AS n
         ON s.seller_id = n.seller_id
+WHERE n.seller_gen_name = 'Relojoaria Crono'
 GROUP BY
     s.year_number,
     s.month_number,
@@ -67,7 +68,7 @@ calculate_sellers AS (
     FROM agg_sellers AS s
 )
 
-SELECT TOP 10
+SELECT
     s.seller_id,
     s.seller_gen_name,
     s.order_count AS total_sales,

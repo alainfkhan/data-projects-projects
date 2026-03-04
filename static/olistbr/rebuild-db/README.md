@@ -481,4 +481,4 @@ CREATE TABLE sales.dim_customers(
 
 For the last step, manually copy the created database `olist_stg` and save it as `olist` and continue with the analysis.
 
-Some tables that are cleaned further in analysis.
+Some tables are cleaned further in analysis.

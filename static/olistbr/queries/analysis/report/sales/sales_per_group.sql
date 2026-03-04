@@ -2,7 +2,7 @@ USE olist;
 GO
 
 -- ==================================================
--- top product categories by revenue
+-- sales per product category
 WITH agg_sales AS (
     SELECT
         p.product_category_name,
@@ -34,17 +34,17 @@ SELECT
     s.product_category_name,
     s.product_category_name_english,
     s.order_count AS total_sales,
-    utils.fn_format_brl(s.total_revenue) AS aov,
-    utils.fn_format_brl(s.total_revenue / s.order_count) AS gmv,
+    utils.fn_format_brl(s.total_revenue) AS gmv,
+    FORMAT(s.total_revenue / s.order_count, 'R$0.00') AS aov,
     FORMAT(s.total_revenue / dst.dataset_total_revenue, 'P')
         AS product_category_concentration
 FROM agg_sales AS s
     CROSS JOIN dataset_totals AS dst
-ORDER BY s.total_revenue DESC
-
+ORDER BY s.total_revenue DESC;
+GO
 
 -- ==================================================
--- sales per product category
+-- sales per date per product category
 SELECT
     s.year_number,
     s.month_number,
@@ -68,7 +68,7 @@ GO
 
 -- ==================================================
 /*
-sales per
+sales per date per
     business segment
     business type
 */
