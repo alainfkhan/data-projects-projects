@@ -1,4 +1,5 @@
 USE olist;
+go
 
 /*
 distinct product_category_names in table products
@@ -57,6 +58,4 @@ BEGIN
         )
 END;
 
-/*
-commit transaction t
-*/
+COMMIT TRANSACTION t

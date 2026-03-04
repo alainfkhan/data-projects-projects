@@ -25,11 +25,6 @@ FROM sales.fact_orders AS o
         ON o.order_id = oi.order_id;
 GO
 
-/*
-select *
-from sales.vw_join_orders
-*/
-
 -- ==================================================
 -- orders
 CREATE OR ALTER VIEW sales.vw_orders AS
@@ -41,12 +36,6 @@ FROM sales.vw_join_orders AS o
         -- an order occurs at purchase date
         ON CAST(o.order_purchase_timestamp AS DATE) = d.key_date;
 GO
-
-/*
-select o.*
-from sales.vw_orders as o
-order by o.date_key, o.order_purchase_timestamp
-*/
 
 -- ==================================================
 -- sales
@@ -76,16 +65,18 @@ FROM cte_sales AS s
         ON CAST(s.order_approved_at AS DATE) = d.key_date;
 GO
 
-/*
-select s.*
-from sales.vw_sales as s
-order by s.date_key, s.order_approved_at
-*/
-
 -- ==================================================
 -- practical dates
 DECLARE @practical_start_date DATE = '2017-01-08';
 DECLARE @practical_end_date DATE = '2018-08-21';
+GO
+
+-- ==================================================
+-- orders practical dates
+CREATE OR ALTER VIEW sales.vw_orders_practical AS
+SELECT s.*
+FROM sales.vw_orders AS s
+WHERE s.full_date BETWEEN '2017-01-08' AND '2018-08-21';
 GO
 
 -- ==================================================

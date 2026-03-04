@@ -72,6 +72,17 @@ BEGIN
 END;
 GO
 
+-- ==================================================
+CREATE OR ALTER FUNCTION utils.fn_format_brl(
+    @value REAL
+)
+RETURNS NVARCHAR(50)
+AS
+BEGIN
+    RETURN FORMAT(@value, 'R$0,.0K')
+END;
+GO
+
 -- ====================================================================================================
 -- CALCULATIONS
 

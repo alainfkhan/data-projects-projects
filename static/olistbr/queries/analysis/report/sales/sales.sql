@@ -8,7 +8,7 @@ WITH agg_sales AS (
         COUNT(DISTINCT s.order_id) AS order_count,
         SUM(s.price) AS product_revenue,
         SUM(s.freight_value) AS freight_revenue
-    FROM sales.vw_sales AS s
+    FROM sales.vw_sales_practical AS s
     GROUP BY
         s.year_number,
         s.month_number
@@ -58,10 +58,11 @@ SELECT
     s.order_count AS total_sales,
     -- s.product_revenue,
     -- s.freight_revenue,
-    FORMAT(s.gmv, 'R$0,K') AS gmv,
-    FORMAT(s.aov, 'R$0,K') AS aov,
+    utils.fn_format_brl(s.gmv) AS gmv,
+    utils.fn_format_brl(s.aov) AS aov,
     FORMAT(s.aov_pc_growth, 'P') AS aov_periodic
 FROM growth_sales AS s
 ORDER BY
     s.year_number,
-    s.month_number
+    s.month_number;
+GO

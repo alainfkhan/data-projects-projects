@@ -36,18 +36,21 @@ report structure
     [x] gmv
     [x] total sales
     [x] aov
-    [x] revenue growth mom
+    [x] revenue growth yoy/mom/qoq/wow/dod
     
     [x] revenue by product category
     [x] revenue by business segment
+    revenue by customer state
+    revenue by seller state
+
 
 customer analytics
-    cancellation rate
     distinguish customer and user
     lifetime users
     average order per user
     new vs returning user ratio
     which states have the highest returning customers
+    cancellation rate
 
     average review score
     review score by product category
@@ -58,12 +61,12 @@ customer analytics
 
 
 seller analytics
-    top sellers by revenue
-    seller conentration (pc share)
-    revenue by seller date (revenue per date per seller)
+    [x] revenue by seller date (revenue per date per seller)
+    [x] top sellers by revenue
+    [x] seller conentration (pc share)
+
     ? sdr/sr performance (sales reps effectiveness)
     which sdr has the highest win rate?
-
 
 
 marketing and funnel analysis TODO
