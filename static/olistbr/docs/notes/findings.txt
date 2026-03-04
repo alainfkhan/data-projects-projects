@@ -1,3 +1,5 @@
 dim_customers and fact_orders on customer_id is 1-1
 (?) repeat customers (with a customer_unique_id) with new orders will have a new customer_id
 freight value seem to differ based on seller customer distance    
+
+unrealised to realised is crystallisation

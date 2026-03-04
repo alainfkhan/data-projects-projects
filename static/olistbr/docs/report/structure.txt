@@ -40,15 +40,20 @@ report structure
     
     [x] revenue by product category
     [x] revenue by business segment
+
     revenue by customer state
     revenue by seller state
+
+    market value to realised value ratio
 
 
 customer analytics
     distinguish customer and user
-    lifetime users
-    average order per user
+
+    dataset users gained per date
     new vs returning user ratio
+
+    average order per user
     which states have the highest returning customers
     cancellation rate
 
