@@ -13,3 +13,9 @@ Churn = (customers lost during period) / (customers at start of perdiod)
     
 Customer Lifetime Value (CLV, LTV)
     CLV = [(avg revenue per user) * (gross margin)] / (churn)
+
+MVRV (Market Value to Realised Value)
+    = MV / RV
+
+MVRV Z-Score
+    = (MV - RV) / stddev(MV)
