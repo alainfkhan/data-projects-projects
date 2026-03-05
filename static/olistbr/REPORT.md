@@ -125,7 +125,7 @@ Loosely, a user is a customer, but in this dataset these definitions are kept.
 
 An **order** is a basket of items bought at checkout.
 
-- A single order can contain more than one item (product).
+- A single order can contain more than one items (products).
 - Products are from sellers.
 - Sellers are from some location.
 
@@ -197,6 +197,7 @@ and becomes a realised sale:
 - on the date the financial transaction was approved.
 
 The **revenue** is interpreted as the price of a realised sale in the `orders` table.
+
 - **Product revenue** is calculated from `price`.
 - **Freight revenue** is calculated form `freight_value`.
 - **Total revenue** = product revenue + freight revenue.
@@ -235,20 +236,18 @@ Revenue by:
 ## Customers
 
 An order is fullfilled when it is delivered.
+An order is delivered when:
 
-An order is delivered when any:
-- `order_delivered_customer_date` exists,
-- `order_status` is `delivered`
-- TODO: find more requirements
+- `order_status` is `delivered`,
+- or `order_delivered_customer_date` exists
 
 Monthly:
 
 - new users
 - repeat users
 - cancellations
-- unfulfilled orders (cancellations/created/unavailable)
+- unfulfilled orders
 - average orders per user
-
 
 Per user:
 
@@ -274,3 +273,11 @@ Per seller:
 ## Funnel
 
 ## Logistics
+
+Monthly
+  average delivery time
+  late deliveries count
+  pc of late deliveries
+
+Delivery time by state
+

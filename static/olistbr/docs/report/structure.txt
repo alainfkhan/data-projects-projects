@@ -85,9 +85,11 @@ marketing and funnel analysis TODO
 logistics and delivery performance TODO
     average delivery time
     % of late deliveries
+
     delivery time by state
+
     freight cost vs distance
+
     correlate product weight vs freight value
     shipping distance analysis
     do customers buy more from nearby sellers?
-    revenue

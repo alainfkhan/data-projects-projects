@@ -1,6 +1,8 @@
 USE olist;
 GO
 
+-- ====================================================================================================
+-- sales
 -- ==================================================
 -- prerequisite table join
 CREATE OR ALTER VIEW sales.vw_join_orders AS
@@ -27,6 +29,8 @@ GO
 
 -- ==================================================
 -- orders
+-- simple table joins
+-- marketing date
 CREATE OR ALTER VIEW sales.vw_orders AS
 SELECT
     d.*,
@@ -39,6 +43,8 @@ GO
 
 -- ==================================================
 -- sales
+-- filtered orders to fit sale definition
+-- accounting date
 CREATE OR ALTER VIEW sales.vw_sales AS
 WITH cte_sales AS (
     SELECT o.*
@@ -73,6 +79,7 @@ GO
 
 -- ==================================================
 -- orders practical dates
+-- filter to these dates
 CREATE OR ALTER VIEW sales.vw_orders_practical AS
 SELECT s.*
 FROM sales.vw_orders AS s
@@ -81,8 +88,25 @@ GO
 
 -- ==================================================
 -- sales practical dates
+-- filter to these dates
 CREATE OR ALTER VIEW sales.vw_sales_practical AS
 SELECT s.*
 FROM sales.vw_sales AS s
 WHERE s.full_date BETWEEN '2017-01-08' AND '2018-08-21';
+GO
+
+-- ====================================================================================================
+-- geolocation
+-- ==================================================
+-- find average long lat of each zip code prefix
+-- TODO: need to create
+CREATE OR ALTER VIEW logistics.vw_avg_lat_lng AS
+SELECT
+    g.geolocation_zip_code_prefix,
+    COUNT(DISTINCT g.geolocation_lat) AS count,
+    AVG(g.geolocation_lat) AS avg_lat,
+    AVG(g.geolocation_lng) AS avg_lng
+FROM logistics.fact_geolocation AS g
+GROUP BY g.geolocation_zip_code_prefix
+ORDER BY g.geolocation_zip_code_prefix
 GO

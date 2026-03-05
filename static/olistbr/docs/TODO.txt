@@ -1,11 +1,13 @@
 TODO:
-    finish delivery definition
     start power bi
+    finish geolcoation view
+    
     change .md links to relative to to url
     find freight cost vs distance
 
     update erd
         geolocation lat lng data types
         geolocation zip code prefix many-many sellers, customers
+        
     redo product-analysis in python (correlation !=> causation)
     get full cep from coordinates using python brazilcep
