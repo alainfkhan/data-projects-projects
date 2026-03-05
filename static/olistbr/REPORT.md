@@ -4,26 +4,27 @@
 
 ### Brazilian currency
 
-Summary:
+Summary (for context):
 
 |                     |                  |
 | ------------------- | ---------------- |
 | Symbol              | `R$`           |
 | ISO Code            | `BRL`          |
-| Decimal Separator   | Comma `,`      |
-| Thousands Separator | Period `.`     |
+| Thousands separator | Period `.`     |
+| Decimal separator   | Comma `,`      |
 | Example             | `R$ 10.000,00` |
 
 Exchange rate [BRL to GBP](https://www.exchangerates.org.uk/BRL-GBP-spot-exchange-rates-history-2018.html):
 
-| Date           | BRL      | GBP          |
-| -------------- | -------- | ------------ |
-| `2018-01-01` | `R$ 1` | `£0.2234` |
-| `2018-08-22` | `R$ 1` | `£0.1916` |
-| `2018-10-17` | `R$ 1` | `£0.2069` |
+| Significance         | Date           | BRL         | GBP          |
+| -------------------- | -------------- | ----------- | ------------ |
+| First order placed   | `2016-09-04` | `R$ 1,00` | `£0.1964` |
+| Start of 'this year' | `2018-01-01` | `R$ 1,00` | `£0.2234` |
+| Defined as 'today'   | `2018-08-22` | `R$ 1,00` | `£0.1916` |
+| Last order placed    | `2018-10-17` | `R$ 1,00` | `£0.2069` |
 
 - Banknotes: `R$ 2`, `R$ 5`, `R$ 10`, `R$ 20`, `R$ 50`, `R$ 100`, `R$ 200`
-- Coins (centavos): `R$ 0.01`, `R$ 0.05`, `R$ 0.10`, `R$ 0.25`, `R$ 0.50`, `R$ 1.00`
+- Coins (centavos): `R$ 0,01`, `R$ 0,05`, `R$ 0,10`, `R$ 0,25`, `R$ 0,50`, `R$ 1,00`
 
 ### Recorded data vs actual
 
@@ -34,7 +35,7 @@ A day displaying no sales could mean:
 - no sales were truly made
 - an incomplete/inaccurate recording of data
 
-We depend on parsing the available data as context, to determine reality.
+We depend on understanding the surrounding data as context to determine reality.
 
 ## Definitions
 
@@ -44,7 +45,7 @@ The dataset provided by Olist shows a growth and decay of the captured data.
 
 Choose,
 from this dataset,
-a reaslistic start and end date,
+a realistic start and end date,
 that best reflect a supposed snapshot taken of the database under normal business operations.
 
 For any analysis that require practicality choose:
@@ -80,6 +81,7 @@ Before `2017-01-04`:
 
 - Orders placed consistently stay `0`.
 - Some orders placed spuriously between `2016-09-04` - `2016-10-22`.
+- The first order was placed at `2016-09-04`.
 
 #### Decay of data capture
 
@@ -100,9 +102,9 @@ full_date   orders_placed
 
 After `2018-08-26`:
 
-- Orders placed continue to decay until it first reaches `0` at `2018-08-01`.
+- Orders placed continue to decay until it first reaches `0` at `2018-09-01`.
+- Some orders placed spuriously between `2018-09-01` - `2018-10-17`.
 - The last order is placed at `2018-10-17`.
-- Some orders placed spuriously between `2018-08-01` - `2018-08-17`.
 
 </details>
 
@@ -114,21 +116,28 @@ A **customer** is an instance of a user placing an order.
 
 - A single user can be a customer many times.
 - A user (with a single `customer_unique_id`) who has ordered last month, and who has ordered again this month, has been a customer twice (generating two disinct `customer_id`'s).
-- A customer is a user who places an order from some location.
+- A customer is a user who places an order to some location.
 - The customer location is the delivery destination.
-- A user who has made more than one orders, with more than one customer locations, has had more than one delivery destinations, and is a **repeat user**.
+- A user who has ordered more than once is a **repeat user**.
+- It is possible for a user to make an order to one delivery destination, and order again to another delivery destination.
 
-Loosely, a user is a customer. But in this dataset these definitions are kept.
+Loosely, a user is a customer, but in this dataset these definitions are kept.
 
 An **order** is a basket of items bought at checkout.
 
-- A single order can contain more than one items (products).
+- A single order can contain more than one item (product).
 - Products are from sellers.
 - Sellers are from some location.
 
-A row added onto the `orders` table is an order transaction (or simply, an order).
+A row added onto the `orders` table can be thought of:
 
-Order transactions have the possible `order_status`'s:
+- an order transaction,
+- an order,
+- or (loosely) a sale.
+
+A sale can be a realised sale, or an unrealised sale.
+
+Order transactions have the possible `order_status` values:
 
 - `approved`
 - `canceled` [sic.]
@@ -141,17 +150,21 @@ Order transactions have the possible `order_status`'s:
 
 Define a **sale** to be a realised and price-measurable order.
 
-- An order is realised when the `order_status` is any of:
+- An sale is realised when the `order_status` is any of:
   - `approved`,
   - `delivered`,
   - `invoiced`,
   - `processing`,
-  - `shipped`,
+  - `shipped`;
 - and is unrealised at its complement, when the `order_status` is any of:
   - `canceled`,
   - `created`,
   - `unavailable`.
-- An order is price-measurable when the `price` is available.
+- An order is price-measurable when the listed `price` is available. (i.e. `WHERE price IS NOT NULL`.)
+
+We are interested in sales that are realised, and measurable.
+
+For a better picture:
 
 | `order_status` | Realised sale | Unrealised sale |
 | ---------------- | ------------- | --------------- |
@@ -164,17 +177,99 @@ Define a **sale** to be a realised and price-measurable order.
 | `shipped`      | Y             | -               |
 | `unavailable`  | -             | Y               |
 
-Define the **accounting date** to be the date the order is approved: the date of `order_approved_at`.
+Significant dates:
 
-Define the **marketing date** to be the date the order is placed: the date of `order_purchase_timestamp`.
+| Type            | Definition          | Column                       |
+| --------------- | ------------------- | ---------------------------- |
+| Marketing date  | Order placed date   | `order_purchase_timestamp` |
+| Accounting date | Order approved date | `order_approved_at`        |
+
+We use the accounting date to measure realised sales,
+and the marketing date to measure user activity.
+
+A user who places an order that is later cancelled,
+generates user activity, but does not contribute to a sale and hence, also revenue.
+
+A new order placed (with some initial `order_status`) starts as an unrealised sale,
+and becomes a realised sale:
+
+- when the `order_status` changes to an appropriate value,
+- on the date the financial transaction was approved.
+
+The **revenue** is interpreted as the price of a realised sale in the `orders` table.
+- **Product revenue** is calculated from `price`.
+- **Freight revenue** is calculated form `freight_value`.
+- **Total revenue** = product revenue + freight revenue.
+- In a particular month of sales, the sum of listed prices is the revenue generated for that month.
+- An order, that is not a realised sale, with a price listed, does not contribute to revenue.
 
 ## Assumptions
 
+Suppose we are given a snapshot of a complete database from `2017-01-09` to `2018-08-21`, and that today is `2018-08-22`.
+
+The definitions defined hold.
+
+Let the base periodic timeframe be monthly.
+
 ## Sales
+
+Monthly:
+
+- total sales (order count)
+- missed sales (unrealised sales)
+- price is null count
+- GMV = total revenue
+- AOV = GMV / order count
+- GMV MoM growth
+
+Top (by total revenue):
+
+- product categories
+- business segments
+
+Revenue by:
+
+- customer state
+- seller state
 
 ## Customers
 
+An order is fullfilled when it is delivered.
+
+An order is delivered when any:
+- `order_delivered_customer_date` exists,
+- `order_status` is `delivered`
+- TODO: find more requirements
+
+Monthly:
+
+- new users
+- repeat users
+- cancellations
+- unfulfilled orders (cancellations/created/unavailable)
+- average orders per user
+
+
+Per user:
+
+- expenditures
+- orders
+- concentration (pc share)
+
+Top users in expenditures.
+
 ## Sellers
+
+Monthly:
+
+- new sellers
+- repeat sellers
+
+Per seller:
+
+- revenue
+- orders
+- concentration (pc share)
 
 ## Funnel
 

@@ -8,6 +8,10 @@
 
 ---
 
+[Report](REPORT.md)
+
+---
+
 ## Navigation
 - [Analysis projects](https://github.com/alainfkhan/data-projects-projects)
 
