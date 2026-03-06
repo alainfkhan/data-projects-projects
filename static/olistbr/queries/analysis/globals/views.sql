@@ -99,14 +99,21 @@ GO
 -- geolocation
 -- ==================================================
 -- find average long lat of each zip code prefix
--- TODO: need to create
-CREATE OR ALTER VIEW logistics.vw_avg_lat_lng AS
+-- it doesnt make sense to average coords of supposed brazil coords with coords outside brazil
+
+CREATE OR ALTER VIEW logistics.vw_uq_coords AS
+WITH cte AS (
+    SELECT
+        g.geolocation_zip_code_prefix,
+        COUNT(DISTINCT g.geolocation_sk) AS apps,
+        COUNT(DISTINCT CONCAT(g.geolocation_lat, ', ', g.geolocation_lng))
+            AS uq_coord_count
+    FROM logistics.fact_geolocation AS g
+    GROUP BY g.geolocation_zip_code_prefix
+)
+
 SELECT
-    g.geolocation_zip_code_prefix,
-    COUNT(DISTINCT g.geolocation_lat) AS count,
-    AVG(g.geolocation_lat) AS avg_lat,
-    AVG(g.geolocation_lng) AS avg_lng
-FROM logistics.fact_geolocation AS g
-GROUP BY g.geolocation_zip_code_prefix
-ORDER BY g.geolocation_zip_code_prefix
+    g.*,
+    1.0 * g.uq_coord_count / NULLIF(g.apps, 0) AS coords_per_app
+FROM cte AS g;
 GO

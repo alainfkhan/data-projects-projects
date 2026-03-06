@@ -3,5 +3,4 @@ using driver: 17 works
 cannot have fks on tables with references to rows that don't exist
 tables with incomplete fks:
 
-
 unique constraint expensive

@@ -1,4 +1,5 @@
-Successful connection
+uv run src
+Establishing a connection to server: 'localhost'Successful connection                                                                                
         Driver used:            'ODBC Driver 17 for SQL Server'
         Connected to server:    'localhost'
         Connected to database:  'master'
@@ -7,12 +8,12 @@ SQL strings executed:
 ----------------------------------------------------------------------------------------------------
 Wipe database 'olist_stg':
 
->>>       ALTER DATABASE olist_stg SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
->>>
+Wiping database: 'olist_stg'...                                                                                >>>       ALTER DATABASE olist_stg SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+>>>       
 >>>       DROP DATABASE olist_stg;
->>>
+>>>       
 >>>       CREATE DATABASE olist_stg;
->>>
+>>>       
 >>>       ALTER DATABASE olist_stg
 >>>       SET RECOVERY SIMPLE;
 
@@ -40,13 +41,12 @@ Create tables and insert data:
 >>>             customer_zip_code_prefix CHAR(5) NOT NULL,
 >>>             customer_city VARCHAR(50),
 >>>             customer_state CHAR(2),
->>>
+>>>       
 >>>             CONSTRAINT pk_dim_customers
 >>>                     PRIMARY KEY (customer_id)
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_customers_dataset.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'olist_sellers_dataset.csv'
@@ -56,13 +56,12 @@ Insert successful
 >>>             seller_zip_code_prefix CHAR(5) NOT NULL,
 >>>             seller_city NVARCHAR(50) NOT NULL,
 >>>             seller_state CHAR(2) NOT NULL,
->>>
+>>>       
 >>>             CONSTRAINT pk_dim_sellers
 >>>                     PRIMARY KEY (seller_id)
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_sellers_dataset.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'product_category_name_translation.csv'
@@ -70,13 +69,12 @@ Insert successful
 >>>       CREATE TABLE sales.dim_product_category_name_translation (
 >>>             product_category_name VARCHAR(50) NOT NULL,
 >>>             product_category_name_english VARCHAR(50) NOT NULL,
->>>
+>>>       
 >>>             CONSTRAINT pk_dim_product_category_name_translation
 >>>                     PRIMARY KEY (product_category_name)
 >>>       );
->>>
 
-Insert successful
+Inserting: 'product_category_name_translation.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'olist_products_dataset.csv'
@@ -91,13 +89,12 @@ Insert successful
 >>>             product_length_cm TINYINT,
 >>>             product_height_cm TINYINT,
 >>>             product_width_cm TINYINT,
->>>
+>>>       
 >>>             CONSTRAINT pk_dim_products
 >>>                     PRIMARY KEY (product_id)
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_products_dataset.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'olist_orders_dataset.csv'
@@ -111,19 +108,18 @@ Insert successful
 >>>             order_delivered_carrier_date DATETIME2,
 >>>             order_delivered_customer_date DATETIME2,
 >>>             order_estimated_delivery_date DATETIME2,
->>>
+>>>       
 >>>             CONSTRAINT pk_fact_orders
 >>>                     PRIMARY KEY (order_id),
->>>
+>>>       
 >>>             CONSTRAINT fk_fact_orders_dim_customers__customer_id
 >>>                     FOREIGN KEY (customer_id)
 >>>                             REFERENCES sales.dim_customers (customer_id)
 >>>                             ON DELETE CASCADE
 >>>                             ON UPDATE CASCADE
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_orders_dataset.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'olist_order_items_dataset.csv'
@@ -136,31 +132,30 @@ Insert successful
 >>>             shipping_limit_date DATETIME2 NOT NULL,
 >>>             price DECIMAL(9, 4) NOT NULL,
 >>>             freight_value DECIMAL(9, 4) NOT NULL,
->>>
+>>>       
 >>>             CONSTRAINT pk_fact_order_items
 >>>                     PRIMARY KEY (order_id, order_item_id),
->>>
+>>>       
 >>>             CONSTRAINT fk_fact_order_items_fact_orders__order_id
 >>>                     FOREIGN KEY (order_id)
 >>>                             REFERENCES sales.fact_orders (order_id)
 >>>                             ON DELETE CASCADE
 >>>                             ON UPDATE CASCADE,
->>>
+>>>       
 >>>             CONSTRAINT fk_fact_order_items_dim_products__product_id
 >>>                     FOREIGN KEY (product_id)
 >>>                             REFERENCES sales.dim_products (product_id)
 >>>                             ON DELETE CASCADE
 >>>                             ON UPDATE CASCADE,
->>>
+>>>       
 >>>             CONSTRAINT fk_fact_order_items_dim_sellers__seller_id
 >>>                     FOREIGN KEY (seller_id)
 >>>                             REFERENCES sales.dim_sellers (seller_id)
 >>>                             ON DELETE CASCADE
 >>>                             ON UPDATE CASCADE
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_order_items_dataset.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'olist_order_payments_dataset.csv'
@@ -171,13 +166,12 @@ Insert successful
 >>>             payment_type VARCHAR(20) NOT NULL,
 >>>             payment_installments TINYINT NOT NULL,
 >>>             payment_value DECIMAL(9, 4) NOT NULL,
->>>
+>>>       
 >>>             CONSTRAINT pk_fact_order_payments
 >>>                     PRIMARY KEY (order_id, payment_sequential)
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_order_payments_dataset.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'olist_order_reviews_dataset.csv'
@@ -190,16 +184,15 @@ Insert successful
 >>>             review_comment_message NVARCHAR(210),
 >>>             review_creation_date DATETIME2 NOT NULL,
 >>>             review_answer_timestamp DATETIME2 NOT NULL,
->>>
+>>>       
 >>>             CONSTRAINT pk_fact_order_reviews
 >>>                     PRIMARY KEY (review_id, order_id),
->>>
+>>>       
 >>>             CONSTRAINT chk_review_score
 >>>                     CHECK (review_score BETWEEN 1 AND 5)
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_order_reviews_dataset.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'olist_marketing_qualified_leads_dataset.csv'
@@ -209,13 +202,12 @@ Insert successful
 >>>             first_contact_date DATE NOT NULL,
 >>>             landing_page_id CHAR(32) NOT NULL,
 >>>             origin VARCHAR(20),
->>>
+>>>       
 >>>             CONSTRAINT pk_fact_marketing_qualified_leads
 >>>                     PRIMARY KEY (mql_id)
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_marketing_qualified_leads_dataset.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'olist_closed_deals_dataset.csv'
@@ -235,13 +227,12 @@ Insert successful
 >>>             business_type VARCHAR(20),
 >>>             declared_product_catalog_size DECIMAL(9, 4),
 >>>             declared_monthly_revenue DECIMAL(19, 4),
->>>
+>>>       
 >>>             CONSTRAINT pk_fact_closed_deals
 >>>                     PRIMARY KEY (mql_id)
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_closed_deals_dataset.csv'...                                                                                Insert successful
 
 --------------------------------------------------
 'olist_geolocation_dataset.csv'
@@ -249,47 +240,63 @@ Insert successful
 >>>       CREATE TABLE logistics.fact_geolocation (
 >>>             geolocation_sk INT IDENTITY(1, 1) NOT NULL,
 >>>             geolocation_zip_code_prefix CHAR(5) NOT NULL,
->>>             geolocation_lat DECIMAL(9, 6),
->>>             geolocation_lng DECIMAL(9, 6),
+>>>             geolocation_lat DECIMAL(28, 21),
+>>>             geolocation_lng DECIMAL(28, 21),
 >>>             geolocation_city NVARCHAR(40),
 >>>             geolocation_state CHAR(2),
->>>
->>>             CONSTRAINT pk_dim_geolocation
+>>>       
+>>>             CONSTRAINT pk_fact_geolocation
 >>>                     PRIMARY KEY (geolocation_sk)
 >>>       );
->>>
 
-Insert successful
+Inserting: 'olist_geolocation_dataset.csv'...                                                                                Insert successful
 
+----------------------------------------------------------------------------------------------------
+
+Adding supplementary data
+--------------------------------------------------
+Executing 'create-dim_date.sql'...                                                                                Script 'create-dim_date.sql' executed successfully.
+Executing 'create-dim_time.sql'...                                                                                Script 'create-dim_time.sql' executed successfully.
+Executing 'create-dim_cep_iz.sql'...                                                                                Script 'create-dim_cep_iz.sql' executed successfully.
+Populating 'staging.dim_cep_iz_AuBmA'...                                                                                Table 'staging.dim_cep_iz_AuBmA' populated with [995090] rows.
+Populating 'staging.dim_cep_iz_B'...                                                                                Table 'staging.dim_cep_iz_B' populated with [849343] rows.
+Executing 'last_things.sql'...                                                                                Script 'last_things.sql' executed successfully.
 ----------------------------------------------------------------------------------------------------
 
 Overview of database: 'olist_stg'
 --------------------------------------------------
-        Schemas
-┏━━━━━━━━━━━━━┳━━━━━━━━┓
-┃ Schema name ┃ Tables ┃
-┡━━━━━━━━━━━━━╇━━━━━━━━┩
-│ sales       │ 8      │
-│ marketing   │ 2      │
-│ logistics   │ 1      │
-└─────────────┴────────┘
-                              Tables
-┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┓
-┃ Table name                                  ┃ Rows    ┃ Columns ┃
-┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━╇━━━━━━━━━┩
-│ sales.dim_customers                         │ 99441   │ 5       │
-│ sales.dim_sellers                           │ 3095    │ 4       │
-│ sales.dim_product_category_name_translation │ 71      │ 2       │
-│ sales.dim_products                          │ 32951   │ 9       │
-│ sales.fact_orders                           │ 99441   │ 8       │
-│ sales.fact_order_items                      │ 112650  │ 7       │
-│ sales.fact_order_payments                   │ 103886  │ 5       │
-│ sales.fact_order_reviews                    │ 99224   │ 7       │
-│ marketing.fact_marketing_qualified_leads    │ 8000    │ 4       │
-│ marketing.fact_closed_deals                 │ 842     │ 14      │
-│ logistics.fact_geolocation                  │ 1000163 │ 6       │
-└─────────────────────────────────────────────┴─────────┴─────────┘
+        Schemas         
++----------------------+
+| Schema name | Tables |
+|-------------+--------|
+| sales       | 8      |
+| marketing   | 2      |
+| logistics   | 2      |
+| utils       | 2      |
+| staging     | 1      |
++----------------------+
+                              Tables                               
++-----------------------------------------------------------------+
+| Table name                                  | Rows    | Columns |
+|---------------------------------------------+---------+---------|
+| sales.dim_customers                         | 99441   | 5       |
+| sales.dim_sellers                           | 3095    | 4       |
+| sales.dim_product_category_name_translation | 71      | 2       |
+| sales.dim_products                          | 32951   | 9       |
+| sales.fact_orders                           | 99441   | 8       |
+| sales.fact_order_items                      | 112650  | 7       |
+| sales.fact_order_payments                   | 103886  | 5       |
+| sales.fact_order_reviews                    | 99224   | 7       |
+| marketing.fact_marketing_qualified_leads    | 8000    | 4       |
+| marketing.fact_closed_deals                 | 842     | 14      |
+| logistics.fact_geolocation                  | 1000163 | 6       |
+| utils.dim_date                              | 2557    | 17      |
+| utils.dim_time                              | 86400   | 31      |
+| logistics.dim_cep                           | 995090  | 6       |
+| staging.dim_cep_iz_B                        | 849343  | 5       |
++-----------------------------------------------------------------+
 --------------------------------------------------
+Successfully rebuilt 'olist_stg'.
 !!! 'olist_stg' subject to repeated rewrites.
 !!! Remember to copy the database.
 --------------------------------------------------

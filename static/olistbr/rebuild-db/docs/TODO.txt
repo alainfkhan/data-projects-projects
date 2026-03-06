@@ -1,8 +1,5 @@
 README.md
     ## Output
     gif of running src
-    explain end steps:
-        this creates a staging db
-        need to copy to make usable
 
     containerise app and server so can run on other os.

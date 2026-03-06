@@ -383,10 +383,10 @@ olist_stg:
           nullable: false
           converter: str
       - geolocation_lat:
-          dtype: DECIMAL(9, 6)
+          dtype: DECIMAL(28, 21)
           nullable: true
       - geolocation_lng:
-          dtype: DECIMAL(9, 6)
+          dtype: DECIMAL(28, 21)
           nullable: true
       - geolocation_city:
           dtype: NVARCHAR(40)
