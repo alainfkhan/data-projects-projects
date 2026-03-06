@@ -4,3 +4,24 @@ cannot have fks on tables with references to rows that don't exist
 tables with incomplete fks:
 
 unique constraint expensive
+
+for macos requires the driver download:
+https://learn.microsoft.com/en-gb/sql/connect/odbc/linux-mac/install-microsoft-odbc-driver-sql-server-macos?view=sql-server-2017
+
+
+does not work
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
+brew update
+brew install msodbcsql@13.1.9.2 mssql-tools@14.0.6.0
+```
+
+trying 17
+```bash
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+brew tap microsoft/mssql-release https://github.com/Microsoft/homebrew-mssql-release
+brew update
+HOMEBREW_ACCEPT_EULA=Y brew install msodbcsql17 mssql-tools
+```
+looks good, but cannot make a connection
