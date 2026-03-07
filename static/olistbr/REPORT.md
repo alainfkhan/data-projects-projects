@@ -39,75 +39,6 @@ We depend on understanding the surrounding data as context to determine reality.
 
 ## Definitions
 
-### Practical project scope
-
-The dataset provided by Olist shows a growth and decay of the captured data.
-
-Choose,
-from this dataset,
-a realistic start and end date,
-that best reflect a supposed snapshot taken of the database under normal business operations.
-
-For any analysis that require practicality choose:
-
-- Snapshot start date: `2017-01-09`
-- Snapshot end date: `2018-08-21`
-
-Then, for any practical analyses, suppose therefore, that today is `2018-08-22`,
-and we have no knowledge of data beyond this date.
-
-<details>
-
-<summary>Reasoning</summary>
-
-#### Growth of data capture
-
-```txt
-full_date   orders_placed
-2017-01-04	0
-2017-01-05	32
-2017-01-06	4
-2017-01-07	4
-2017-01-08	6
-2017-01-09	5       <--
-2017-01-10	6
-2017-01-11	12
-2017-01-12	13
-2017-01-13	12
-2017-01-14	18
-```
-
-Before `2017-01-04`:
-
-- Orders placed consistently stay `0`.
-- Some orders placed spuriously between `2016-09-04` - `2016-10-22`.
-- The first order was placed at `2016-09-04`.
-
-#### Decay of data capture
-
-```txt
-full_date   orders_placed
-2018-08-16	320
-2018-08-17	257
-2018-08-18	198
-2018-08-19	204
-2018-08-20	256
-2018-08-21	243     <--
-2018-08-22	187
-2018-08-23	144
-2018-08-24	99
-2018-08-25	69
-2018-08-26	73
-```
-
-After `2018-08-26`:
-
-- Orders placed continue to decay until it first reaches `0` at `2018-09-01`.
-- Some orders placed spuriously between `2018-09-01` - `2018-10-17`.
-- The last order is placed at `2018-10-17`.
-
-</details>
-
 ### Dataset core definitions
 
 A **user** is the human placing an order.
@@ -188,23 +119,92 @@ We use the accounting date to measure realised sales,
 and the marketing date to measure user activity.
 
 A user who places an order that is later cancelled,
-generates user activity, but does not contribute to a sale and hence, also revenue.
+generates user activity, but does not contribute to a sale, and hence, neither also to revenue.
 
 A new order placed (with some initial `order_status`) starts as an unrealised sale,
-and becomes a realised sale:
+and becomes a realised sale when:
 
-- when the `order_status` changes to an appropriate value,
+- the `order_status` changes to value that classifies it as realised,
 - on the date the financial transaction was approved.
 
-The **revenue** is interpreted as the price of a realised sale in the `orders` table.
+The **revenue** is interpreted to be the listed price of a realised sale in the `orders` table.
 
 - **Product revenue** is calculated from `price`.
 - **Freight revenue** is calculated form `freight_value`.
 - **Total revenue** = product revenue + freight revenue.
-- In a particular month of sales, the sum of listed prices is the revenue generated for that month.
+- In a particular month of sales, the sum of the prices is the revenue generated for that month.
 - An order, that is not a realised sale, with a price listed, does not contribute to revenue.
 
 ## Assumptions
+
+### Practical project scope
+
+The dataset provided by Olist shows a growth and decay of the captured data.
+
+Choose,
+from this dataset,
+a realistic start and end date,
+that best reflect a supposed snapshot taken of the database under normal business operations.
+
+For any analysis that require practicality choose:
+
+- Snapshot start date: `2017-01-09`
+- Snapshot end date: `2018-08-21`
+
+Then, for any practical analyses, suppose therefore, that today is `2018-08-22`,
+and we have no knowledge of data beyond this date.
+
+<details>
+
+<summary>Reasoning</summary>
+
+#### Growth of data capture
+
+```txt
+full_date   orders_placed
+2017-01-04	0
+2017-01-05	32
+2017-01-06	4
+2017-01-07	4
+2017-01-08	6
+2017-01-09	5       <--
+2017-01-10	6
+2017-01-11	12
+2017-01-12	13
+2017-01-13	12
+2017-01-14	18
+```
+
+Before `2017-01-04`:
+
+- Orders placed consistently stay `0`.
+- Some orders placed spuriously between `2016-09-04` - `2016-10-22`.
+- The first order was placed at `2016-09-04`.
+
+#### Decay of data capture
+
+```txt
+full_date   orders_placed
+2018-08-16	320
+2018-08-17	257
+2018-08-18	198
+2018-08-19	204
+2018-08-20	256
+2018-08-21	243     <--
+2018-08-22	187
+2018-08-23	144
+2018-08-24	99
+2018-08-25	69
+2018-08-26	73
+```
+
+After `2018-08-26`:
+
+- Orders placed continue to decay until it first reaches `0` at `2018-09-01`.
+- Some orders placed spuriously between `2018-09-01` - `2018-10-17`.
+- The last order is placed at `2018-10-17`.
+
+</details>
 
 Suppose we are given a snapshot of a complete database from `2017-01-09` to `2018-08-21`, and that today is `2018-08-22`.
 
@@ -236,7 +236,7 @@ Revenue by:
 ## Customers
 
 An order is fullfilled when it is delivered.
-An order is delivered when:
+An order is considered delivered when:
 
 - `order_status` is `delivered`,
 - or `order_delivered_customer_date` exists
@@ -275,9 +275,8 @@ Per seller:
 ## Logistics
 
 Monthly
-  average delivery time
-  late deliveries count
-  pc of late deliveries
+- average delivery time
+- late deliveries count
+- pc of late deliveries
 
 Delivery time by state
-

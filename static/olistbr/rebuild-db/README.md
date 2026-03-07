@@ -128,27 +128,6 @@ Overview of database: 'olist_stg'
 - The database overview queries the database as it is.
 - Notice the file `olist_geolocation_dataset.csv` takes the longest time to process since it has the table with the most rows with `1000163` rows.
 
-<details>
-
-<summary>View the debug mode</summary>
-
-### Running this program (in debug mode)
-
-![](../img/cmd_debug.gif)
-
-- View an example output at [`docs/stdout/cmd_debug.txt`](docs/stdout/cmd_debug.txt)
-- The output in debug mode still shows the sql generated but is not executed to the server.
-- Debug mode acts as a confirmation layer before sql commands are actually executed.
-
-> [!NOTE]
->
-> - The gif above shows running this program `rebuild-db` in debug mode (with `execute = False`)
-> - The database overview that appears at the end queries the database as it is.
-> - The reason it shows no tables is because this program was ran before the tables were created.
-> - If there was a lone table currently inside in the database, the database overview would show it.
-
-</details>
-
 ### Data-type validation
 
 - An inference function was used to help determine the SQL server column data types that optimise storage.

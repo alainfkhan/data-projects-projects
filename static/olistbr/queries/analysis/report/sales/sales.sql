@@ -4,14 +4,14 @@ GO
 WITH agg_sales AS (
     SELECT
         s.year_number,
-        s.full_date,
+        s.month_number,
         COUNT(DISTINCT s.order_id) AS order_count,
         SUM(s.price) AS product_revenue,
         SUM(s.freight_value) AS freight_revenue
     FROM sales.vw_sales_practical AS s
     GROUP BY
         s.year_number,
-        s.full_date
+        s.month_number
 ),
 
 calculated_sales AS (
@@ -28,17 +28,17 @@ lag_sales AS (
         LAG(s.order_count) OVER (
             ORDER BY
                 s.year_number,
-                s.full_date
+                s.month_number
         ) AS lag_order_count,
         LAG(s.gmv) OVER (
             ORDER BY
                 s.year_number,
-                s.full_date
+                s.month_number
         ) AS lag_gmv,
         LAG(s.aov) OVER (
             ORDER BY
                 s.year_number,
-                s.full_date
+                s.month_number
         ) AS lag_aov
     FROM calculated_sales AS s
 ),
@@ -54,7 +54,7 @@ growth_sales AS (
 
 SELECT
     s.year_number,
-    s.full_date,
+    s.month_number,
     s.order_count AS total_sales,
     -- s.product_revenue,
     -- s.freight_revenue,
@@ -64,7 +64,7 @@ SELECT
 FROM growth_sales AS s
 ORDER BY
     s.year_number,
-    s.full_date;
+    s.month_number;
 GO
 
 -- =

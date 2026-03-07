@@ -1,7 +1,10 @@
 .vs
 *.slnx
 *.mp4
+*.pbix
 
 # close to 100MB
 # 99.3MB
 TB_CEP_BR_2018.csv
+# 150MB
+report.pbix
