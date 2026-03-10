@@ -8,8 +8,8 @@
 
 ## Project overview
 
-1. [`Run rebuild-db`](#rebuild-the-database-by-running-src)
-1. [`Copy the database`](#copy-the-database)
+1. [Run rebuild-db](#rebuild-the-database-by-running-src)
+2. [Copy the database](#copy-the-database)
 
 Running `rebuild-db`:
 
@@ -20,7 +20,7 @@ Running `rebuild-db`:
    - as defined by [`src/configs/db_config.yml`](src/configs/db_config.yml)
 3. Inserts the project data into the tables.
    - From the dataset in [`../data/raw`](../data/raw/)
-4. Creates supplementary tables:
+4. Generates supplementary tables:
    - [`utils.dim_date`](queries/rebuild-db/create-dim_date.sql)
    - [`utils.dim_time`](queries/rebuild-db/create-dim_time.sql)
 5. Ingests supplementary geolocation data:
@@ -80,7 +80,7 @@ uv run src
 
 ### Running this program
 
-![](../img/cmd_execute.gif)
+![](../img/cmd_execute-260306.gif)
 
 <details>
 
@@ -95,7 +95,9 @@ Overview of database: 'olist_stg'
 ┡━━━━━━━━━━━━━╇━━━━━━━━┩
 │ sales       │ 8      │
 │ marketing   │ 2      │
-│ logistics   │ 1      │
+│ logistics   │ 2      │
+│ utils       │ 2      │
+│ staging     │ 1      │
 └─────────────┴────────┘
                               Tables
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━┳━━━━━━━━━┓
@@ -112,32 +114,40 @@ Overview of database: 'olist_stg'
 │ marketing.fact_marketing_qualified_leads    │ 8000    │ 4       │
 │ marketing.fact_closed_deals                 │ 842     │ 14      │
 │ logistics.fact_geolocation                  │ 1000163 │ 6       │
+│ utils.dim_date                              │ 2557    │ 17      │
+│ utils.dim_time                              │ 86400   │ 31      │
+│ logistics.dim_cep                           │ 995090  │ 6       │
+│ staging.dim_cep_iz_B                        │ 849343  │ 5       │
 └─────────────────────────────────────────────┴─────────┴─────────┘
+--------------------------------------------------
+Successfully rebuilt 'olist_stg'.
+!!! 'olist_stg' subject to repeated rewrites.
+!!! Remember to copy the database.
+--------------------------------------------------
 
 ```
 
 </details>
 
-- View an example output at [`docs/stdout/cmd_execute.txt`](docs/stdout/cmd_execute.txt).
+- View the piped [output](docs/stdout/cmd_execute.txt).
 - Running `src` generates dynamic sql commands that is sent to the connected database.
-- The connection configuration file [`src/configs/connection.yml`](src/configs/connection.yml) defines the connection variables used to connect to a server.
+- The [connection configuration file](src/configs/connection.yml) defines the connection variables used to connect to a server.
   - This project currently depends on SQL Server Windows Authentication to connect to the server.
-- The database configuration file [`src/configs/db_config.yml`](src/configs/db_config.yml) defines the table schemas for this dataset.
+- The [database configuration file](src/configs/db_config.yml) defines the table schemas for this dataset.
   - The information in this configuration file was manually typed.
-  - Column data types, and constraints were determined from a [`preliminary analysis`](#data-type-validation) on this dataset.
+  - Column data types, and constraints were determined from a [preliminary analysis](#data-type-validation) on this dataset.
 - The database overview queries the database as it is.
 - Notice the file `olist_geolocation_dataset.csv` takes the longest time to process since it has the table with the most rows with `1000163` rows.
 
 ### Data-type validation
 
-- An inference function was used to help determine the SQL server column data types that optimise storage.
-- The `infer_dtypes()` function from [`src/utils/infer.py`](src/utils/infer.py) inputs a pandas dataframe and outputs an attributes table that describe each column.
-- View an example in [`notebooks/table_attrs.ipynb`](notebooks/table_attrs.ipynb)
-- Other functions in [`src/utils/measures.py`](src/utils/measures.py) were used to determine other attributes like:
+- An inference function [`infer_dtypes()`](src/utils/infer.py) was used to help determine the ideal SQL server column data types that improve query memory allocations.
+- This function inputs a pandas dataframe and outputs an attributes table that describe each column.
+- Other functions, in [`src/utils/measures.py`](src/utils/measures.py), were used to determine other attributes like:
   - finding the max `precision` and `scale` of a supposed `DECIMAL` datatype.
   - how similar a string is from another using the [Dice-Sørensen coefficient](https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient).
 
-Suppose we would like to find the SQL server data types of the columns from `olist_customers_dataset.csv` that optimise storage.
+Suppose we would like to find the SQL server data types of the columns from `olist_customers_dataset.csv`.
 We consider using a `.ipynb` jupyter notebook for analysis.
 
 ```py
@@ -402,6 +412,8 @@ Then, when creating the table:
 - Manually type the table configuration in [`src/configs/db_config.yml`](src/configs/db_config.yml):
 
 ```yml
+# this is manually typed:
+
 olist_stg:
 - sales:
   - dim_customers:
@@ -422,6 +434,8 @@ olist_stg:
 - The program will later generate the following sql string:
 
 ```sql
+-- this is generated:
+
 CREATE TABLE sales.dim_customers(
   customer_id CHAR(32) NOT NULL,
   -- ...other columns...
@@ -433,6 +447,8 @@ CREATE TABLE sales.dim_customers(
 
 - Analyse the other columns in this table.
 - Repeat for all other tables.
+- You will then have the ideal SQL Server column data types for all tables that optimise query memory allocation.
+
 
 **Q**: Why not just write the sql directly?
 
@@ -442,7 +458,7 @@ CREATE TABLE sales.dim_customers(
 
 - A `FOREIGN KEY` constraint requires a 1-1 or 1-many relationship.
 - Columns with entries that cannot be reached cannot have the `FOREIGN KEY` constraint.
-- Some foreign keys as defined by the [`Olist entity relationship diagram`](../references/img/HRhd2Y0%20-%20Imgur.png) (ERD) were not implemented since it breaks the requirement.
+- Some foreign keys as defined by the [Olist ERD](../references/img/HRhd2Y0%20-%20Imgur.png) were not implemented since it breaks the requirement.
 - The relationship is noted but is not coded in creating the tables.
 - Tables that didn't implement foreign keys:
   - `dim_products`
@@ -452,9 +468,12 @@ CREATE TABLE sales.dim_customers(
 
 #### A note on data integrity:
 
+The SQL datatypes where chosen in such a way that supposes the database as a production database that expects more data.
+
+Notes:
+
 - Column names: `product_name_lenght` and `product_description_lenght` from table `dim_products` were purposefully not corrected.
-- Columns: `geolocation_lat` and `geolocation_lng` from table `fact_geolocation` containing latitudinal and longitudinal coordinates were truncated from having at most 18 decimal places down to now at most 6.
-- Columns with payment values needing at most 2 decimal places were given more decimal places (at most 4) for free (without any negative effect on storage since the `DECIMAL` data type is binned).
+- Columns with payment values needing at most 2 decimal places were given more decimal places (at most 4) for free (without any negative effect on storage since the `DECIMAL` storage is [binned](https://learn.microsoft.com/en-us/sql/t-sql/data-types/decimal-and-numeric-transact-sql?view=sql-server-ver17#s-scale)).
 
 ## Copy the database
 
