@@ -5,7 +5,6 @@
 Monthly:
 
 - total sales (order count)
-- missed sales (unrealised sales)
 - price is null count
 - GMV = total revenue
 - AOV = GMV / order count

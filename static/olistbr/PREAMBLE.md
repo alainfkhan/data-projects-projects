@@ -126,7 +126,7 @@ generates user activity, but does not contribute to a sale, and hence, neither a
 A new order placed (with some initial `order_status`) starts as an unrealised sale,
 and becomes realised exactly when
 the `order_status` changes to a value that classifies it as realised,
-on the date the financial transaction was approved at `order_approved_at`.
+on the date of the financial transaction (at `order_approved_at`).
 
 The **revenue** is interpreted to be the listed price of a realised sale in the `orders` table.
 
@@ -141,6 +141,7 @@ N.B.:
 - In this particular dataset, `freight_value` always exists with `price`.
 - I.e. if we have `price`, we also have `freight_value`.
 - Any numerical aggregations on realised and price-measurable sales is valid since `price` always exists.
+
 
 ## Assumptions
 
@@ -217,9 +218,15 @@ Suppose we are given a snapshot of a complete database from `2017-01-09` to `201
 
 The definitions defined hold.
 
+Users who have made payments on orders that are not realised sales, are eligible for a **refund** on that order.
+Assume all refunds are actualised.
+
 Let the base periodic timeframe be monthly.
+
+## View code
 
 View the queries:
 - [Views](queries/analysis/globals/views.sql)
 - [Functions](queries/analysis/globals/functions.sql)
 - [Scratch work](queries/analysis/report/_scratch/). Ordered in attempt order.
+

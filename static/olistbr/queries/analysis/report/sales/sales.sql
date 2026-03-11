@@ -21,6 +21,9 @@ calculated_sales AS (
         s.product_revenue + s.freight_revenue / s.order_count AS aov
     FROM agg_sales AS s
 ),
+-- )
+-- select *
+-- from calculated_sales
 
 lag_sales AS (
     SELECT
@@ -42,6 +45,9 @@ lag_sales AS (
         ) AS lag_aov
     FROM calculated_sales AS s
 ),
+-- )
+-- select *
+-- from lag_sales
 
 growth_sales AS (
     SELECT
@@ -66,11 +72,3 @@ ORDER BY
     s.year_number,
     s.month_number;
 GO
-
--- =
--- random analysis
-SELECT o.order_purchase_timestamp
-FROM sales.fact_orders AS o
-    LEFT JOIN sales.fact_order_items AS oi
-        ON o.order_id = oi.order_id
-ORDER BY o.order_purchase_timestamp ASC

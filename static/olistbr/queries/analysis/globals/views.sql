@@ -98,9 +98,6 @@ GO
 -- ====================================================================================================
 -- geolocation
 -- ==================================================
--- find average long lat of each zip code prefix
--- it doesnt make sense to average coords of supposed brazil coords with coords outside brazil
-
 CREATE OR ALTER VIEW logistics.vw_uq_coords AS
 WITH cte AS (
     SELECT

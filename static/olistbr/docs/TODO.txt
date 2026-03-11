@@ -1,5 +1,4 @@
 TODO:
-    start power bi
     finish geolcoation view
     
     change .md links to relative to to url

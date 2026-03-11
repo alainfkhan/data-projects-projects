@@ -92,3 +92,44 @@ ORDER BY
     s.month_number,
     cd.business_segment;
 GO
+
+-- ==================================================
+-- revenue per customer state
+WITH customer_state_revenues AS (
+    SELECT
+        c.customer_state,
+        -- sum(s.price) as product_expenditure,
+        -- sum(s.freight_value) as freight_expenditure,
+        SUM(s.price + s.freight_value) AS total_expenditure
+    FROM sales.vw_sales_practical AS s
+        LEFT JOIN sales.dim_customers AS c
+            ON s.customer_id = c.customer_id
+    WHERE c.customer_state IS NOT NULL
+    GROUP BY c.customer_state
+),
+
+-- revenue per seller state
+seller_state_revenues AS (
+    SELECT
+        c.seller_state,
+        -- sum(s.price) as product_revenue,
+        -- sum(s.freight_value) as freight_revenue,
+        SUM(s.price + s.freight_value) AS total_revenue
+    FROM sales.vw_sales_practical AS s
+        LEFT JOIN sales.dim_sellers AS c
+            ON s.seller_id = c.seller_id
+    WHERE c.seller_state IS NOT NULL
+    GROUP BY c.seller_state
+)
+
+SELECT
+    -- c.*,
+    -- s.*
+    c.customer_state AS uf,
+    utils.fn_format_brl(c.total_expenditure) AS total_expenditure,
+    utils.fn_format_brl(s.total_revenue) AS total_revenue
+FROM customer_state_revenues AS c
+    LEFT JOIN seller_state_revenues AS s
+        ON c.customer_state = s.seller_state
+ORDER BY c.customer_state ASC;
+GO
