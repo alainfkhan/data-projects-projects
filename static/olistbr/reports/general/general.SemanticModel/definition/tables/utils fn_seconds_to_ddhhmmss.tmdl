@@ -1,0 +1,23 @@
+table 'utils fn_seconds_to_ddhhmmss'
+	lineageTag: 02b0a286-d4b6-420d-99ec-972313e056f7
+
+	column 'utils fn_seconds_to_ddhhmmss'
+		dataType: string
+		lineageTag: 713ddfc0-7255-431b-989c-4fbc424b0b3f
+		summarizeBy: none
+		sourceColumn: utils fn_seconds_to_ddhhmmss
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'utils fn_seconds_to_ddhhmmss' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    utils_fn_seconds_to_ddhhmmss = Source{[Schema="utils",Item="fn_seconds_to_ddhhmmss"]}[Data],
+				    #"Invoked Functionutils_fn_seconds_to_ddhhmmss1" = utils_fn_seconds_to_ddhhmmss(null)
+				in
+				    #"Invoked Functionutils_fn_seconds_to_ddhhmmss1"
+
+	annotation PBI_ResultType = Null
+

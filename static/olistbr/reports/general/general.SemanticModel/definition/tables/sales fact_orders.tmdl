@@ -1,0 +1,108 @@
+table 'sales fact_orders'
+	lineageTag: fb90fb45-8630-4b4a-b7d9-d96fa26b2c45
+
+	column order_id
+		dataType: string
+		lineageTag: 985d33fd-3911-4e75-a085-5bd2738bc138
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_id
+		dataType: string
+		lineageTag: 79b645f5-de5c-4ea9-b634-81271ed0b2ce
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_status
+		dataType: string
+		lineageTag: 85ece62e-c07f-4481-ba1c-0c2e3e3982d9
+		summarizeBy: none
+		sourceColumn: order_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_purchase_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: c13310ee-cf72-4ecd-9f81-448e23e8fdd3
+		summarizeBy: none
+		sourceColumn: order_purchase_timestamp
+
+		variation Variation
+			isDefault
+			relationship: bbe022a5-124e-40c5-9e44-415798de84b5
+			defaultHierarchy: LocalDateTable_275f3763-2473-4849-beb0-935b5e7dfe58.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_approved_at
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: b623bc37-727b-48e3-be00-8feb64cd0ff8
+		summarizeBy: none
+		sourceColumn: order_approved_at
+
+		variation Variation
+			isDefault
+			relationship: ae3cb023-609d-45f2-8ca3-e3711ef33082
+			defaultHierarchy: LocalDateTable_b29f17bd-9f91-4a53-b36f-1000891fbf52.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_delivered_carrier_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9af3133a-bd00-4e0a-b930-1d750b474ef6
+		summarizeBy: none
+		sourceColumn: order_delivered_carrier_date
+
+		variation Variation
+			isDefault
+			relationship: 28feac8c-e511-40b8-8e5e-1c40777b6c8f
+			defaultHierarchy: LocalDateTable_a2760970-5f5e-4076-9934-1f72bff57efa.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_delivered_customer_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 84e034d7-9a26-4aa7-affd-d34b214fcc35
+		summarizeBy: none
+		sourceColumn: order_delivered_customer_date
+
+		variation Variation
+			isDefault
+			relationship: 270c9565-6133-42f3-b8d4-a80228b4794c
+			defaultHierarchy: LocalDateTable_d0c8e945-30c8-4999-bd03-8bddf28224d2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_estimated_delivery_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 9c00d475-f6f6-443e-901e-2ec5b6d41afe
+		summarizeBy: none
+		sourceColumn: order_estimated_delivery_date
+
+		variation Variation
+			isDefault
+			relationship: d8aedb05-d700-433b-a2a9-2d2732c34693
+			defaultHierarchy: LocalDateTable_e5357f27-77bb-44d7-a1ea-5a39e97e9c5f.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'sales fact_orders' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    sales_fact_orders = Source{[Schema="sales",Item="fact_orders"]}[Data]
+				in
+				    sales_fact_orders
+
+	annotation PBI_ResultType = Table
+

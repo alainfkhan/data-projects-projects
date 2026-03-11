@@ -1,0 +1,67 @@
+table 'logistics fact_geolocation'
+	lineageTag: 0202e53b-df58-4508-954d-c625c760215a
+
+	column geolocation_sk
+		dataType: int64
+		formatString: 0
+		lineageTag: ca2db3c1-8204-49d2-b70b-3a16db1317ea
+		summarizeBy: sum
+		sourceColumn: geolocation_sk
+
+		annotation SummarizationSetBy = Automatic
+
+	column geolocation_zip_code_prefix
+		dataType: string
+		lineageTag: 057a6f72-1ffd-4e92-90b9-6544a07e46a9
+		summarizeBy: none
+		sourceColumn: geolocation_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column geolocation_lat
+		dataType: double
+		lineageTag: 29228d9e-d879-4712-897d-32c0cc92a454
+		summarizeBy: sum
+		sourceColumn: geolocation_lat
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column geolocation_lng
+		dataType: double
+		lineageTag: 2060e65e-6d48-428c-8600-d7301b95d205
+		summarizeBy: sum
+		sourceColumn: geolocation_lng
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column geolocation_city
+		dataType: string
+		lineageTag: 18db7b15-23be-47fc-859d-3fcc847c0b7c
+		summarizeBy: none
+		sourceColumn: geolocation_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column geolocation_state
+		dataType: string
+		lineageTag: 5773edd8-6eec-4b38-9bd1-546cedf1a106
+		summarizeBy: none
+		sourceColumn: geolocation_state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'logistics fact_geolocation' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    logistics_fact_geolocation = Source{[Schema="logistics",Item="fact_geolocation"]}[Data]
+				in
+				    logistics_fact_geolocation
+
+	annotation PBI_ResultType = Table
+

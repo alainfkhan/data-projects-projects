@@ -1,0 +1,54 @@
+table 'staging dim_cep_iz_B'
+	lineageTag: 6113325c-78b5-4191-9e99-71f49b3d13b6
+
+	column cep
+		dataType: string
+		lineageTag: 8e64bc71-3dd6-45d2-8181-4aaa842d4519
+		summarizeBy: none
+		sourceColumn: cep
+
+		annotation SummarizationSetBy = Automatic
+
+	column uf
+		dataType: string
+		lineageTag: 61aaa491-9370-4405-8a68-70ca875c92a4
+		summarizeBy: none
+		sourceColumn: uf
+
+		annotation SummarizationSetBy = Automatic
+
+	column cidade
+		dataType: string
+		lineageTag: a1bb5f13-21bc-4e74-a71e-862a96377331
+		summarizeBy: none
+		sourceColumn: cidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column bairro
+		dataType: string
+		lineageTag: a7916af8-a56d-4d35-b9b6-f4fead93450c
+		summarizeBy: none
+		sourceColumn: bairro
+
+		annotation SummarizationSetBy = Automatic
+
+	column logradouro
+		dataType: string
+		lineageTag: 72c546b4-d61f-44f4-a56c-5c12bbd9c789
+		summarizeBy: none
+		sourceColumn: logradouro
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'staging dim_cep_iz_B' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    staging_dim_cep_iz_B = Source{[Schema="staging",Item="dim_cep_iz_B"]}[Data]
+				in
+				    staging_dim_cep_iz_B
+
+	annotation PBI_ResultType = Table
+

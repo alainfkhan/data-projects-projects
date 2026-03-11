@@ -1,0 +1,23 @@
+table 'utils fn_pcc'
+	lineageTag: 9080cd14-c30f-4f5c-8b55-f8682ee6be50
+
+	column 'utils fn_pcc'
+		dataType: string
+		lineageTag: 5a5d4486-7cde-4701-953f-7c3ac225bc3d
+		summarizeBy: none
+		sourceColumn: utils fn_pcc
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'utils fn_pcc' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    utils_fn_pcc = Source{[Schema="utils",Item="fn_pcc"]}[Data],
+				    #"Invoked Functionutils_fn_pcc1" = utils_fn_pcc(null, null)
+				in
+				    #"Invoked Functionutils_fn_pcc1"
+
+	annotation PBI_ResultType = Null
+

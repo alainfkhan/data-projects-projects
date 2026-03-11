@@ -1,0 +1,62 @@
+table 'logistics dim_cep'
+	lineageTag: 2e4557b6-7f2d-40d7-8736-a23452b60aa8
+
+	column cep
+		dataType: string
+		lineageTag: 8bbb50ef-cca7-41f1-98a4-f0a8483ecc14
+		summarizeBy: none
+		sourceColumn: cep
+
+		annotation SummarizationSetBy = Automatic
+
+	column uf
+		dataType: string
+		lineageTag: 3e607532-c82f-4964-a004-7c1fb14c9cab
+		summarizeBy: none
+		sourceColumn: uf
+
+		annotation SummarizationSetBy = Automatic
+
+	column cidade
+		dataType: string
+		lineageTag: c954ecff-54f4-483c-a54c-4aeab3e04b69
+		summarizeBy: none
+		sourceColumn: cidade
+
+		annotation SummarizationSetBy = Automatic
+
+	column bairro
+		dataType: string
+		lineageTag: cf08734f-5705-4bba-8405-5e50b7ef587f
+		summarizeBy: none
+		sourceColumn: bairro
+
+		annotation SummarizationSetBy = Automatic
+
+	column logradouro
+		dataType: string
+		lineageTag: 8a96e9e4-fd7e-480a-b0bc-4af94a55b59e
+		summarizeBy: none
+		sourceColumn: logradouro
+
+		annotation SummarizationSetBy = Automatic
+
+	column complemento
+		dataType: string
+		lineageTag: 4a72cfb9-8ed3-4f40-9c75-fd0ff02dc7c0
+		summarizeBy: none
+		sourceColumn: complemento
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'logistics dim_cep' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    logistics_dim_cep = Source{[Schema="logistics",Item="dim_cep"]}[Data]
+				in
+				    logistics_dim_cep
+
+	annotation PBI_ResultType = Table
+

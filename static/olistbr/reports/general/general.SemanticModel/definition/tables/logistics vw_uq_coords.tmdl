@@ -1,0 +1,50 @@
+table 'logistics vw_uq_coords'
+	lineageTag: 788d5218-29dc-4aef-853b-bc677ca7c596
+
+	column geolocation_zip_code_prefix
+		dataType: string
+		lineageTag: eaf78c80-7567-4010-8c21-1769dd57d143
+		summarizeBy: none
+		sourceColumn: geolocation_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column apps
+		dataType: int64
+		formatString: 0
+		lineageTag: a7d208e3-b42b-47b6-adf6-a227be87d819
+		summarizeBy: sum
+		sourceColumn: apps
+
+		annotation SummarizationSetBy = Automatic
+
+	column uq_coord_count
+		dataType: int64
+		formatString: 0
+		lineageTag: 1d8d72a8-0ea8-4544-a975-564c169a325c
+		summarizeBy: sum
+		sourceColumn: uq_coord_count
+
+		annotation SummarizationSetBy = Automatic
+
+	column coords_per_app
+		dataType: double
+		lineageTag: 0c9eb1c5-e4fd-4e16-9dca-9cbb58a4286d
+		summarizeBy: sum
+		sourceColumn: coords_per_app
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'logistics vw_uq_coords' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    logistics_vw_uq_coords = Source{[Schema="logistics",Item="vw_uq_coords"]}[Data]
+				in
+				    logistics_vw_uq_coords
+
+	annotation PBI_ResultType = Table
+

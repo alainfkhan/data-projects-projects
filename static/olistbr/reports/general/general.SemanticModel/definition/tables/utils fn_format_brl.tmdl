@@ -1,0 +1,23 @@
+table 'utils fn_format_brl'
+	lineageTag: ad16b201-0ade-4d41-8133-5268dd932aa0
+
+	column 'utils fn_format_brl'
+		dataType: string
+		lineageTag: e194cfdc-0234-44b7-a13f-d0288ad3e5aa
+		summarizeBy: none
+		sourceColumn: utils fn_format_brl
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'utils fn_format_brl' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    utils_fn_format_brl = Source{[Schema="utils",Item="fn_format_brl"]}[Data],
+				    #"Invoked Functionutils_fn_format_brl1" = utils_fn_format_brl(null)
+				in
+				    #"Invoked Functionutils_fn_format_brl1"
+
+	annotation PBI_ResultType = Null
+

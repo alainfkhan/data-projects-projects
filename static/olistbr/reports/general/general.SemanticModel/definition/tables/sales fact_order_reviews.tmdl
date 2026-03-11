@@ -1,0 +1,83 @@
+table 'sales fact_order_reviews'
+	lineageTag: d6c6da3c-d4d8-49f5-b406-3ec303930820
+
+	column review_id
+		dataType: string
+		lineageTag: 74836bdc-48f4-49e2-9278-1e55f4a2b0e5
+		summarizeBy: none
+		sourceColumn: review_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column order_id
+		dataType: string
+		lineageTag: 7d2c50ae-e89d-4852-95a1-8baef30b9f36
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_score
+		dataType: int64
+		formatString: 0
+		lineageTag: 69f98606-1f5c-482e-b878-12a6ae191a2d
+		summarizeBy: sum
+		sourceColumn: review_score
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_title
+		dataType: string
+		lineageTag: a11885b6-c68b-47c5-a9d5-6437e41988f8
+		summarizeBy: none
+		sourceColumn: review_comment_title
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_comment_message
+		dataType: string
+		lineageTag: 73c9056f-283b-4199-8131-8a55ac18dd40
+		summarizeBy: none
+		sourceColumn: review_comment_message
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_creation_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 05bde255-1dcb-47ef-ab9c-039181ca0ba9
+		summarizeBy: none
+		sourceColumn: review_creation_date
+
+		variation Variation
+			isDefault
+			relationship: dcbcb920-b29a-4019-ae37-ab844c7fd4cc
+			defaultHierarchy: LocalDateTable_6e22ec3c-ff11-4da8-86ea-8d7b232bd98b.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column review_answer_timestamp
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 94844c03-e2c9-4200-ac23-835e3cfd19e8
+		summarizeBy: none
+		sourceColumn: review_answer_timestamp
+
+		variation Variation
+			isDefault
+			relationship: 22974062-a0fe-461d-b221-5fc6bcc4ca20
+			defaultHierarchy: LocalDateTable_57abc2bf-0ff3-4aa6-92b7-d7a4593a4e7a.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'sales fact_order_reviews' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    sales_fact_order_reviews = Source{[Schema="sales",Item="fact_order_reviews"]}[Data]
+				in
+				    sales_fact_order_reviews
+
+	annotation PBI_ResultType = Table
+

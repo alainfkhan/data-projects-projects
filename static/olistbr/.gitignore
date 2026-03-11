@@ -1,3 +1,7 @@
+# pbip
+**/.pbi/localSettings.json
+**/.pbi/cache.abf
+
 .vs
 *.slnx
 *.mp4
@@ -6,5 +10,5 @@
 # close to 100MB
 # 99.3MB
 TB_CEP_BR_2018.csv
-# 150MB
+# 157MB
 report.pbix

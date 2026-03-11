@@ -1,0 +1,284 @@
+table 'utils dim_time'
+	lineageTag: a7819949-5938-4c63-a4b5-a3c86dca2852
+
+	column time_key
+		dataType: int64
+		formatString: 0
+		lineageTag: 59f09470-2ddd-40f3-9036-24a7cbf31f4b
+		summarizeBy: sum
+		sourceColumn: time_key
+
+		annotation SummarizationSetBy = Automatic
+
+	column am_pm
+		dataType: string
+		lineageTag: 305a1437-34c0-40c0-9e03-e01cc5f47add
+		summarizeBy: none
+		sourceColumn: am_pm
+
+		annotation SummarizationSetBy = Automatic
+
+	column full_time
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: bc33af4e-274f-4ae6-957e-0ff5427c7400
+		summarizeBy: none
+		sourceColumn: full_time
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column full_time_12
+		dataType: string
+		lineageTag: 1366c8ed-814e-43ea-8f61-5e87a7cc3e36
+		summarizeBy: none
+		sourceColumn: full_time_12
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_part
+		dataType: int64
+		formatString: 0
+		lineageTag: 6335b4f9-a5dd-458c-886a-5705811ac6ff
+		summarizeBy: sum
+		sourceColumn: hour_part
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_part_12
+		dataType: int64
+		formatString: 0
+		lineageTag: 8bd0fa42-d802-400e-8ac1-3b19e5efdab6
+		summarizeBy: sum
+		sourceColumn: hour_part_12
+
+		annotation SummarizationSetBy = Automatic
+
+	column hh
+		dataType: string
+		lineageTag: 14bcc8a3-b333-4205-a02c-9345d9b31a19
+		summarizeBy: none
+		sourceColumn: hh
+
+		annotation SummarizationSetBy = Automatic
+
+	column hh_12
+		dataType: string
+		lineageTag: c9fa6218-3c55-4385-83ba-1ae8f4a456e4
+		summarizeBy: none
+		sourceColumn: hh_12
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_of_day
+		dataType: int64
+		formatString: 0
+		lineageTag: 775fc4f5-9552-41c9-984f-9ae49ddec26e
+		summarizeBy: sum
+		sourceColumn: hour_of_day
+
+		annotation SummarizationSetBy = Automatic
+
+	column minute_part
+		dataType: int64
+		formatString: 0
+		lineageTag: 7812d5ba-9c97-45f5-b441-135e15cb9b94
+		summarizeBy: sum
+		sourceColumn: minute_part
+
+		annotation SummarizationSetBy = Automatic
+
+	column mm
+		dataType: string
+		lineageTag: afe28ecf-429d-4a66-8b64-dc0e4e4d3e5c
+		summarizeBy: none
+		sourceColumn: mm
+
+		annotation SummarizationSetBy = Automatic
+
+	column minute_of_day
+		dataType: int64
+		formatString: 0
+		lineageTag: 38577d5e-445b-420b-b469-f427a429f401
+		summarizeBy: sum
+		sourceColumn: minute_of_day
+
+		annotation SummarizationSetBy = Automatic
+
+	column second_part
+		dataType: int64
+		formatString: 0
+		lineageTag: d21a5396-b4a0-4a13-8576-d7c438c37ae5
+		summarizeBy: sum
+		sourceColumn: second_part
+
+		annotation SummarizationSetBy = Automatic
+
+	column ss
+		dataType: string
+		lineageTag: 5ef62eaa-cd89-4c59-8de3-928ca2f14097
+		summarizeBy: none
+		sourceColumn: ss
+
+		annotation SummarizationSetBy = Automatic
+
+	column second_of_day
+		dataType: int64
+		formatString: 0
+		lineageTag: c0d16b64-35fc-451b-b85b-424d89ec0aa5
+		summarizeBy: sum
+		sourceColumn: second_of_day
+
+		annotation SummarizationSetBy = Automatic
+
+	column shorthand
+		dataType: string
+		lineageTag: b5508890-991b-4667-8c42-0df2814dc317
+		summarizeBy: none
+		sourceColumn: shorthand
+
+		annotation SummarizationSetBy = Automatic
+
+	column hhmm
+		dataType: string
+		lineageTag: fda45937-1ea2-460b-8c52-475a9d097c86
+		summarizeBy: none
+		sourceColumn: hhmm
+
+		annotation SummarizationSetBy = Automatic
+
+	column hhmm_12
+		dataType: string
+		lineageTag: 35d8894f-8bd8-4ffd-984c-fa8d392c0587
+		summarizeBy: none
+		sourceColumn: hhmm_12
+
+		annotation SummarizationSetBy = Automatic
+
+	column hhmmss
+		dataType: string
+		lineageTag: de9604f9-c3f9-49ca-989b-81246fc7581c
+		summarizeBy: none
+		sourceColumn: hhmmss
+
+		annotation SummarizationSetBy = Automatic
+
+	column hhmmss_12
+		dataType: string
+		lineageTag: da4c0a69-f8da-4fe1-af76-fe37726b0885
+		summarizeBy: none
+		sourceColumn: hhmmss_12
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_bucket_12h
+		dataType: int64
+		formatString: 0
+		lineageTag: 5d527e63-4095-4522-a4de-019a6e590169
+		summarizeBy: sum
+		sourceColumn: day_bucket_12h
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_bucket_8h
+		dataType: int64
+		formatString: 0
+		lineageTag: b353ab48-401c-41a0-b1a5-4f1928fd3cc8
+		summarizeBy: sum
+		sourceColumn: day_bucket_8h
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_bucket_6h
+		dataType: int64
+		formatString: 0
+		lineageTag: 4b07f54d-8b51-4bc2-826d-70ec27813ef6
+		summarizeBy: sum
+		sourceColumn: day_bucket_6h
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_bucket_4h
+		dataType: int64
+		formatString: 0
+		lineageTag: bd7ced83-7856-4c0a-a069-cae6f0865f93
+		summarizeBy: sum
+		sourceColumn: day_bucket_4h
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_bucket_3h
+		dataType: int64
+		formatString: 0
+		lineageTag: 36682dcb-b2bf-4cad-9176-6ea7f1171b12
+		summarizeBy: sum
+		sourceColumn: day_bucket_3h
+
+		annotation SummarizationSetBy = Automatic
+
+	column day_bucket_2h
+		dataType: int64
+		formatString: 0
+		lineageTag: cd363dc7-ff4d-4ce3-892d-2d5a23dc08df
+		summarizeBy: sum
+		sourceColumn: day_bucket_2h
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_bucket_30m
+		dataType: int64
+		formatString: 0
+		lineageTag: 992c9fd2-8019-42dd-88c9-f66da6f933f7
+		summarizeBy: sum
+		sourceColumn: hour_bucket_30m
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_bucket_20m
+		dataType: int64
+		formatString: 0
+		lineageTag: 3ae01a59-c357-428b-99e6-5dcd1cdac2ef
+		summarizeBy: sum
+		sourceColumn: hour_bucket_20m
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_bucket_15m
+		dataType: int64
+		formatString: 0
+		lineageTag: 985dfd7d-c86a-41e4-a347-c1bea74b07b2
+		summarizeBy: sum
+		sourceColumn: hour_bucket_15m
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_bucket_10m
+		dataType: int64
+		formatString: 0
+		lineageTag: 1de1a9a3-1069-4b57-bc8d-12d01ac982ad
+		summarizeBy: sum
+		sourceColumn: hour_bucket_10m
+
+		annotation SummarizationSetBy = Automatic
+
+	column hour_bucket_5m
+		dataType: int64
+		formatString: 0
+		lineageTag: cb6d157a-d630-460f-8c9c-b89dc83c8a30
+		summarizeBy: sum
+		sourceColumn: hour_bucket_5m
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'utils dim_time' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    utils_dim_time = Source{[Schema="utils",Item="dim_time"]}[Data]
+				in
+				    utils_dim_time
+
+	annotation PBI_ResultType = Table
+

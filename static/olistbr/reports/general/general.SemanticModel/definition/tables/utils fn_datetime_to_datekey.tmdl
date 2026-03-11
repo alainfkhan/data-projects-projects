@@ -1,0 +1,25 @@
+table 'utils fn_datetime_to_datekey'
+	lineageTag: beb23300-8fd5-45aa-81c2-49d9b8c89637
+
+	column 'utils fn_datetime_to_datekey'
+		dataType: double
+		lineageTag: e3e7c06c-1e35-449f-9ada-9e1849597498
+		summarizeBy: sum
+		sourceColumn: utils fn_datetime_to_datekey
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'utils fn_datetime_to_datekey' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    utils_fn_datetime_to_datekey = Source{[Schema="utils",Item="fn_datetime_to_datekey"]}[Data],
+				    #"Invoked Functionutils_fn_datetime_to_datekey1" = utils_fn_datetime_to_datekey(null)
+				in
+				    #"Invoked Functionutils_fn_datetime_to_datekey1"
+
+	annotation PBI_ResultType = Number
+

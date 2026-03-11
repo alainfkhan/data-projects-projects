@@ -1,0 +1,58 @@
+table 'sales fact_order_payments'
+	lineageTag: 50be772f-677a-4b71-a6ec-223288f4a6ce
+
+	column order_id
+		dataType: string
+		lineageTag: f42a5aa7-5f5f-4e85-af8c-5ff1d2badf9f
+		summarizeBy: none
+		sourceColumn: order_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_sequential
+		dataType: int64
+		formatString: 0
+		lineageTag: d77d60dc-a043-4cfe-8757-5d1cd152a4fc
+		summarizeBy: sum
+		sourceColumn: payment_sequential
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_type
+		dataType: string
+		lineageTag: 8254be8e-b253-412d-a633-a87c16f1367f
+		summarizeBy: none
+		sourceColumn: payment_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_installments
+		dataType: int64
+		formatString: 0
+		lineageTag: 59aee3d5-b6e8-4025-bb9c-195581eb9b44
+		summarizeBy: sum
+		sourceColumn: payment_installments
+
+		annotation SummarizationSetBy = Automatic
+
+	column payment_value
+		dataType: double
+		lineageTag: 37aeb5e1-d455-4401-9c14-e148dcd0807d
+		summarizeBy: sum
+		sourceColumn: payment_value
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'sales fact_order_payments' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    sales_fact_order_payments = Source{[Schema="sales",Item="fact_order_payments"]}[Data]
+				in
+				    sales_fact_order_payments
+
+	annotation PBI_ResultType = Table
+

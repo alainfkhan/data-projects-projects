@@ -1,0 +1,99 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["logistics vw_uq_coords","sales vw_join_orders","sales vw_orders","sales vw_orders_practical","sales vw_sales","sales vw_sales_practical","logistics dim_cep","logistics fact_geolocation","marketing fact_closed_deals","marketing fact_marketing_qualified_leads","sales dim_customers","sales dim_product_category_name_translation","sales dim_seller_gen_names","sales dim_products","sales dim_sellers","sales fact_order_items","sales fact_order_payments","sales fact_order_reviews","staging dim_cep_iz_B","sales fact_orders","utils dim_date","utils dim_time","utils fn_datetime_to_datekey","utils fn_format_brl","utils fn_pcc","utils fn_seconds_to_ddhhmmss"]
+
+ref table 'logistics vw_uq_coords'
+ref table 'sales vw_join_orders'
+ref table DateTableTemplate_bc701743-218b-4e62-85fc-2d343171d534
+ref table LocalDateTable_354f7802-d31e-43e0-806d-02dc3074820e
+ref table LocalDateTable_1ce9667a-a4b2-4efb-8083-3fdfc67844f1
+ref table LocalDateTable_3de53b3d-a7a0-42e6-b56f-9b56b4dda512
+ref table LocalDateTable_daac27b9-f765-4d3d-85bc-45095159d151
+ref table LocalDateTable_b844c4c0-e583-427a-8b40-da44f2cb642b
+ref table LocalDateTable_d50ee725-84a4-4f75-9dcf-c3a2d26546a7
+ref table 'sales vw_orders'
+ref table LocalDateTable_24891d59-8167-41a5-a532-f36e992cc3a4
+ref table LocalDateTable_4e840783-ba4b-4e4d-b2f4-8344649fbbaa
+ref table LocalDateTable_36e36785-1f16-494a-ae09-bdf5bda1eb0d
+ref table LocalDateTable_fe3c2f44-ea5d-4dfe-af87-466595cc88be
+ref table LocalDateTable_ef42de22-ac3f-4ca2-9605-e26647057a61
+ref table LocalDateTable_eb676ae3-b3e5-443c-bc47-72aec52134ee
+ref table LocalDateTable_1ff0670c-a2db-4bdc-9457-71f2abe19463
+ref table LocalDateTable_b7960c6b-9a27-4cc6-a9d1-ed40b4f59626
+ref table LocalDateTable_717896ff-586e-49df-aecf-45422b0cc98d
+ref table 'sales vw_orders_practical'
+ref table LocalDateTable_46d18a07-bf33-474a-b873-3bf5f25d65c0
+ref table LocalDateTable_3b93cd97-a104-4054-8065-1d6c9f478fd5
+ref table LocalDateTable_df39bc2e-8b9a-496d-a701-d5192b53dd8f
+ref table LocalDateTable_02b3b5e3-1683-4775-a8e1-bcc44045f79c
+ref table LocalDateTable_8d35a57e-9ef7-4452-9f71-b792d546545d
+ref table LocalDateTable_f7f51eb4-9aa3-4ad1-b07b-995808e65aff
+ref table LocalDateTable_f90db559-16e6-411c-af12-12d3d7e320d8
+ref table LocalDateTable_dfe02d4d-013f-4bda-b692-a39c851ff2ac
+ref table LocalDateTable_18f2cdda-f426-47e3-a69b-85d49932391d
+ref table 'sales vw_sales'
+ref table LocalDateTable_e164265d-1ab4-4040-bf28-548df43142d1
+ref table LocalDateTable_fc6a5497-f064-4de8-a0a3-b7b3365ea8c6
+ref table LocalDateTable_6f9ba3db-dfb4-40be-bcfe-3b8f4d726d62
+ref table LocalDateTable_e913cb02-fdd9-4f11-bdea-495eb4e1c454
+ref table LocalDateTable_548c3649-df7a-4323-9be6-edb724f333b3
+ref table LocalDateTable_e90d36df-b07c-469f-94b8-884ac7f565eb
+ref table LocalDateTable_890d50f1-8558-4ffe-9163-4774ad67e316
+ref table LocalDateTable_a0aa44a5-5cb1-489b-9dff-482923694c96
+ref table LocalDateTable_bc156251-aa2c-4a34-b54a-59f3bb7cc29a
+ref table 'sales vw_sales_practical'
+ref table LocalDateTable_b51981df-47b0-479d-ac36-9ac5e61bf6a0
+ref table LocalDateTable_52683768-1dac-41ca-9cb0-59f4dfb98f4c
+ref table LocalDateTable_c62097d6-8a1c-48f8-81ca-e1b735293c6d
+ref table LocalDateTable_024fe179-352f-4125-8aeb-9075dd0676ee
+ref table LocalDateTable_7f46b4e4-cf5a-4d2a-a028-ccba7f557090
+ref table LocalDateTable_4dce837d-74a2-45c8-b72c-9cd86245ac28
+ref table LocalDateTable_a0e0ab57-3ef0-4065-b220-21d49376e275
+ref table LocalDateTable_f37408b4-6c7b-4e3f-a722-cd4868948120
+ref table LocalDateTable_4f4cc248-857c-47ac-ade1-8f9046ec18fd
+ref table 'logistics dim_cep'
+ref table 'logistics fact_geolocation'
+ref table 'marketing fact_closed_deals'
+ref table LocalDateTable_b1dd4be2-646d-449d-be39-e0cc448cfb49
+ref table 'marketing fact_marketing_qualified_leads'
+ref table LocalDateTable_f5d128e1-d8d5-4089-b39c-f1f4458dbaf7
+ref table 'sales dim_customers'
+ref table 'sales dim_product_category_name_translation'
+ref table 'sales dim_seller_gen_names'
+ref table 'sales dim_products'
+ref table 'sales dim_sellers'
+ref table 'sales fact_order_items'
+ref table LocalDateTable_5ff0c023-2257-4dd8-8536-b1b5a5b404b6
+ref table 'sales fact_order_payments'
+ref table 'sales fact_order_reviews'
+ref table LocalDateTable_6e22ec3c-ff11-4da8-86ea-8d7b232bd98b
+ref table LocalDateTable_57abc2bf-0ff3-4aa6-92b7-d7a4593a4e7a
+ref table 'staging dim_cep_iz_B'
+ref table 'sales fact_orders'
+ref table LocalDateTable_275f3763-2473-4849-beb0-935b5e7dfe58
+ref table LocalDateTable_b29f17bd-9f91-4a53-b36f-1000891fbf52
+ref table LocalDateTable_a2760970-5f5e-4076-9934-1f72bff57efa
+ref table LocalDateTable_d0c8e945-30c8-4999-bd03-8bddf28224d2
+ref table LocalDateTable_e5357f27-77bb-44d7-a1ea-5a39e97e9c5f
+ref table 'utils dim_date'
+ref table LocalDateTable_9daa6594-7172-4b9d-8764-80efcef2b9af
+ref table LocalDateTable_5d6eca8c-2138-410c-b94f-e5ee5622b765
+ref table LocalDateTable_48706b81-7a81-41a3-9782-b3d866099e04
+ref table 'utils dim_time'
+ref table 'utils fn_datetime_to_datekey'
+ref table 'utils fn_format_brl'
+ref table 'utils fn_pcc'
+ref table 'utils fn_seconds_to_ddhhmmss'
+
+ref cultureInfo en-GB
+

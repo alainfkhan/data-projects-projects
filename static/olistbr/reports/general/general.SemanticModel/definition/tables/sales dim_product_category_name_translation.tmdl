@@ -1,0 +1,30 @@
+table 'sales dim_product_category_name_translation'
+	lineageTag: 00d7a358-4db5-4613-ae2c-79bf28cab16e
+
+	column product_category_name
+		dataType: string
+		lineageTag: 89cac9e1-aea0-4eca-9649-0c7f27b9f649
+		summarizeBy: none
+		sourceColumn: product_category_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_category_name_english
+		dataType: string
+		lineageTag: 87fc6145-fe4f-4662-bc26-3a506487b7f9
+		summarizeBy: none
+		sourceColumn: product_category_name_english
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'sales dim_product_category_name_translation' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    sales_dim_product_category_name_translation = Source{[Schema="sales",Item="dim_product_category_name_translation"]}[Data]
+				in
+				    sales_dim_product_category_name_translation
+
+	annotation PBI_ResultType = Table
+
