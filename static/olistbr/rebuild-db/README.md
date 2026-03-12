@@ -452,7 +452,7 @@ CREATE TABLE sales.dim_customers(
 
 **Q**: Why not just write the sql directly?
 
-**A**: We would like the data-type inferencing to be automated in future iterations of a flavour of this project. The yaml configuration file would act as a storage space for table schemas, that communicates to the program.
+**A**: We would like the data-type inferencing to be automated in future iterations of a flavour of this project. The yaml configuration acts as a storage space for table schemas, that communicates to the program.
 
 #### A note on forgone constraints:
 

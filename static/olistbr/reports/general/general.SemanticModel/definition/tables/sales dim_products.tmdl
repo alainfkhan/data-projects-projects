@@ -21,7 +21,7 @@ table 'sales dim_products'
 		dataType: int64
 		formatString: 0
 		lineageTag: 823288c9-54ef-476c-a315-9ab04608365e
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: product_name_lenght
 
 		annotation SummarizationSetBy = Automatic
@@ -30,7 +30,7 @@ table 'sales dim_products'
 		dataType: int64
 		formatString: 0
 		lineageTag: 28db26f6-9847-4064-8943-a8d9426f9ce5
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: product_description_lenght
 
 		annotation SummarizationSetBy = Automatic
@@ -39,7 +39,7 @@ table 'sales dim_products'
 		dataType: int64
 		formatString: 0
 		lineageTag: 58128b8b-6bf7-44bf-875f-1636bc79ff21
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: product_photos_qty
 
 		annotation SummarizationSetBy = Automatic
@@ -48,7 +48,7 @@ table 'sales dim_products'
 		dataType: int64
 		formatString: 0
 		lineageTag: 09ecb59c-b639-49de-a16e-919cf29b6814
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: product_weight_g
 
 		annotation SummarizationSetBy = Automatic
@@ -57,7 +57,7 @@ table 'sales dim_products'
 		dataType: int64
 		formatString: 0
 		lineageTag: fdb9473e-2b06-4243-8b3a-63b47ebc5706
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: product_length_cm
 
 		annotation SummarizationSetBy = Automatic
@@ -66,7 +66,7 @@ table 'sales dim_products'
 		dataType: int64
 		formatString: 0
 		lineageTag: 93e0ee27-2cc6-4580-90d6-44c788b27432
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: product_height_cm
 
 		annotation SummarizationSetBy = Automatic
@@ -75,7 +75,7 @@ table 'sales dim_products'
 		dataType: int64
 		formatString: 0
 		lineageTag: 4ad33b26-1d3a-44e0-8787-df3d04a004cb
-		summarizeBy: none
+		summarizeBy: sum
 		sourceColumn: product_width_cm
 
 		annotation SummarizationSetBy = Automatic

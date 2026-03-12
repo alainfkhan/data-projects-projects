@@ -10,3 +10,6 @@ TODO:
         
     redo product-analysis in python (correlation !=> causation)
     get full cep from coordinates using python brazilcep
+
+    there are some seller_ids in closed_deals that are not in sellers.
+        generate new names based on these missed seller_ids

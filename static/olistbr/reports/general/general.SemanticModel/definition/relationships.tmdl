@@ -299,3 +299,52 @@ relationship 45e56a26-cf14-4993-93e6-49737b084b86
 
 	annotation PBI_IsFromSource = FS
 
+relationship 2f5f19ce-6685-8420-ab61-2ce3f7816813
+	fromColumn: 'sales dim_products'.product_category_name
+	toColumn: 'sales dim_product_category_name_translation'.product_category_name
+
+relationship 22dade52-c336-48a8-a653-29947c71c7fc
+	crossFilteringBehavior: bothDirections
+	fromColumn: 'sales dim_sellers'.seller_id
+	toColumn: 'sales dim_seller_gen_names'.seller_id
+
+relationship 8e6e5131-ff62-3d53-e8c5-154df43c9375
+	fromColumn: 'sales fact_order_reviews'.order_id
+	toColumn: 'sales fact_orders'.order_id
+
+relationship c40e6b08-6098-1368-bfae-748b45d2ab62
+	fromColumn: 'sales fact_order_payments'.order_id
+	toColumn: 'sales fact_orders'.order_id
+
+relationship 9a526351-ff33-b339-84d7-bb5079316fa4
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'marketing fact_closed_deals'.seller_id
+	toColumn: 'sales dim_sellers'.seller_id
+
+relationship 7650894d-cd56-2422-1de2-f12ffda50b54
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'marketing fact_closed_deals'.mql_id
+	toColumn: 'marketing fact_marketing_qualified_leads'.mql_id
+
+relationship 5d3b2a23-bb33-692b-b1fa-2eaf850ca9e1
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: 'sales dim_customers'.customer_zip_code_prefix
+	toColumn: 'logistics fact_geolocation'.geolocation_zip_code_prefix
+
+relationship 8c3bfaec-5cca-d82b-4c91-c8f57610a49e
+	isActive: false
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: 'sales dim_sellers'.seller_zip_code_prefix
+	toColumn: 'logistics fact_geolocation'.geolocation_zip_code_prefix
+
+relationship b78cc477-61b1-4896-f37b-1f4b7987a425
+	crossFilteringBehavior: bothDirections
+	toCardinality: many
+	fromColumn: 'logistics dim_cep'.uf
+	toColumn: 'logistics fact_geolocation'.geolocation_state
+

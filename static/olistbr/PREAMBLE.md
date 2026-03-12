@@ -2,7 +2,9 @@
 
 ## Context
 
-### Brazilian currency
+### Brazil
+
+#### Currency
 
 Summary (for context):
 
@@ -25,6 +27,17 @@ Exchange rate [BRL to GBP](https://www.exchangerates.org.uk/BRL-GBP-spot-exchang
 
 - Banknotes: `R$ 2`, `R$ 5`, `R$ 10`, `R$ 20`, `R$ 50`, `R$ 100`, `R$ 200`
 - Coins (centavos): `R$ 0,01`, `R$ 0,05`, `R$ 0,10`, `R$ 0,25`, `R$ 0,50`, `R$ 1,00`
+
+#### Time
+
+In Brazil, the Financial Year (FY) follows the Calendar Year (CY).
+
+- Q1 CY26 = Q1 FY26
+- Q2 CY26 = Q2 FY26
+- ...
+
+The first quarter of the financial year is the first quarter of the calendar year.
+
 
 ### Recorded data vs actual
 
@@ -140,8 +153,7 @@ N.B.:
 
 - In this particular dataset, `freight_value` always exists with `price`.
 - I.e. if we have `price`, we also have `freight_value`.
-- Any numerical aggregations on realised and price-measurable sales is valid since `price` always exists.
-
+- Any numerical aggregations on realised and price-measurable sales is well-defined since `price` always exists.
 
 ## Assumptions
 
@@ -214,7 +226,7 @@ After `2018-08-26`:
 
 </details>
 
-Suppose we are given a snapshot of a complete database from `2017-01-09` to `2018-08-21`, and that today is `2018-08-22`.
+Suppose we are given a snapshot of a complete operational database from `2017-01-09` to `2018-08-21`, and that today is `2018-08-22`.
 
 The definitions defined hold.
 
@@ -228,5 +240,5 @@ Let the base periodic timeframe be monthly.
 View the queries:
 - [Views](queries/analysis/globals/views.sql)
 - [Functions](queries/analysis/globals/functions.sql)
-- [Scratch work](queries/analysis/report/_scratch/). Ordered in attempt order.
+- [Scratch work](queries/analysis/report/_scratch/)
 
