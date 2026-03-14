@@ -1,6 +1,6 @@
 TODO:
-    finish geolcoation view
-    
+    [] start sales visualisation
+
     change .md links to relative to to url
     find freight cost vs distance
 

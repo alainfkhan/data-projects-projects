@@ -1,0 +1,56 @@
+table Customers
+	lineageTag: 44f8204a-f8b3-4d4f-bca4-f068ab0884fc
+
+	column customer_id
+		dataType: string
+		lineageTag: a5ed7ee0-e06f-44af-941d-4b31365a5338
+		summarizeBy: none
+		sourceColumn: customer_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_unique_id
+		dataType: string
+		lineageTag: 6311c240-9956-4c0f-baab-8ab0f51d926f
+		summarizeBy: none
+		sourceColumn: customer_unique_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_zip_code_prefix
+		dataType: string
+		lineageTag: 273a7a0c-6bce-494a-a8e5-67f10c4fd648
+		summarizeBy: none
+		sourceColumn: customer_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_city
+		dataType: string
+		lineageTag: 558c3493-7385-4057-b85d-46450b609a33
+		summarizeBy: none
+		sourceColumn: customer_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column customer_state
+		dataType: string
+		lineageTag: 5c186f5b-5a44-4f84-b99e-f56a9640e5c1
+		summarizeBy: none
+		sourceColumn: customer_state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Customers = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ton", "olist"),
+				    sales_dim_customers = Source{[Schema="sales",Item="dim_customers"]}[Data]
+				in
+				    sales_dim_customers
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

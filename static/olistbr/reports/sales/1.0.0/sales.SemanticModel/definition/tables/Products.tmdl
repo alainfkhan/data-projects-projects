@@ -1,0 +1,95 @@
+table Products
+	lineageTag: 740443d2-d0db-40ad-a6d4-45fb7c0f7d10
+
+	column product_id
+		dataType: string
+		lineageTag: cc866f65-1473-4413-be40-419a4eb589df
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_category_name
+		dataType: string
+		lineageTag: 5f974196-54e3-4d53-b03d-e3e69321704b
+		summarizeBy: none
+		sourceColumn: product_category_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name_lenght
+		dataType: int64
+		formatString: 0
+		lineageTag: 389202cf-f930-4c7d-8286-3db5e9d9db41
+		summarizeBy: sum
+		sourceColumn: product_name_lenght
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_description_lenght
+		dataType: int64
+		formatString: 0
+		lineageTag: c1ee6689-0785-4b9b-b20d-3b1b8f397ba4
+		summarizeBy: sum
+		sourceColumn: product_description_lenght
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_photos_qty
+		dataType: int64
+		formatString: 0
+		lineageTag: 5a03e578-0623-4e21-b50e-3b430be4cf44
+		summarizeBy: sum
+		sourceColumn: product_photos_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_weight_g
+		dataType: int64
+		formatString: 0
+		lineageTag: 5467c399-1598-4bf2-8986-8cd4d0239381
+		summarizeBy: sum
+		sourceColumn: product_weight_g
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_length_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 3d8782c0-4750-40c2-a9cb-f24f84471d3c
+		summarizeBy: sum
+		sourceColumn: product_length_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_height_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: e22de935-6b47-415c-bcc3-525ac3abf0f1
+		summarizeBy: sum
+		sourceColumn: product_height_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_width_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: b75cbb65-d012-413f-a7cf-c98dc06c1669
+		summarizeBy: sum
+		sourceColumn: product_width_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Products = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("ton", "olist"),
+				    sales_dim_products = Source{[Schema="sales",Item="dim_products"]}[Data]
+				in
+				    sales_dim_products
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

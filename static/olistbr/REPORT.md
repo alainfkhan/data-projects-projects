@@ -22,7 +22,7 @@ Revenue by:
 
 ## Customers
 
-An order is fullfilled when it is delivered.
+An order is fulfilled when it is delivered.
 
 An order is considered delivered when:
 

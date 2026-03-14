@@ -1,0 +1,32 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["Sales","Products","Translation","Sellers","Customers"]
+
+ref table Sales
+ref table DateTableTemplate_cf649f72-1530-4138-83ed-d6c1057d48ac
+ref table LocalDateTable_8e15353b-41b2-4861-9628-2608a6cf82bb
+ref table LocalDateTable_dd9a1f91-1560-4635-b4b2-2bca9762064e
+ref table LocalDateTable_181391c4-4bf5-4a0f-aafb-99401aaf8765
+ref table LocalDateTable_e36f56b4-7751-49fe-bcdd-670581557d78
+ref table LocalDateTable_3ca7d4b4-7c1e-4c90-94f8-f51cb7ab9fb1
+ref table LocalDateTable_84b36239-5355-40df-9535-ef95e42ca9bb
+ref table LocalDateTable_2bec15ba-5295-409d-bd07-737eb53b1a83
+ref table LocalDateTable_bcd49271-160f-4424-8200-2f590a86f239
+ref table LocalDateTable_92ed33ea-3e57-483e-8ab7-7f8098e8a7e3
+ref table Products
+ref table Translation
+ref table Sellers
+ref table Customers
+
+ref cultureInfo en-GB
+

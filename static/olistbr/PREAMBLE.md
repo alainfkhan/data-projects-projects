@@ -59,7 +59,7 @@ A **user** is the human placing an order.
 A **customer** is an instance of a user placing an order.
 
 - A single user can be a customer many times.
-- A user (with a single `customer_unique_id`) who has ordered last month, and who has ordered again this month, has been a customer twice (generating two disinct `customer_id`'s).
+- A user (with a single `customer_unique_id`) who has ordered last month, and who has ordered again this month, has been a customer twice (generating two distinct `customer_id`'s).
 - A customer is a user who places an order for a delivery to some location.
 - The customer location is the delivery destination.
 - A user who has ordered more than once is a **repeat user**.

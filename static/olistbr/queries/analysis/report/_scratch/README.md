@@ -7,7 +7,7 @@ are ordered in the order I answered the questions,
 so the evolution of how I write SQL is apparent.
 
 - `01` is my first attempt at answering SQL questions.
-- `02` is my seccond attempt at answer SQL questions.
+- `02` is my second attempt at answering SQL questions.
 - ...
 
 ## Evolution of how I write SQL
