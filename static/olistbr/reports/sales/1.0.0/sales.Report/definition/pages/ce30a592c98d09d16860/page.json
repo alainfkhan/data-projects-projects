@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.0.0/schema.json",
+  "name": "ce30a592c98d09d16860",
+  "displayName": "States",
+  "displayOption": "FitToPage",
+  "height": 720,
+  "width": 1280
+}

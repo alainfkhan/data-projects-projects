@@ -59,3 +59,14 @@ relationship AutoDetected_36c668f5-ce34-4b5a-bc7e-63d7769c5961
 	fromColumn: Products.product_category_name
 	toColumn: Translation.product_category_name
 
+relationship 5bd6d160-7aa4-4fba-b7ab-832bb6e53fdd
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'Closed Deals'.won_date
+	toColumn: LocalDateTable_58cd728d-1a89-4692-8fe3-726171eaf1db.Date
+
+relationship 0ab21304-0541-c7e8-7fa8-9d062d02be57
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Closed Deals'.seller_id
+	toColumn: Sellers.seller_id
+

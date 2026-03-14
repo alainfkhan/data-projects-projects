@@ -326,14 +326,6 @@ table Sales
 
 		annotation UnderlyingDateTimeDataType = Date
 
-	column GMV = 'Sales'[price] + 'Sales'[freight_value]
-		lineageTag: a7e16b22-3e02-4b7d-9cd4-e900c8b5e34a
-		summarizeBy: sum
-
-		annotation SummarizationSetBy = Automatic
-
-		annotation PBI_FormatHint = {"isGeneralNumber":true}
-
 	partition Sales = m
 		mode: import
 		source =

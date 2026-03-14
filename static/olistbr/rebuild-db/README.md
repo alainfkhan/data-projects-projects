@@ -80,7 +80,7 @@ uv run src
 
 ### Running this program
 
-![](../img/cmd_execute-260306.gif)
+![Running rebuild-db in terminal](../img/rebuild-db/cmd_execute-260306.gif)
 
 <details>
 
@@ -448,7 +448,6 @@ CREATE TABLE sales.dim_customers(
 - Analyse the other columns in this table.
 - Repeat for all other tables.
 - You will then have the ideal SQL Server column data types for all tables that optimise query memory allocation.
-
 
 **Q**: Why not just write the sql directly?
 

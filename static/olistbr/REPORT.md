@@ -2,23 +2,22 @@
 
 ## Sales
 
-Monthly:
+Overview: 
 
-- total sales (order count)
-- price is null count
-- GMV = total revenue
-- AOV = GMV / order count
-- GMV MoM growth
+- Order count
+- GMV = (Total Product Revenue) + (Total Freight Revenue)
+- AOV = GMV / (Order Count)
+- AOV MoM %
 
 Top (by total revenue):
 
-- product categories
-- business segments
+- Product Categories
+- Business Segments
 
 Revenue by:
 
-- customer state
-- seller state
+- Customer State
+- Seller State
 
 ## Customers
 

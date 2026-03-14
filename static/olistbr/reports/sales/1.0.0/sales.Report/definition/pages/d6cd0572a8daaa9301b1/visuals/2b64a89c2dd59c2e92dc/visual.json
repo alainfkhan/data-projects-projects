@@ -1,19 +1,19 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.6.0/schema.json",
-  "name": "fb022e7a57609b4aeb0b",
+  "name": "2b64a89c2dd59c2e92dc",
   "position": {
-    "x": 0,
-    "y": 0,
-    "z": 0,
-    "height": 720,
-    "width": 416,
-    "tabOrder": 0
+    "x": 816,
+    "y": 480,
+    "z": 3,
+    "height": 240,
+    "width": 464.00000000000006,
+    "tabOrder": 3
   },
   "visual": {
-    "visualType": "pivotTable",
+    "visualType": "lineChart",
     "query": {
       "queryState": {
-        "Rows": {
+        "Category": {
           "projections": [
             {
               "field": {
@@ -49,7 +49,7 @@
             }
           ]
         },
-        "Values": {
+        "Y": {
           "projections": [
             {
               "field": {
@@ -67,9 +67,9 @@
                   "Function": 2
                 }
               },
-              "queryRef": "Min(Sales.order_id)",
+              "queryRef": "Count(Sales.order_id)",
               "nativeQueryRef": "Count of order_id",
-              "displayName": "Order Count"
+              "hidden": true
             },
             {
               "field": {
@@ -122,7 +122,8 @@
                 }
               },
               "queryRef": "select",
-              "nativeQueryRef": "GMV"
+              "nativeQueryRef": "GMV",
+              "hidden": true
             },
             {
               "field": {
@@ -133,7 +134,8 @@
                 }
               },
               "queryRef": "select1",
-              "nativeQueryRef": "AOV"
+              "nativeQueryRef": "AOV",
+              "hidden": true
             },
             {
               "field": {
@@ -181,80 +183,34 @@
         ]
       }
     },
-    "expansionStates": [
-      {
-        "roles": [
-          "Rows"
-        ],
-        "levels": [
-          {
-            "queryRefs": [
-              "sales vw_sales_practical.year_number"
-            ],
-            "isCollapsed": true,
-            "identityKeys": [
-              {
-                "Column": {
-                  "Expression": {
-                    "SourceRef": {
-                      "Entity": "Sales"
-                    }
-                  },
-                  "Property": "year_number"
-                }
-              }
-            ],
-            "isPinned": true
-          },
-          {
-            "queryRefs": [
-              "sales vw_sales_practical.month_number"
-            ],
-            "isCollapsed": true,
-            "isPinned": true
-          }
-        ],
-        "root": {
-          "children": [
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "2017L"
-                  }
-                }
-              ],
-              "isToggled": true
-            },
-            {
-              "identityValues": [
-                {
-                  "Literal": {
-                    "Value": "2018L"
-                  }
-                }
-              ],
-              "isToggled": true
-            }
-          ]
-        }
-      }
-    ],
     "objects": {
-      "subTotals": [
+      "valueAxis": [
         {
           "properties": {
-            "columnSubtotals": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "show": {
               "expr": {
                 "Literal": {
                   "Value": "true"
                 }
               }
-            },
-            "rowSubtotals": {
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             }
@@ -275,6 +231,19 @@
             }
           }
         }
+      ],
+      "title": [
+        {
+          "properties": {
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'AOV Month on Month %'"
+                }
+              }
+            }
+          }
+        }
       ]
     },
     "drillFilterOtherVisuals": true
@@ -282,7 +251,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "02fdc84dbc0beb33452a",
+        "name": "98cb04e6b5d90b88685a",
         "field": {
           "Column": {
             "Expression": {
@@ -290,13 +259,14 @@
                 "Entity": "Sales"
               }
             },
-            "Property": "month_number"
+            "Property": "price"
           }
         },
-        "type": "Advanced"
+        "type": "Advanced",
+        "howCreated": "User"
       },
       {
-        "name": "7d38009327731e40dcda",
+        "name": "f106a6474c1b1c6ae8ce",
         "field": {
           "Column": {
             "Expression": {
@@ -310,7 +280,21 @@
         "type": "Advanced"
       },
       {
-        "name": "f5f0abc81392c931a62d",
+        "name": "1aafe36719660e90e7e4",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Sales"
+              }
+            },
+            "Property": "month_number"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "2111d62cbe50474a5a88",
         "field": {
           "Aggregation": {
             "Expression": {
@@ -329,22 +313,7 @@
         "type": "Advanced"
       },
       {
-        "name": "98cb04e6b5d90b88685a",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Sales"
-              }
-            },
-            "Property": "price"
-          }
-        },
-        "type": "Advanced",
-        "howCreated": "User"
-      },
-      {
-        "name": "72ea924226db0c2508d5",
+        "name": "5c7cff913c779c388620",
         "field": {
           "Aggregation": {
             "Expression": {
@@ -363,7 +332,7 @@
         "type": "Advanced"
       },
       {
-        "name": "ac2d3dd0a9aa06b092de",
+        "name": "9b5a3364154b0d19b0c3",
         "field": {
           "Aggregation": {
             "Expression": {

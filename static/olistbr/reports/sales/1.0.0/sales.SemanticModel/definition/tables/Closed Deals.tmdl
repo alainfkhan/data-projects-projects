@@ -1,0 +1,138 @@
+table 'Closed Deals'
+	lineageTag: 2eaa0d84-a414-460f-9ef8-8d0d518bd417
+
+	column mql_id
+		dataType: string
+		lineageTag: 207177c9-e463-420d-bc7f-4a6aabe7e2c2
+		summarizeBy: none
+		sourceColumn: mql_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_id
+		dataType: string
+		lineageTag: dbccd8b0-a377-4051-9519-86f6a87d96bf
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sdr_id
+		dataType: string
+		lineageTag: 2a003270-1d9d-4137-87b6-0b36a6fca783
+		summarizeBy: none
+		sourceColumn: sdr_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column sr_id
+		dataType: string
+		lineageTag: 9afae619-0822-44d2-8ddd-7edac64123c4
+		summarizeBy: none
+		sourceColumn: sr_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column won_date
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 35e741b1-b8e9-425e-a020-fd2ca3d5eabc
+		summarizeBy: none
+		sourceColumn: won_date
+
+		variation Variation
+			isDefault
+			relationship: 5bd6d160-7aa4-4fba-b7ab-832bb6e53fdd
+			defaultHierarchy: LocalDateTable_58cd728d-1a89-4692-8fe3-726171eaf1db.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_segment
+		dataType: string
+		lineageTag: b6c47415-a9d4-45cc-9590-1423204958eb
+		summarizeBy: none
+		sourceColumn: business_segment
+
+		annotation SummarizationSetBy = Automatic
+
+	column lead_type
+		dataType: string
+		lineageTag: fc97ca59-3c70-4487-9f08-87d38f840b59
+		summarizeBy: none
+		sourceColumn: lead_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column lead_behaviour_profile
+		dataType: string
+		lineageTag: 7b133afb-08b9-47ed-a696-423fbd83cbd4
+		summarizeBy: none
+		sourceColumn: lead_behaviour_profile
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_company
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: e4a53aab-cd1f-4955-a694-2e7723034158
+		summarizeBy: none
+		sourceColumn: has_company
+
+		annotation SummarizationSetBy = Automatic
+
+	column has_gtin
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: cca9e64b-71fb-4ce4-880b-52063f8ac92e
+		summarizeBy: none
+		sourceColumn: has_gtin
+
+		annotation SummarizationSetBy = Automatic
+
+	column average_stock
+		dataType: string
+		lineageTag: 6b564d4a-8107-4d8a-a55e-4f3a49be6e5c
+		summarizeBy: none
+		sourceColumn: average_stock
+
+		annotation SummarizationSetBy = Automatic
+
+	column business_type
+		dataType: string
+		lineageTag: f5f76368-4d62-4545-826b-cec8af30d3a3
+		summarizeBy: none
+		sourceColumn: business_type
+
+		annotation SummarizationSetBy = Automatic
+
+	column declared_product_catalog_size
+		dataType: double
+		lineageTag: 13c620d4-55cc-4127-9e9b-9d6166457d5e
+		summarizeBy: sum
+		sourceColumn: declared_product_catalog_size
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column declared_monthly_revenue
+		dataType: double
+		lineageTag: b0eeba85-df8a-40e0-ac99-af960ccf6699
+		summarizeBy: sum
+		sourceColumn: declared_monthly_revenue
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition 'Closed Deals' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    marketing_fact_closed_deals = Source{[Schema="marketing",Item="fact_closed_deals"]}[Data]
+				in
+				    marketing_fact_closed_deals
+
+	changedProperty = Name
+
