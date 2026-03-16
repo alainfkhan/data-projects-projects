@@ -1,6 +1,6 @@
 .PHONY: run
 run:
-	uv run src
+	uv run src | tee docs/stdout/cmd_execute.txt
 
 .PHONY: ingest
 ingest:
@@ -12,7 +12,8 @@ cep:
 
 .PHONY: test
 test:
-	python -m src.tests.test
+	python -m src.tests.test | tee test_output.txt
+
 
 .PHONY: paths
 paths:

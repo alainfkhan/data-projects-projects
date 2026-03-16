@@ -1,0 +1,16 @@
+
+a dashboard page:
+    height: 720
+    width: 1280
+
+a visual:
+    xyz coords: top left corner
+
+(0,0,0) is top right corner of dashboard
+
+positive x means move down
+positive y means move right
+positive z means move ?
+
+height: stretch down
+width: stretch right

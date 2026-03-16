@@ -1,0 +1,8 @@
+opening vscode via file select made me lose progress in my dashboard
+
+> work on power bi
+> open vscode (need to select folder)
+> go to folder
+> vs code opens on folder
+> power bi reverts back to what it was before i opened vscode
+

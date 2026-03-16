@@ -2,7 +2,7 @@
 
 ## Sales
 
-Overview: 
+Overview (history):
 
 - Order count
 - GMV = (Total Product Revenue) + (Total Freight Revenue)

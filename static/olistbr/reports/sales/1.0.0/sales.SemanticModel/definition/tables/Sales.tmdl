@@ -135,6 +135,8 @@ table Sales
 		summarizeBy: sum
 		sourceColumn: month_number
 
+		changedProperty = SortByColumn
+
 		annotation SummarizationSetBy = Automatic
 
 	column month_name
@@ -150,6 +152,9 @@ table Sales
 		lineageTag: 5c68f6a7-e070-44db-be56-44cc565537c3
 		summarizeBy: none
 		sourceColumn: month_name_short
+		sortByColumn: month_number
+
+		changedProperty = SortByColumn
 
 		annotation SummarizationSetBy = Automatic
 

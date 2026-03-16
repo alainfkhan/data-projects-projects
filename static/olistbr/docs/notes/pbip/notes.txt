@@ -1,0 +1,1 @@
+if change visual height in .json file, does not seem to change in desktop

@@ -38,7 +38,6 @@ In Brazil, the Financial Year (FY) follows the Calendar Year (CY).
 
 The first quarter of the financial year is the first quarter of the calendar year.
 
-
 ### Recorded data vs actual
 
 A distinction is made between reality, and what is recorded.
@@ -93,7 +92,7 @@ Order transactions have the possible `order_status` values:
 - `shipped`
 - `unavailable`
 
-Define a **sale** to be a realised and price-measurable order.
+We formally define a **sale** to be a realised and price-measurable order.
 
 - A sale is realised when the `order_status` is any of:
   - `approved`,
@@ -109,7 +108,6 @@ Define a **sale** to be a realised and price-measurable order.
 
 We are interested in sales that are realised, and measurable.
 An unrealised sale is a sale that is yet to be realised.
-It is perhaps possible to have a sale that cannot be measured monetarily.
 
 For a better picture:
 
@@ -238,7 +236,7 @@ Let the base periodic timeframe be monthly.
 ## View code
 
 View the queries:
+
 - [Views](queries/analysis/globals/views.sql)
 - [Functions](queries/analysis/globals/functions.sql)
 - [Scratch work](queries/analysis/report/_scratch/)
-

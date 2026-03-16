@@ -1,16 +1,16 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.6.0/schema.json",
-  "name": "2b64a89c2dd59c2e92dc",
+  "name": "fde2da0b0839b9818bb3",
   "position": {
-    "x": 816,
-    "y": 480,
-    "z": 3,
-    "height": 240,
-    "width": 464.00000000000006,
-    "tabOrder": 3
+    "x": 736,
+    "y": 144,
+    "z": 10,
+    "height": 288,
+    "width": 544,
+    "tabOrder": 10
   },
   "visual": {
-    "visualType": "lineChart",
+    "visualType": "lineClusteredColumnComboChart",
     "query": {
       "queryState": {
         "Category": {
@@ -26,7 +26,7 @@
                   "Property": "year_number"
                 }
               },
-              "queryRef": "sales vw_sales_practical.year_number",
+              "queryRef": "Sales.year_number",
               "nativeQueryRef": "Year",
               "active": true,
               "displayName": "Year"
@@ -39,13 +39,13 @@
                       "Entity": "Sales"
                     }
                   },
-                  "Property": "month_number"
+                  "Property": "month_name_short"
                 }
               },
-              "queryRef": "sales vw_sales_practical.month_number",
-              "nativeQueryRef": "Month Number",
+              "queryRef": "Sales.month_name_short",
+              "nativeQueryRef": "Month",
               "active": true,
-              "displayName": "Month Number"
+              "displayName": "Month"
             }
           ]
         },
@@ -68,7 +68,7 @@
                 }
               },
               "queryRef": "Count(Sales.order_id)",
-              "nativeQueryRef": "Count of order_id",
+              "nativeQueryRef": "Order Count",
               "hidden": true
             },
             {
@@ -88,9 +88,9 @@
                 }
               },
               "queryRef": "Sum(Sales.price)",
-              "nativeQueryRef": "Total Product Revenue",
+              "nativeQueryRef": "Product Revenue",
               "hidden": true,
-              "displayName": "Total Product Revenue"
+              "displayName": "Product Revenue"
             },
             {
               "field": {
@@ -109,15 +109,15 @@
                 }
               },
               "queryRef": "Sum(Sales.freight_value)",
-              "nativeQueryRef": "Total Freight Revenue",
+              "nativeQueryRef": "Freight Revenue",
               "hidden": true,
-              "displayName": "Total Freight Revenue"
+              "displayName": "Freight Revenue"
             },
             {
               "field": {
                 "NativeVisualCalculation": {
                   "Language": "dax",
-                  "Expression": "[Total Product Revenue] + [Total Freight Revenue]",
+                  "Expression": "[Product Revenue] + [Freight Revenue]",
                   "Name": "GMV"
                 }
               },
@@ -129,65 +129,120 @@
               "field": {
                 "NativeVisualCalculation": {
                   "Language": "dax",
-                  "Expression": "DIVIDE([GMV], [Count of order_id])",
-                  "Name": "AOV"
+                  "Expression": "DIVIDE( [AOV] - PREVIOUS([AOV]), PREVIOUS([AOV]))",
+                  "Name": "AOV % change"
                 }
               },
-              "queryRef": "select1",
-              "nativeQueryRef": "AOV",
-              "hidden": true
-            },
+              "queryRef": "select2",
+              "nativeQueryRef": "AOV % change",
+              "format": "0.00%;-0.00%;0.00%"
+            }
+          ]
+        },
+        "Y2": {
+          "projections": [
             {
               "field": {
                 "NativeVisualCalculation": {
                   "Language": "dax",
-                  "Expression": "DIVIDE([AOV] - PREVIOUS([AOV]), PREVIOUS([AOV]))",
-                  "Name": "AOV MoM %"
+                  "Expression": "DIVIDE([GMV], [Order Count])",
+                  "Name": "AOV"
                 }
               },
-              "queryRef": "select2",
-              "nativeQueryRef": "AOV MoM %",
-              "format": "0.00%;-0.00%;0.00%"
+              "queryRef": "select1",
+              "nativeQueryRef": "AOV"
             }
           ]
         }
-      },
-      "sortDefinition": {
-        "sort": [
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Sales"
-                  }
-                },
-                "Property": "year_number"
-              }
-            },
-            "direction": "Ascending"
-          },
-          {
-            "field": {
-              "Column": {
-                "Expression": {
-                  "SourceRef": {
-                    "Entity": "Sales"
-                  }
-                },
-                "Property": "month_number"
-              }
-            },
-            "direction": "Ascending"
-          }
-        ]
       }
     },
     "objects": {
+      "categoryAxis": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ],
       "valueAxis": [
         {
           "properties": {
-            "showAxisTitle": {
+            "titleText": {
+              "expr": {
+                "Literal": {
+                  "Value": "'AOV % change'"
+                }
+              }
+            },
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "secShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "secShowAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridlineShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "gridlineStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'solid'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "legend": [
+        {
+          "properties": {
+            "legendMarkerRendering": {
+              "expr": {
+                "Literal": {
+                  "Value": "'markerCircleDefault'"
+                }
+              }
+            },
+            "matchLineColor": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "showTitle": {
               "expr": {
                 "Literal": {
                   "Value": "false"
@@ -200,17 +255,11 @@
                   "Value": "true"
                 }
               }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "showAxisTitle": {
+            },
+            "position": {
               "expr": {
                 "Literal": {
-                  "Value": "false"
+                  "Value": "'Top'"
                 }
               }
             }
@@ -219,26 +268,13 @@
       ]
     },
     "visualContainerObjects": {
-      "visualHeader": [
+      "title": [
         {
           "properties": {
             "show": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "title": [
-        {
-          "properties": {
-            "text": {
-              "expr": {
-                "Literal": {
-                  "Value": "'AOV Month on Month %'"
+                  "Value": "false"
                 }
               }
             }
@@ -251,50 +287,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "98cb04e6b5d90b88685a",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Sales"
-              }
-            },
-            "Property": "price"
-          }
-        },
-        "type": "Advanced",
-        "howCreated": "User"
-      },
-      {
-        "name": "f106a6474c1b1c6ae8ce",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Sales"
-              }
-            },
-            "Property": "year_number"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "1aafe36719660e90e7e4",
-        "field": {
-          "Column": {
-            "Expression": {
-              "SourceRef": {
-                "Entity": "Sales"
-              }
-            },
-            "Property": "month_number"
-          }
-        },
-        "type": "Advanced"
-      },
-      {
-        "name": "2111d62cbe50474a5a88",
+        "name": "b3fe42b97730703a293c",
         "field": {
           "Aggregation": {
             "Expression": {
@@ -313,7 +306,7 @@
         "type": "Advanced"
       },
       {
-        "name": "5c7cff913c779c388620",
+        "name": "7bb8bd0aa098e0c196ec",
         "field": {
           "Aggregation": {
             "Expression": {
@@ -332,7 +325,7 @@
         "type": "Advanced"
       },
       {
-        "name": "9b5a3364154b0d19b0c3",
+        "name": "677511272c694a73cd08",
         "field": {
           "Aggregation": {
             "Expression": {
@@ -349,6 +342,34 @@
           }
         },
         "type": "Advanced"
+      },
+      {
+        "name": "ddf7e599430b76ae6d7b",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Sales"
+              }
+            },
+            "Property": "year_number"
+          }
+        },
+        "type": "Advanced"
+      },
+      {
+        "name": "e3097512d1837ab2e295",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Sales"
+              }
+            },
+            "Property": "month_name_short"
+          }
+        },
+        "type": "Categorical"
       }
     ]
   }

@@ -122,6 +122,20 @@
             }
           ]
         }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "NativeVisualCalculation": {
+                "Language": "dax",
+                "Expression": "DIVIDE([Total Revenue], COLLAPSEALL([Total Revenue], ROWS))",
+                "Name": "Concentration %"
+              }
+            },
+            "direction": "Descending"
+          }
+        ]
       }
     },
     "drillFilterOtherVisuals": true
