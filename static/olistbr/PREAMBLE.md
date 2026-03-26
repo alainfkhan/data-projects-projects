@@ -1,12 +1,14 @@
-# Preamble 
+# Preamble
 
 ## View code
 
-View the queries:
+View the SQL queries:
 
 - [Views](queries/analysis/globals/views.sql)
 - [Functions](queries/analysis/globals/functions.sql)
 - [Scratch work](queries/analysis/report/_scratch/)
+- [`dim_date`](rebuild-db/queries/rebuild-db/create-dim_date.sql)
+- [`dim_time`](rebuild-db/queries/rebuild-db/create-dim_time.sql)
 
 ## Definitions
 
@@ -43,7 +45,7 @@ A sale can be realised, or unrealised.
 Order transactions have the possible `order_status` values:
 
 - `approved`
-- `canceled` [sic.]
+- `canceled`
 - `created`
 - `delivered`
 - `invoiced`
@@ -96,7 +98,7 @@ generates user activity, but does not contribute to a sale, and hence, neither a
 A new order placed (with some initial `order_status`) starts as an unrealised sale,
 and becomes realised exactly when
 the `order_status` changes to a value that classifies it as realised,
-on the date of the financial transaction (at `order_approved_at`).
+on the date of the financial transaction (accounting date).
 
 The **revenue** is interpreted to be the listed price of a realised sale in the `orders` table.
 
@@ -194,8 +196,9 @@ to have consistent non-increasing `orders_placed`.
 Suppose we are given a snapshot of a complete operational database from `2017-01-09` to `2018-08-21`, and that today is `2018-08-22`.
 
 Assume the following:
+
 - The definitions defined above are business definitions used within the organisation.
-- Pretend users who have made payments on orders that are not realised sales, are eligible for a **refund** on that order.
+- Users who have made payments on orders that are not realised sales, are eligible for a **refund** on that order.
 - All refunds are actualised.
 - The dataset timezone follows the official Brasília Time (BRT): UTC-03:00
 - The dataset currency is the Brazilian currency (reais).
@@ -214,4 +217,3 @@ For example, a day displaying no sales could mean:
 - an incomplete/inaccurate recording of data
 
 We depend on understanding the surrounding data as context to determine reality.
-

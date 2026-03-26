@@ -6,11 +6,20 @@
 
 ### Kaggle Dataset
 
+Project dataset links:
+
+- [Brazilian E-Commerce Public Dataset by Olist](https://www.kaggle.com/datasets/olistbr/brazilian-ecommerce) (1)
+- [Marketing Funnel by Olist](https://www.kaggle.com/datasets/olistbr/marketing-funnel-olist) (2)
+
 Provided ERDs:
 
-![main dataset erd](references/img/HRhd2Y0%20-%20Imgur.png)
+![Dataset 1 ERD](references/img/HRhd2Y0%20-%20Imgur.png)
 
-![supplementary dataset erd](references/img/Jory0O3%20-%20Imgur.png)
+![Dataset 2 ERD](references/img/Jory0O3%20-%20Imgur.png)
+
+<!-- Combined dataset ERDs:
+
+![Datasets 1 and 2 combined ERD](img/erd.png) -->
 
 ## Brazil
 
@@ -57,4 +66,4 @@ Time zones currently being used in Brazil ([link](https://www.timeanddate.com/ti
 | UTC-3:00 | BRT  | Brasília Time           | São Paulo          |
 | UTC-2:00 | FNT  | Fernando de Noronha Time | Fernando de Noronha |
 
-The official time is BRT.
+The official time used in Brazil is BRT.
