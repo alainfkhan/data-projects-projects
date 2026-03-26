@@ -1,10 +1,11 @@
-# rebuild-db
-
 ## Notable analysis projects
 
 - [Olist](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/README.md)
   - [**rebuild-db**](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/rebuild-db/README.md)
-- [Restaurant Business Online](https://github.com/alainfkhan/data-projects-projects/blob/main/macos/bogacz-res/README.md)
+
+<!-- - [Restaurant Business Online](https://github.com/alainfkhan/data-projects-projects/blob/main/macos/bogacz-res/README.md) -->
+
+# rebuild-db
 
 ## Project overview
 
@@ -434,7 +435,7 @@ olist_stg:
 - The program will later generate the following sql string:
 
 ```sql
--- this is generated:
+-- this will be generated:
 
 CREATE TABLE sales.dim_customers(
   customer_id CHAR(32) NOT NULL,
@@ -446,8 +447,7 @@ CREATE TABLE sales.dim_customers(
 ```
 
 - Analyse the other columns in this table.
-- Repeat for all other tables.
-- You will then have the ideal SQL Server column data types for all tables that optimise query memory allocation.
+- Repeat for other tables.
 
 **Q**: Why not just write the sql directly?
 
@@ -478,4 +478,4 @@ Notes:
 
 For the last step, manually copy the created database `olist_stg` and save it as `olist` and continue with the analysis.
 
-Some tables are cleaned further in analysis.
+Some tables are cleaned further in analysis (see [next steps](../docs/after-rebuild-db.txt)).

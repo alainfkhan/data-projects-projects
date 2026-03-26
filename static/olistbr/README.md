@@ -1,11 +1,14 @@
-# Olist
+## Navigation
+
+- [Analysis Projects](https://github.com/alainfkhan/data-projects-projects)
 
 ## Notable analysis projects
 
 - [**Olist**](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/README.md)
   - [rebuild-db](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/rebuild-db/README.md)
-
 <!-- - [Restaurant Business Online](https://github.com/alainfkhan/data-projects-projects/blob/main/macos/bogacz-res/README.md) -->
+
+# Olist
 
 ## Read more from this project
 
@@ -47,6 +50,3 @@ Seller concentration through time
 
 ---
 
-## Navigation
-
-- [Analysis projects](https://github.com/alainfkhan/data-projects-projects)
