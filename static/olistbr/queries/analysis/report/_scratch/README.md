@@ -6,22 +6,24 @@ The folders and `.sql` files
 are ordered in the order I answered the questions,
 so the evolution of how I write SQL is apparent.
 
-- `01` is my first attempt at answering SQL questions.
-- `02` is my second attempt at answering SQL questions.
+- `01` is my first attempt at answering SQL questions,
+- `02` is my second,
 - ...
 
 ## Evolution of how I write SQL
 
-Changing grain:
+### Changing grain
 
 1. Write multiple queries. Changing grain means copy and pasting queries with the different column names.
 2. Write one query with commented out grains. Changing grain means commenting and uncommenting columns.
 3. Write one query. Changing grain means using find and replace (vim motions) to change column names.
 
-Complex SQL queries.
+### Complex SQL queries
 
 1. Nested subqueries.
 2. Chained CTEs.
-3. Developed a preference for chained CTEs, avoid largely nested subqueries. Chained CTEs are easier to debug.
 
-Answering SQL questions necessitated defining key business terms like realised and unrealised sales, user vs customer, etc.
+Developed a preference for chained CTEs, avoid largely nested subqueries. Chained CTEs are easier to debug.
+
+Answering the generated SQL questions
+necessitated defining key business terms.

@@ -1,53 +1,12 @@
-# Preamble
+# Preamble 
 
-## Context
+## View code
 
-### Brazil
+View the queries:
 
-#### Currency
-
-Summary (for context):
-
-|                     |                  |
-| ------------------- | ---------------- |
-| Symbol              | `R$`           |
-| ISO Code            | `BRL`          |
-| Thousands separator | Period `.`     |
-| Decimal separator   | Comma `,`      |
-| Example             | `R$ 10.000,00` |
-
-Exchange rate [BRL to GBP](https://www.exchangerates.org.uk/BRL-GBP-spot-exchange-rates-history-2018.html):
-
-| Significance         | Date           | BRL         | GBP          |
-| -------------------- | -------------- | ----------- | ------------ |
-| First order placed   | `2016-09-04` | `R$ 1,00` | `£0.1964` |
-| Start of 'this year' | `2018-01-01` | `R$ 1,00` | `£0.2234` |
-| Defined as 'today'   | `2018-08-22` | `R$ 1,00` | `£0.1916` |
-| Last order placed    | `2018-10-17` | `R$ 1,00` | `£0.2069` |
-
-- Banknotes: `R$ 2`, `R$ 5`, `R$ 10`, `R$ 20`, `R$ 50`, `R$ 100`, `R$ 200`
-- Coins (centavos): `R$ 0,01`, `R$ 0,05`, `R$ 0,10`, `R$ 0,25`, `R$ 0,50`, `R$ 1,00`
-
-#### Time
-
-In Brazil, the Financial Year (FY) follows the Calendar Year (CY).
-
-- Q1 CY26 = Q1 FY26
-- Q2 CY26 = Q2 FY26
-- ...
-
-The first quarter of the financial year is the first quarter of the calendar year.
-
-### Recorded data vs actual
-
-A distinction is made between reality, and what is recorded.
-
-For example, a day displaying no sales could mean:
-
-- no sales were truly made
-- an incomplete/inaccurate recording of data
-
-We depend on understanding the surrounding data as context to determine reality.
+- [Views](queries/analysis/globals/views.sql)
+- [Functions](queries/analysis/globals/functions.sql)
+- [Scratch work](queries/analysis/report/_scratch/)
 
 ## Definitions
 
@@ -77,7 +36,7 @@ A row added onto the `orders` table can be thought of as:
 
 - an order transaction,
 - an order,
-- or (loosely) a sale.
+- or (informally) a sale.
 
 A sale can be realised, or unrealised.
 
@@ -147,7 +106,7 @@ The **revenue** is interpreted to be the listed price of a realised sale in the 
 - In a particular month of sales, the sum of the listed prices is the revenue generated for that month.
 - An order, that is not a realised sale, with a price listed, does not contribute to revenue.
 
-N.B.:
+**N.B.**:
 
 - In this particular dataset, `freight_value` always exists with `price`.
 - I.e. if we have `price`, we also have `freight_value`.
@@ -199,6 +158,9 @@ Before `2017-01-04`:
 - Some orders placed spuriously between `2016-09-04` - `2016-10-22`.
 - The first order was placed at `2016-09-04`.
 
+Artificially choose `2017-01-09` because it's the first date
+to have consistent non-decreasing `orders_placed`.
+
 #### Decay of data capture
 
 ```txt
@@ -222,21 +184,34 @@ After `2018-08-26`:
 - Some orders placed spuriously between `2018-09-01` - `2018-10-17`.
 - The last order is placed at `2018-10-17`.
 
+Artificially choose `2018-08-21` because it's the first date
+to have consistent non-increasing `orders_placed`.
+
 </details>
+
+### Main assumptions
 
 Suppose we are given a snapshot of a complete operational database from `2017-01-09` to `2018-08-21`, and that today is `2018-08-22`.
 
-The definitions defined hold.
-
-Users who have made payments on orders that are not realised sales, are eligible for a **refund** on that order.
-Assume all refunds are actualised.
+Assume the following:
+- The definitions defined above are business definitions used within the organisation.
+- Pretend users who have made payments on orders that are not realised sales, are eligible for a **refund** on that order.
+- All refunds are actualised.
+- The dataset timezone follows the official Brasília Time (BRT): UTC-03:00
+- The dataset currency is the Brazilian currency (reais).
 
 Let the base periodic timeframe be monthly.
 
-## View code
+## Other notes
 
-View the queries:
+### Recorded data vs actual
 
-- [Views](queries/analysis/globals/views.sql)
-- [Functions](queries/analysis/globals/functions.sql)
-- [Scratch work](queries/analysis/report/_scratch/)
+A distinction is made between reality, and what is recorded.
+
+For example, a day displaying no sales could mean:
+
+- no sales were truly made
+- an incomplete/inaccurate recording of data
+
+We depend on understanding the surrounding data as context to determine reality.
+
