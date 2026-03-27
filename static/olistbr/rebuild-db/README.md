@@ -1,9 +1,8 @@
-## Notable analysis projects
+## Navigation
 
+- [Analysis Projects](https://github.com/alainfkhan/data-projects-projects)
 - [Olist](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/README.md)
   - [**rebuild-db**](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/rebuild-db/README.md)
-
-<!-- - [Restaurant Business Online](https://github.com/alainfkhan/data-projects-projects/blob/main/macos/bogacz-res/README.md) -->
 
 # rebuild-db
 
