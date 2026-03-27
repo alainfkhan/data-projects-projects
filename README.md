@@ -4,12 +4,12 @@
 - [`DPM`](https://github.com/alainfkhan/data-projects)
   - [`DPX`](https://github.com/alainfkhan/data-projects-dpx)
   - [`DPP`](https://github.com/alainfkhan/data-projects-projects) `<-`
-- [Github profile](https://github.com/alainfkhan)
+- [Github Profile](https://github.com/alainfkhan)
 
 ## Notable analysis projects
 
 - [Olist](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/README.md)
-<!-- - [Restaurant Business Online](https://github.com/alainfkhan/data-projects-projects/blob/main/macos/bogacz-res/README.md) -->
+- [Restaurant Business Online](https://github.com/alainfkhan/data-projects-projects/blob/main/macos/bogacz-res/README.md)
 
 # Data Project Projects (DPP)
 

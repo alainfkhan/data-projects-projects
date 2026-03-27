@@ -6,6 +6,8 @@
 
 # rebuild-db
 
+Builds a local SQL Server database with project data.
+
 ## Project overview
 
 1. [Run rebuild-db](#rebuild-the-database-by-running-src)
@@ -13,26 +15,23 @@
 
 Running `rebuild-db`:
 
-1. Rebuilds a staging database `olist_stg` in SQL Server.
+1. Builds a local staging database `olist_stg` in SQL Server.
    - Drops a database `olist_stg` if it exists.
    - Creates a new empty database `olist_stg`.
-2. Creates the schema and tables,
-   - as defined by [`src/configs/db_config.yml`](src/configs/db_config.yml)
-3. Inserts the project data into the tables.
-   - From the dataset in [`../data/raw`](../data/raw/)
+2. Creates the schemas and tables defined by a database configuration file.
+3. Inserts project data into tables from the dataset.
 4. Generates supplementary tables:
    - [`utils.dim_date`](queries/rebuild-db/create-dim_date.sql)
    - [`utils.dim_time`](queries/rebuild-db/create-dim_time.sql)
-5. Ingests supplementary geolocation data:
-   - `logistics.dim_cep`
-   - `staging.dim_cep_iz_B`
+5. Ingests supplementary geolocation data downloaded externally.
 
 > [!IMPORTANT]
-> The created staging database `olist_stg` is intended to be copied and saved as `olist`, and should not be used for analysis since it's susceptible to frequent rewrites and hence also to potential data loss.
+>
+> - The created database `olist_stg` is an unstable staging database.
+> - It's not intended to be used for analysis
+>   since it's susceptible to frequent rewrites and hence also to potential data loss.
 
 `rebuild-db` uses `uv` as the python package manager.
-
----
 
 ## Setup the virtual environment
 
@@ -68,19 +67,15 @@ uv run src
 > [!NOTE]
 >
 > - You could be on debug mode.
-> - To exit debug mode:
->   1. Go to [`src/__main__.py`](src/__main__.py)
->   2. Find the variable `execute` just after imports and before `def main() -> None:`.
->   3. Change the bool of `execute` from `False` to `True`.
->   4. Change the bools of any of the other debug variables as required.
->   5. Run `src` to rebuild the database.
->   6. You can choose to revert `execute` back to `False` to avoid any accidental rebuilds.
-> - Do not use the created staging database for analysis.
-> - Copy the staging database and use that for analysis.
+> - Change debugs in:
+>   1. [`src/__main__.py`](src/__main__.py)
+>   2. [`src/ingest/__main__.py`](src/ingest/__main__.py)
+> - Set `execute = True`.
+> - Set any other debugs if required.
 
 ### Running this program
 
-![Running rebuild-db in terminal](../img/rebuild-db/cmd_execute-260306.gif)
+![Running rebuild-db</code></code></code></code> in terminal](../img/rebuild-db/cmd_execute-260306.gif)
 
 <details>
 
@@ -130,21 +125,21 @@ Successfully rebuilt 'olist_stg'.
 </details>
 
 - View the piped [output](docs/stdout/cmd_execute.txt).
-- Running `src` generates dynamic sql commands that is sent to the connected database.
+- Running `src` generates dynamic SQL commands and sends it to the database.
 - The [connection configuration file](src/configs/connection.yml) defines the connection variables used to connect to a server.
   - This project currently depends on SQL Server Windows Authentication to connect to the server.
 - The [database configuration file](src/configs/db_config.yml) defines the table schemas for this dataset.
-  - The information in this configuration file was manually typed.
-  - Column data types, and constraints were determined from a [preliminary analysis](#data-type-validation) on this dataset.
+  - The information in this configuration file is manually typed.
+  - Column data types and constraints, were determined from a [preliminary analysis](#data-type-validation) on this dataset.
 - The database overview queries the database as it is.
 - Notice the file `olist_geolocation_dataset.csv` takes the longest time to process since it has the table with the most rows with `1000163` rows.
 
 ### Data-type validation
 
-- An inference function [`infer_dtypes()`](src/utils/infer.py) was used to help determine the ideal SQL server column data types that improve query memory allocations.
+- An inference function [`infer_dtypes()`](src/utils/infer.py) was used to help determine the ideal SQL Server column data types that minimise the [query memory grant](https://techcommunity.microsoft.com/blog/sqlserver/understanding-sql-server-memory-grant/383595).
 - This function inputs a pandas dataframe and outputs an attributes table that describe each column.
 - Other functions, in [`src/utils/measures.py`](src/utils/measures.py), were used to determine other attributes like:
-  - finding the max `precision` and `scale` of a supposed `DECIMAL` datatype.
+  - finding the max precision and scale of a supposed `DECIMAL` datatype.
   - how similar a string is from another using the [Dice-Sørensen coefficient](https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient).
 
 Suppose we would like to find the SQL server data types of the columns from `olist_customers_dataset.csv`.
@@ -431,7 +426,7 @@ olist_stg:
         - customer_id
 ```
 
-- The program will later generate the following sql string:
+- The program will later generate the following SQL string:
 
 ```sql
 -- this will be generated:
@@ -448,7 +443,7 @@ CREATE TABLE sales.dim_customers(
 - Analyse the other columns in this table.
 - Repeat for other tables.
 
-**Q**: Why not just write the sql directly?
+**Q**: Why not just write the SQL directly?
 
 **A**: We would like the data-type inferencing to be automated in future iterations of a flavour of this project. The yaml configuration acts as a storage space for table schemas, that communicates to the program.
 
@@ -477,4 +472,4 @@ Notes:
 
 For the last step, manually copy the created database `olist_stg` and save it as `olist` and continue with the analysis.
 
-Some tables are cleaned further in analysis (see [next steps](../docs/after-rebuild-db.txt)).
+Some tables are cleaned further in analysis (see [instructions](../docs/after-rebuild-db.txt)).

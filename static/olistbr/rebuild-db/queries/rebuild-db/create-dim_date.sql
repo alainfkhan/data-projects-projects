@@ -1,8 +1,4 @@
 /*
-
-create dim_dates table
-choose 2016-01-01 to 2020-12-31 inclusive
-
 use english names
 follow brazilian financial year
     jan1 - dec31

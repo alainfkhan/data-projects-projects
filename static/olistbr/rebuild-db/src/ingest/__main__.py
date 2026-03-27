@@ -13,8 +13,11 @@ from src.ingest.cep_iz import main as cep_iz_main
 from src.utils.db_manager import DBManager
 from src.utils.paths import REBUILD_DB_QUERIES_PATH, CONFIGS_PATH
 
+
+# ==================================================
 # debugs
 execute = True
+# ==================================================
 
 # configs
 with open(CONFIGS_PATH / "connection.yml", "r") as f:

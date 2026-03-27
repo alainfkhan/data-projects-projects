@@ -1,11 +1,14 @@
-# Restaurant Business Online
+## Navigation
 
-## Notable analysis projects
-
-- [Olist](https://github.com/alainfkhan/data-projects-projects/blob/main/static/olistbr/README.md)
+- [Analysis Projects](https://github.com/alainfkhan/data-projects-projects)
 - [**Restaurant Business Online**](https://github.com/alainfkhan/data-projects-projects/blob/main/macos/bogacz-res/README.md)
+
+# Restaurant Business Online
 
 ---
 
-## Navigation
-- [Analysis projects](https://github.com/alainfkhan/data-projects-projects)
+This project uses SQLite.
+
+View SQL code:
+- [Cleaning](queries/create-tables.sql)
+- [Analysis](queries/analysis.sql)

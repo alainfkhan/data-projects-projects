@@ -28,7 +28,6 @@ from src.utils.db_config_manager import DBConfigManager
 
 # ==================================================
 # debugs
-# ==================================================
 execute = True
 
 run_main = True
@@ -46,7 +45,6 @@ custom_table_names = [
     # "marketing.fact_closed_deals",
     "logistics.fact_geolocation",
 ]
-
 # ==================================================
 
 # maps
@@ -72,14 +70,11 @@ db = connection_config["database"]
 default_db = "master"
 test_db = "deletesoon"
 
-# ==================================================
 # print
-# ==================================================
 long_lines = 100 * "-"
 short_lines = 50 * "-"
 equals = 80 * "="
 spaces = 80 * " "
-# ==================================================
 
 
 def mulitline_string_startwith(startwith: str, multiline_string: str) -> str:
