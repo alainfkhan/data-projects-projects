@@ -36,6 +36,10 @@ Entity Relationship Diagram (ERD):
 
 ### Month on month Average Order Values (AOV)
 
+<details>
+
+<summary>View table</summary>
+
 | year_number | month_number | order_count | gmv              | aov              | aov_periodic |
 | ----------- | ------------ | ----------- | ---------------- | ---------------- | ------------ |
 | 2017        | 1            | 711         | R\$ 127.473,40   | R\$ 112.013,20   | NULL         |
@@ -59,9 +63,16 @@ Entity Relationship Diagram (ERD):
 | 2018        | 7            | 6125        | R\$ 1.018.432,00 | R\$ 859.923,90   | -0.89%       |
 | 2018        | 8            | 5823        | R\$ 928.091,20   | R\$ 788.869,10   | -8.26%       |
 
+</details>
+
 ### Revenue by product category and business segment
 
 Revenue by product category (top 10 GMV):
+ 
+<details>
+
+<summary>View table</summary>
+
 
 | product_category_name  | product_category_name_english | order_count | gmv              | aov       | product_category_concentration |
 | ---------------------- | ----------------------------- | ----------- | ---------------- | --------- | ------------------------------ |
@@ -76,7 +87,13 @@ Revenue by product category (top 10 GMV):
 | automotivo             | auto                          | 3827        | R\$ 673.413,90   | R\$175.96 | 4.32%                          |
 | ferramentas_jardim     | garden_tools                  | 3486        | R\$ 576.707,20   | R\$165.44 | 3.70%                          |
 
+</details>
+
 Revenue by business segment (top 10 GMV)
+
+<details>
+
+<summary>View table </summary>
 
 | business_segment                | order_count | gmv            | aov        | business_segment_concentration |
 | ------------------------------- | ----------- | -------------- | ---------- | ------------------------------ |
@@ -90,6 +107,8 @@ Revenue by business segment (top 10 GMV)
 | construction_tools_house_garden | 258         | R\$ 36.849,86  | R\$ 142,83 | 4.87%                          |
 | car_accessories                 | 146         | R\$ 33.845,05  | R\$ 231,82 | 4.47%                          |
 | home_appliances                 | 133         | R\$ 28.793,67  | R\$ 216,49 | 3.81%                          |
+
+</details>
 
 ### Product weight and freight cost correlation
 
