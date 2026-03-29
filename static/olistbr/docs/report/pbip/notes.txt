@@ -1,0 +1,5 @@
+if change visual height in .json file, does not seem to change in desktop
+
+stick to power bi desktop
+dont have power bi desktop and the json files open at the same time.
+it messes with saves

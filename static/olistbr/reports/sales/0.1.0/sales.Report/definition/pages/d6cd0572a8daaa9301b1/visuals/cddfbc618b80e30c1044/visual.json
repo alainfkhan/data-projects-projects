@@ -1,11 +1,11 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.6.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "cddfbc618b80e30c1044",
   "position": {
     "x": 0,
-    "y": 48,
+    "y": 48.000000000000007,
     "z": 9,
-    "height": 672.00000000000011,
+    "height": 672,
     "width": 176,
     "tabOrder": 9
   },
@@ -55,7 +55,7 @@
             "orientation": {
               "expr": {
                 "Literal": {
-                  "Value": "1D"
+                  "Value": "0D"
                 }
               }
             }

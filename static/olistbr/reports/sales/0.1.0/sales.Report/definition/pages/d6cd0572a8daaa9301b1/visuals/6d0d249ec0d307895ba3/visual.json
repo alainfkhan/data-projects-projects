@@ -1,16 +1,16 @@
 {
-  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.6.0/schema.json",
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "6d0d249ec0d307895ba3",
   "position": {
     "x": 176,
-    "y": 48,
+    "y": 48.000000000000007,
     "z": 6,
-    "height": 336.00000000000006,
-    "width": 560,
+    "height": 336,
+    "width": 544,
     "tabOrder": 6
   },
   "visual": {
-    "visualType": "lineChart",
+    "visualType": "areaChart",
     "query": {
       "queryState": {
         "Category": {
@@ -53,6 +53,17 @@
           "projections": [
             {
               "field": {
+                "NativeVisualCalculation": {
+                  "Language": "dax",
+                  "Expression": "[Product] + [Freight]",
+                  "Name": "GMV"
+                }
+              },
+              "queryRef": "select",
+              "nativeQueryRef": "GMV"
+            },
+            {
+              "field": {
                 "Aggregation": {
                   "Expression": {
                     "Column": {
@@ -88,8 +99,8 @@
                 }
               },
               "queryRef": "Sum(Sales.price)",
-              "nativeQueryRef": "Total Product Revenue",
-              "displayName": "Total Product Revenue"
+              "nativeQueryRef": "Product",
+              "displayName": "Product"
             },
             {
               "field": {
@@ -108,19 +119,9 @@
                 }
               },
               "queryRef": "Sum(Sales.freight_value)",
-              "nativeQueryRef": "Total Freight Revenue",
-              "displayName": "Total Freight Revenue"
-            },
-            {
-              "field": {
-                "NativeVisualCalculation": {
-                  "Language": "dax",
-                  "Expression": "[Total Product Revenue] + [Total Freight Revenue]",
-                  "Name": "GMV"
-                }
-              },
-              "queryRef": "select",
-              "nativeQueryRef": "GMV"
+              "nativeQueryRef": "Freight",
+              "hidden": true,
+              "displayName": "Freight"
             },
             {
               "field": {
@@ -215,6 +216,208 @@
             }
           }
         }
+      ],
+      "lineStyles": [
+        {
+          "properties": {
+            "strokeShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "strokeLineJoin": {
+              "expr": {
+                "Literal": {
+                  "Value": "'round'"
+                }
+              }
+            },
+            "lineChartType": {
+              "expr": {
+                "Literal": {
+                  "Value": "'linear'"
+                }
+              }
+            },
+            "areaShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "areaMatchStrokeColor": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "areaColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "Literal": {
+                      "Value": "'#12239E'"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "select"
+          }
+        },
+        {
+          "properties": {
+            "strokeTransparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            },
+            "lineStyle": {
+              "expr": {
+                "Literal": {
+                  "Value": "'solid'"
+                }
+              }
+            },
+            "areaShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "areaMatchStrokeColor": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "areaColor": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 0,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "strokeShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(Sales.price)"
+          }
+        },
+        {
+          "properties": {
+            "strokeShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(Sales.freight_value)"
+          }
+        },
+        {
+          "properties": {
+            "areaShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "strokeShow": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            },
+            "areaMatchStrokeColor": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "dataPoint": [
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 1,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "60D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "select"
+          }
+        },
+        {
+          "properties": {
+            "fill": {
+              "solid": {
+                "color": {
+                  "expr": {
+                    "ThemeDataColor": {
+                      "ColorId": 4,
+                      "Percent": 0
+                    }
+                  }
+                }
+              }
+            },
+            "transparency": {
+              "expr": {
+                "Literal": {
+                  "Value": "0D"
+                }
+              }
+            }
+          },
+          "selector": {
+            "metadata": "Sum(Sales.price)"
+          }
+        }
       ]
     },
     "visualContainerObjects": {
@@ -244,7 +447,7 @@
   "filterConfig": {
     "filters": [
       {
-        "name": "1fb5f0e71268aa1b87d8",
+        "name": "b62f67b8cc758a3a6638",
         "field": {
           "Column": {
             "Expression": {
@@ -258,7 +461,7 @@
         "type": "Advanced"
       },
       {
-        "name": "ca5c8a64c60050e4cce1",
+        "name": "7039aa2783c2ea2a9a49",
         "field": {
           "Column": {
             "Expression": {
@@ -272,7 +475,7 @@
         "type": "Categorical"
       },
       {
-        "name": "d540db58d3ee015bd3c7",
+        "name": "093ba45c848eb0f81027",
         "field": {
           "Aggregation": {
             "Expression": {
@@ -291,7 +494,7 @@
         "type": "Advanced"
       },
       {
-        "name": "a8c8b1f735402b56b422",
+        "name": "95806747ef69d143cfc2",
         "field": {
           "Aggregation": {
             "Expression": {
@@ -310,7 +513,7 @@
         "type": "Advanced"
       },
       {
-        "name": "6cc8e0b090789c5c6b87",
+        "name": "54353c719cedbbc4d822",
         "field": {
           "Aggregation": {
             "Expression": {

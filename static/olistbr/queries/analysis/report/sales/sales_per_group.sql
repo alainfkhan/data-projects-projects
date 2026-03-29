@@ -2,7 +2,7 @@ USE olist;
 GO
 
 -- ==================================================
--- sales per product category
+-- revenue by product category
 WITH agg_sales AS (
     SELECT
         p.product_category_name,
@@ -33,7 +33,7 @@ dataset_totals AS (
 SELECT
     s.product_category_name,
     s.product_category_name_english,
-    s.order_count AS total_sales,
+    s.order_count,
     utils.fn_format_brl(s.total_revenue) AS gmv,
     FORMAT(s.total_revenue / s.order_count, 'R$0.00') AS aov,
     FORMAT(s.total_revenue / dst.dataset_total_revenue, 'P')
@@ -44,7 +44,7 @@ ORDER BY s.total_revenue DESC;
 GO
 
 -- ==================================================
--- sales per date per product category
+-- revenue (per date) by product category
 SELECT
     s.year_number,
     s.month_number,
@@ -67,10 +67,52 @@ ORDER BY
 GO
 
 -- ==================================================
+-- revenue by business segment
+WITH agg_bs_sales AS (
+    SELECT
+        cd.business_segment,
+        COUNT(DISTINCT s.order_id) AS order_count,
+        SUM(s.price) AS product_revenue,
+        SUM(s.freight_value) AS freight_revenue,
+        SUM(s.price + s.freight_value) AS total_revenue
+    FROM sales.vw_sales_practical AS s
+        LEFT JOIN sales.dim_sellers AS m
+            ON s.seller_id = m.seller_id
+        LEFT JOIN marketing.fact_closed_deals AS cd
+            ON m.seller_id = cd.seller_id
+    WHERE cd.business_segment IS NOT NULL
+    GROUP BY cd.business_segment
+),
+
+totals_agg_bs_sales AS (
+    SELECT
+        SUM(order_count) AS total_order_count,
+        SUM(s.product_revenue) AS total_product_revenue,
+        SUM(s.freight_revenue) AS total_freight_revenue,
+        SUM(s.total_revenue) AS total_total_revenue
+    FROM agg_bs_sales AS s
+)
+-- select
+--     t.*
+-- from totals_agg_bs_sales as t
+
+SELECT
+    s.business_segment,
+    s.order_count,
+    utils.fn_format_brl(s.total_revenue) AS gmv,
+    utils.fn_format_brl(s.total_revenue / NULLIF(s.order_count, 0)) AS aov,
+    FORMAT(s.total_revenue / NULLIF(t.total_total_revenue, 0), 'P')
+        AS business_segment_concentration
+FROM agg_bs_sales AS s
+    CROSS JOIN totals_agg_bs_sales AS t
+ORDER BY s.total_revenue DESC;
+GO
+
+-- ==================================================
 /*
-sales per date per
+revenue (per date) by
     business segment
-    business type
+    (or) business type
 */
 SELECT
     s.year_number,

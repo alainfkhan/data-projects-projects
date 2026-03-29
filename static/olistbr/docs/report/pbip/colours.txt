@@ -1,0 +1,6 @@
+
+pallette:
+red: #d61f1f, #ff2424
+yellow: #ffd301
+green: #006b3d, #00b768
+orange: #e8833a

@@ -33,7 +33,7 @@ Running `rebuild-db`:
 
 `rebuild-db` uses `uv` as the python package manager.
 
-## Setup the virtual environment
+## Set up the virtual environment
 
 Go to the project directory:
 
@@ -75,7 +75,7 @@ uv run src
 
 ### Running this program
 
-![Running rebuild-db</code></code></code></code> in terminal](../img/rebuild-db/cmd_execute-260306.gif)
+![Running rebuild-db</code></code></code></code></code></code></code></code> in terminal](../img/rebuild-db/cmd_execute-260306.gif)
 
 <details>
 

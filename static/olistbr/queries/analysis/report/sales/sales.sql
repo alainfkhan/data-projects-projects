@@ -61,7 +61,7 @@ growth_sales AS (
 SELECT
     s.year_number,
     s.month_number,
-    s.order_count AS total_sales,
+    s.order_count,
     -- s.product_revenue,
     -- s.freight_revenue,
     utils.fn_format_brl(s.gmv) AS gmv,
