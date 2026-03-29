@@ -114,6 +114,8 @@ The **revenue** is interpreted to be the listed price of a realised sale in the 
 - I.e. if we have `price`, we also have `freight_value`.
 - Any numerical aggregations on realised and price-measurable sales is well-defined since `price` always exists.
 
+<!-- ### KPIS -->
+
 ## Assumptions
 
 ### Practical project scope

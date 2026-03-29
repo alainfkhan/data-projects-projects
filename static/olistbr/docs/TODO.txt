@@ -1,12 +1,7 @@
 TODO:
-    [] start sales visualisation
+    [] add kpis definitions
 
-    change .md links to relative to to url
     find freight cost vs distance
-
-    update erd
-        geolocation lat lng data types
-        geolocation zip code prefix many-many sellers, customers
         
     redo product-analysis in python (correlation !=> causation)
     get full cep from coordinates using python brazilcep

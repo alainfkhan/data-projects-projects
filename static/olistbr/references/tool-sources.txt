@@ -1,2 +1,3 @@
 erd, https://www.lucidchart.com/pages
 csv to md, https://convertcsv.com/csv-to-markdown.htm
+t-sql stats, https://sqlrob.com/2023/08/01/mean-median-and-mode-in-t-sql/

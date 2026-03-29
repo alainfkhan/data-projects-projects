@@ -68,11 +68,10 @@ Entity Relationship Diagram (ERD):
 ### Revenue by product category and business segment
 
 Revenue by product category (top 10 GMV):
- 
+
 <details>
 
 <summary>View table</summary>
-
 
 | product_category_name  | product_category_name_english | order_count | gmv              | aov       | product_category_concentration |
 | ---------------------- | ----------------------------- | ----------- | ---------------- | --------- | ------------------------------ |
@@ -111,6 +110,38 @@ Revenue by business segment (top 10 GMV)
 </details>
 
 ### Product weight and freight cost correlation
+
+[Scratch `.sql`](queries/analysis/report/_scratch/04_product-analysis/02_weight_vs_freight.sql)
+
+Chose significant if `n` > average(`n`)
+
+<details>
+
+<summary>View table </summary>
+
+| product_category_name_english | n     | corr_weight_freight |
+| ----------------------------- | ----- | ------------------- |
+| health_beauty                 | 9670  | 0.697               |
+| sports_leisure                | 8641  | 0.668               |
+| toys                          | 4117  | 0.652               |
+| furniture_decor               | 8334  | 0.65                |
+| garden_tools                  | 4347  | 0.633               |
+| auto                          | 4235  | 0.632               |
+| housewares                    | 6964  | 0.609               |
+| electronics                   | 2767  | 0.602               |
+| cool_stuff                    | 3796  | 0.587               |
+| baby                          | 3064  | 0.583               |
+| pet_shop                      | 1947  | 0.523               |
+| computers_accessories         | 7827  | 0.523               |
+| bed_bath_table                | 11115 | 0.469               |
+| office_furniture              | 1691  | 0.411               |
+| stationery                    | 2517  | 0.388               |
+| fashion_bags_accessories      | 2031  | 0.345               |
+| perfumery                     | 3419  | 0.335               |
+| telephony                     | 4545  | 0.116               |
+| watches_gifts                 | 5991  | 0.055               |
+
+</details>
 
 ### Average delivery time by customer state
 

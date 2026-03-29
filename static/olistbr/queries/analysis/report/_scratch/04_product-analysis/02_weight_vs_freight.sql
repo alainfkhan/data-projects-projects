@@ -1,17 +1,19 @@
 USE olist_stg;
+GO;
+
+-- TODO: in excel (for practice)
 
 -- does weight affect freight
 -- ie. does weight cause freight
 -- correlation !=> causation
 
-GO;
-
+-- ==================================================
 WITH cov_part_values AS (
     SELECT DISTINCT
         pt.product_category_name_english,
         -- p.product_weight_g,
         -- oi.freight_value
-        COUNT(*) AS n,
+        COUNT(*) AS n,  -- appearances?
         SUM(1.0 * p.product_weight_g) AS sum_x,
         SUM(SQUARE(1.0 * p.product_weight_g)) AS sum_sq_x,
         SUM(1.0 * oi.freight_value) AS sum_y,
@@ -47,13 +49,11 @@ SELECT
 INTO #corr_weight_freight
 FROM cov_part_values AS c
 ORDER BY corr_weight_freight DESC
-
 GO;
 
+/*
 DROP TABLE #corr_weight_freight
-
-SELECT c.*
-FROM #corr_weight_freight AS c
+*/
 
 /*
 product_category_name_english, n, corr_weight_freight
@@ -73,6 +73,50 @@ all
 n, corr_weight_freight
 111022, 0.6113323281612338
 */
+
+-- ==========
+-- significant when n > median
+WITH tbl_median AS (
+    -- median
+    SELECT DISTINCT
+        PERCENTILE_CONT(0.5) WITHIN GROUP (
+ORDER BY c.n) OVER () AS median
+    FROM #corr_weight_freight AS c
+),
+
+tbl_with_median AS (
+    SELECT
+        c.*,
+        m.*
+    FROM #corr_weight_freight AS c
+        CROSS JOIN tbl_median AS m
+)
+
+SELECT
+    m.product_category_name_english,
+    m.n,
+    FORMAT(m.corr_weight_freight, '0.###') AS corr_weight_freight
+FROM tbl_with_median AS m
+WHERE m.n > m.median
+ORDER BY m.corr_weight_freight DESC;
+GO
+
+-- ==========
+-- significant when n > average
+
+SELECT
+    c.product_category_name_english,
+    c.n,
+    FORMAT(c.corr_weight_freight, '0.###') AS corr_weight_freight
+FROM #corr_weight_freight AS c
+WHERE c.n > (
+    SELECT AVG(c.n)
+    FROM #corr_weight_freight AS c
+)
+ORDER BY c.corr_weight_freight DESC;
+GO
+
+-- ==========
 
 SELECT
     pt.product_category_name_english,
