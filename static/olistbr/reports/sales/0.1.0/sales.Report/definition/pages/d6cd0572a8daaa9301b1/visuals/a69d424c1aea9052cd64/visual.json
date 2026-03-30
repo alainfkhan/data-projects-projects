@@ -2,11 +2,11 @@
   "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.7.0/schema.json",
   "name": "a69d424c1aea9052cd64",
   "position": {
-    "x": 720,
+    "x": 176,
     "y": 383.99999999999994,
     "z": 5,
     "height": 336,
-    "width": 560,
+    "width": 512,
     "tabOrder": 5
   },
   "visual": {
@@ -297,7 +297,7 @@
             "columnSubtotals": {
               "expr": {
                 "Literal": {
-                  "Value": "true"
+                  "Value": "false"
                 }
               }
             },

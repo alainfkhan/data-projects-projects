@@ -6,7 +6,7 @@
     "y": 47.999999999999993,
     "z": 6,
     "height": 336,
-    "width": 544,
+    "width": 512,
     "tabOrder": 6
   },
   "visual": {
@@ -187,33 +187,6 @@
               }
             },
             "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            }
-          }
-        }
-      ],
-      "categoryAxis": [
-        {
-          "properties": {
-            "show": {
-              "expr": {
-                "Literal": {
-                  "Value": "true"
-                }
-              }
-            },
-            "showAxisTitle": {
-              "expr": {
-                "Literal": {
-                  "Value": "false"
-                }
-              }
-            },
-            "concatenateLabels": {
               "expr": {
                 "Literal": {
                   "Value": "false"
@@ -479,6 +452,19 @@
               "expr": {
                 "Literal": {
                   "Value": "'TopRight'"
+                }
+              }
+            }
+          }
+        }
+      ],
+      "categoryAxis": [
+        {
+          "properties": {
+            "showAxisTitle": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
                 }
               }
             }

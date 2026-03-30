@@ -114,7 +114,16 @@ The **revenue** is interpreted to be the listed price of a realised sale in the 
 - I.e. if we have `price`, we also have `freight_value`.
 - Any numerical aggregations on realised and price-measurable sales is well-defined since `price` always exists.
 
-<!-- ### KPIS -->
+### KPIS
+
+In any given time period:
+- GMV (Gross Merchandise Value) = (total product revenue) + (total freight revenue)
+- AOV (Average Order Value) = GMV / (total order count)
+
+---
+
+- MTD (Month-to-Date)
+- MoM (Month-on-Month)
 
 ## Assumptions
 
@@ -195,7 +204,7 @@ to have consistent non-increasing `orders_placed`.
 
 ### Main assumptions
 
-Suppose we are given a snapshot of a complete operational database from `2017-01-09` to `2018-08-21`, and that today is `2018-08-22`.
+Suppose we are given a true snapshot of a complete operational database from `2017-01-09` to `2018-08-21`, and that today is `2018-08-22`.
 
 Assume the following:
 

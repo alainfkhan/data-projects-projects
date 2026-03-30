@@ -35,7 +35,11 @@ Olist ERD (Entity Relationship Diagram):
 
 ---
 
-### Month on month Average Order Values (AOV)
+Today is [`2018-08-22`](PREAMBLE.md/#main-assumptions).
+
+### Average Order Values (AOV) Analysis
+
+**The MTD AOV (for 2018-08) is -8.26%.**
 
 <details>
 
@@ -65,6 +69,59 @@ Olist ERD (Entity Relationship Diagram):
 | 2018        | 8            | 5823        | R\$ 928.091,20   | R\$ 788.869,10   | -8.26%       |
 
 </details>
+
+#### What affects AOV?
+
+In any given time frame (say a month):
+
+$$
+AOV = \frac{GMV}{\text{total order count}}
+$$
+
+$$
+GMV = (\text{total product revenue}) + (\text{total freight revenue})
+$$
+
+$$
+\therefore AOV = \frac{(\text{total product revenue} ) + (\text{total freight revenue})}{\text{total order count}}
+$$
+
+So:
+
+$$
+\text{total product revenue} \propto AOV
+$$
+
+$$
+\text{total freight revenue} \propto AOV
+$$
+
+$$
+\frac{1}{\text{total order count}} \propto AOV
+$$
+
+Revenue is generated whenever a sale is realised and measurable.
+
+A sale is realised whenever the `order_status` of an order transaction is any of:
+
+- `approved`
+- `delivered`
+- `invoiced`
+- `processing`
+- `shipped`
+
+A sale is measurable whenever the product `price` is listed.
+It's given that whenever `price` exists, `freight_value` also exists.
+
+Therefore, from the AOV formula above, the factors that affect AOV:
+
+- Any increase in total product revenue:
+  - the propensity the `order_status` has at being a value that classifies it as a realised sale
+  - the propensity the `price` has of being listed
+- Any increase in total freight revenue.
+- Any decrease in total order count.
+
+<!-- #### Why did AOV decrease this month? -->
 
 ### Revenue by product category and business segment
 
