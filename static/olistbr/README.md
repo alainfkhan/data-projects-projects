@@ -17,7 +17,7 @@
 
 ## Executive summary
 
-Entity Relationship Diagram (ERD):
+Olist ERD (Entity Relationship Diagram):
 
 ![Combined project ERD](img/erd.png)
 
@@ -25,8 +25,9 @@ Entity Relationship Diagram (ERD):
 - There are two dataset groups:
   - 'Brazilian e-commerce public dataset' (big blue background, left, contains 9 tables)
   - 'Marketing funnel by Olist' (small orange background, bottom right, contains 2 tables)
-- Solid lines between tables represent an active relation,
-  while dashed lines represent an inactive relation.
+- A solid line between two tables represent an active relation,
+  while a dashed line represent an inactive relation.
+- An active relation is a foreign key constraint defined within the Data Definition Language (DDL).
 - For example:
   - There is an active 1-many relation between `dim_sellers` and `fact_order_items`.
   - There is an inactive many-many relation between `dim_sellers` and `fact_geolocation`.
@@ -92,7 +93,7 @@ Revenue by business segment (top 10 GMV)
 
 <details>
 
-<summary>View table </summary>
+<summary>View table</summary>
 
 | business_segment                | order_count | gmv            | aov        | business_segment_concentration |
 | ------------------------------- | ----------- | -------------- | ---------- | ------------------------------ |
@@ -117,7 +118,7 @@ Chose significant if `n` > average(`n`)
 
 <details>
 
-<summary>View table </summary>
+<summary>View table</summary>
 
 | product_category_name_english | n     | corr_weight_freight |
 | ----------------------------- | ----- | ------------------- |

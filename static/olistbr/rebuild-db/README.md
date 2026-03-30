@@ -6,9 +6,9 @@
 
 # rebuild-db
 
-Builds a local SQL Server database with project data.
+Builds a local SQL Server database and inserts the project data.
 
-## Project overview
+## Overview
 
 1. [Run rebuild-db](#rebuild-the-database-by-running-src)
 2. [Copy the database](#copy-the-database)
@@ -23,7 +23,7 @@ Running `rebuild-db`:
 4. Generates supplementary tables:
    - [`utils.dim_date`](queries/rebuild-db/create-dim_date.sql)
    - [`utils.dim_time`](queries/rebuild-db/create-dim_time.sql)
-5. Ingests supplementary geolocation data downloaded externally.
+5. Cleans and ingests supplementary geolocation data downloaded externally.
 
 > [!IMPORTANT]
 >
@@ -75,7 +75,7 @@ uv run src
 
 ### Running this program
 
-![Running rebuild-db</code></code></code></code></code></code></code></code> in terminal](../img/rebuild-db/cmd_execute-260306.gif)
+![Running rebuild-db in terminal](../img/rebuild-db/cmd_execute-260306.gif)
 
 <details>
 
@@ -142,7 +142,7 @@ Successfully rebuilt 'olist_stg'.
   - finding the max precision and scale of a supposed `DECIMAL` datatype.
   - how similar a string is from another using the [Dice-Sørensen coefficient](https://en.wikipedia.org/wiki/Dice-S%C3%B8rensen_coefficient).
 
-Suppose we would like to find the SQL server data types of the columns from `olist_customers_dataset.csv`.
+Suppose we would like to find the SQL Server data types of the columns from `olist_customers_dataset.csv`.
 We consider using a `.ipynb` jupyter notebook for analysis.
 
 ```py
@@ -445,7 +445,7 @@ CREATE TABLE sales.dim_customers(
 
 **Q**: Why not just write the SQL directly?
 
-**A**: We would like the data-type inferencing to be automated in future iterations of a flavour of this project. The yaml configuration acts as a storage space for table schemas, that communicates to the program.
+**A**: We would like the data-type inferencing to be automated in future iterations of a flavour of this project. The yaml configuration file is storage for table schemas that communicates to the program.
 
 #### A note on forgone constraints:
 
@@ -462,6 +462,9 @@ CREATE TABLE sales.dim_customers(
 #### A note on data integrity:
 
 The SQL datatypes where chosen in such a way that supposes the database as a production database that expects more data.
+Some datatypes were rounded up
+like in table `sales.dim_customers`,
+column: `customer_city`: `NVARCHAR(32)` to `NVARCHAR(50)`.
 
 Notes:
 
@@ -472,4 +475,4 @@ Notes:
 
 For the last step, manually copy the created database `olist_stg` and save it as `olist` and continue with the analysis.
 
-Some tables are cleaned further in analysis (see [instructions](../docs/after-rebuild-db.txt)).
+After establishing `olist`, some tables are cleaned further in analysis (see [instructions](../docs/after-rebuild-db.txt)).
