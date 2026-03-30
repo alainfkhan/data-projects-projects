@@ -10,7 +10,7 @@ annotation __PBI_TimeIntelligenceEnabled = 1
 
 annotation PBI_ProTooling = ["DevMode"]
 
-annotation PBI_QueryOrder = ["Sales","Products","Translation","Sellers","Customers","Closed Deals"]
+annotation PBI_QueryOrder = ["Sales","Products","Translation","Sellers","Customers","Closed Deals","Seller Names"]
 
 ref table Sales
 ref table DateTableTemplate_cf649f72-1530-4138-83ed-d6c1057d48ac
@@ -29,6 +29,7 @@ ref table Sellers
 ref table Customers
 ref table 'Closed Deals'
 ref table LocalDateTable_58cd728d-1a89-4692-8fe3-726171eaf1db
+ref table 'Seller Names'
 
 ref cultureInfo en-GB
 

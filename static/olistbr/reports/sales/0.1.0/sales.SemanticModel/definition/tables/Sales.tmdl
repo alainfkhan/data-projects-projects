@@ -1,6 +1,21 @@
 table Sales
 	lineageTag: 9378a267-b62c-4659-a2de-1465765a9316
 
+	measure 'Total Product Revenue' = SUM( Sales[price] )
+		lineageTag: 1d421025-efae-4080-8832-76147fa41133
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Total Freight Revenue' = SUM( Sales[freight_value] )
+		lineageTag: d95224a2-2f23-4f33-9cc9-e6012c0afcb1
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure GMV = [Total Product Revenue] + [Total Freight Revenue]
+		lineageTag: 881b8f3b-8a54-4791-8a12-ada6a5bae80e
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
 	column date_key
 		dataType: int64
 		formatString: 0

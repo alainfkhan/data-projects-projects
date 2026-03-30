@@ -1,0 +1,30 @@
+table 'Seller Names'
+	lineageTag: b951a5e1-76d7-4b8a-bf72-dabc6ef19519
+
+	column seller_id
+		dataType: string
+		lineageTag: b89bf4b9-f9ef-478a-966b-093cd7f7f0ce
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_gen_name
+		dataType: string
+		lineageTag: c8d5a33a-d7ba-4c50-bcab-bb8e7292a350
+		summarizeBy: none
+		sourceColumn: seller_gen_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Seller Names' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    sales_dim_seller_gen_names = Source{[Schema="sales",Item="dim_seller_gen_names"]}[Data]
+				in
+				    sales_dim_seller_gen_names
+
+	changedProperty = Name
+

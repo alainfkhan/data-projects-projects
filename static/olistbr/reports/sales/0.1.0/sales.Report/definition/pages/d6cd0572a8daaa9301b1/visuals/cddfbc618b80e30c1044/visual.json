@@ -3,7 +3,7 @@
   "name": "cddfbc618b80e30c1044",
   "position": {
     "x": 0,
-    "y": 48.000000000000007,
+    "y": 47.999999999999993,
     "z": 9,
     "height": 672,
     "width": 176,
@@ -20,16 +20,16 @@
                 "Column": {
                   "Expression": {
                     "SourceRef": {
-                      "Entity": "Translation"
+                      "Entity": "Seller Names"
                     }
                   },
-                  "Property": "product_category_name_english"
+                  "Property": "seller_gen_name"
                 }
               },
-              "queryRef": "Translation.product_category_name_english",
-              "nativeQueryRef": "Product Cateogory",
+              "queryRef": "Seller Names.seller_gen_name",
+              "nativeQueryRef": "Sellers",
               "active": true,
-              "displayName": "Product Cateogory"
+              "displayName": "Sellers"
             }
           ]
         }
@@ -55,7 +55,7 @@
             "orientation": {
               "expr": {
                 "Literal": {
-                  "Value": "0D"
+                  "Value": "1D"
                 }
               }
             }
@@ -69,6 +69,13 @@
               "expr": {
                 "Literal": {
                   "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Top Sellers'"
                 }
               }
             }
@@ -86,6 +93,21 @@
               }
             },
             "singleSelect": {
+              "expr": {
+                "Literal": {
+                  "Value": "false"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
               "expr": {
                 "Literal": {
                   "Value": "false"
@@ -156,6 +178,7 @@
             }
           ]
         },
+        "howCreated": "User",
         "objects": {
           "general": [
             {
@@ -164,6 +187,112 @@
                   "expr": {
                     "Literal": {
                       "Value": "true"
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      },
+      {
+        "name": "98d9775c0ea7f104e76c",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Seller Names"
+              }
+            },
+            "Property": "seller_gen_name"
+          }
+        },
+        "type": "TopN",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "subquery",
+              "Expression": {
+                "Subquery": {
+                  "Query": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "s",
+                        "Entity": "Seller Names",
+                        "Type": 0
+                      },
+                      {
+                        "Name": "s1",
+                        "Entity": "Sales",
+                        "Type": 0
+                      }
+                    ],
+                    "Select": [
+                      {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Source": "s"
+                            }
+                          },
+                          "Property": "seller_gen_name"
+                        },
+                        "Name": "field"
+                      }
+                    ],
+                    "OrderBy": [
+                      {
+                        "Direction": 2,
+                        "Expression": {
+                          "Aggregation": {
+                            "Expression": {
+                              "Column": {
+                                "Expression": {
+                                  "SourceRef": {
+                                    "Source": "s1"
+                                  }
+                                },
+                                "Property": "price"
+                              }
+                            },
+                            "Function": 0
+                          }
+                        }
+                      }
+                    ],
+                    "Top": 20
+                  }
+                }
+              },
+              "Type": 2
+            },
+            {
+              "Name": "s",
+              "Entity": "Seller Names",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "s"
+                          }
+                        },
+                        "Property": "seller_gen_name"
+                      }
+                    }
+                  ],
+                  "Table": {
+                    "SourceRef": {
+                      "Source": "subquery"
                     }
                   }
                 }

@@ -70,3 +70,9 @@ relationship 0ab21304-0541-c7e8-7fa8-9d062d02be57
 	fromColumn: 'Closed Deals'.seller_id
 	toColumn: Sellers.seller_id
 
+relationship AutoDetected_1429a0a6-de50-4e5b-9989-ae7ba3e557a9
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'Seller Names'.seller_id
+	toColumn: Sellers.seller_id
+
