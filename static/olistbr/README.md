@@ -35,7 +35,7 @@ Olist ERD (Entity Relationship Diagram):
 
 ---
 
-Today is [`2018-08-22`](PREAMBLE.md/#main-assumptions).
+'Today' is [`2018-08-22`](PREAMBLE.md/#main-assumptions).
 
 ### Average Order Values (AOV) Analysis
 
@@ -116,12 +116,33 @@ It's given that whenever `price` exists, `freight_value` also exists.
 Therefore, from the AOV formula above, the factors that affect AOV:
 
 - Any increase in total product revenue:
-  - the propensity the `order_status` has at being a value that classifies it as a realised sale
+  - the propensity the `order_status` has at being a value that classifies it as a realised sale (`approved`, `delivered`, ...)
   - the propensity the `price` has of being listed
 - Any increase in total freight revenue.
 - Any decrease in total order count.
 
-<!-- #### Why did AOV decrease this month? -->
+### Future orders
+
+#### How likely will the next order be a realised sale?
+
+98.8%
+
+<details>
+
+<summary>View table</summary>
+
+[View query](queries/analysis/report/sales/realised_sale_propensity.sql)
+
+| is_realised_sale | count_order_status | pc      |
+| ---------------- | ------------------ | ------- |
+| 0                | 1239               | 1.246%  |
+| 1                | 98202              | 98.754% |
+
+</details>
+
+
+
+#### Why did AOV decrease this month?
 
 ### Revenue by product category and business segment
 
@@ -169,13 +190,14 @@ Revenue by business segment (top 10 GMV)
 
 ### Product weight and freight cost correlation
 
-[Scratch `.sql`](queries/analysis/report/_scratch/04_product-analysis/02_weight_vs_freight.sql)
 
 Chose significant if `n` > average(`n`)
 
 <details>
 
 <summary>View table</summary>
+
+[View query](queries/analysis/report/_scratch/04_product-analysis/02_weight_vs_freight.sql)
 
 | product_category_name_english | n     | corr_weight_freight |
 | ----------------------------- | ----- | ------------------- |

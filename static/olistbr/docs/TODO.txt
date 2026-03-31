@@ -1,5 +1,6 @@
 TODO:
-    [] add kpis definitions
+    [x] add kpis definitions
+    [] finish propensity of measurable sale (learning pivot table) (realised_sale_propensity.sql)
 
     find freight cost vs distance
         
