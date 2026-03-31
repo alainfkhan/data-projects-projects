@@ -1,6 +1,8 @@
 USE olist;
 GO
 
+-- ==================================================
+-- 
 WITH agg_sales AS (
     SELECT
         s.year_number,
@@ -18,7 +20,7 @@ calculated_sales AS (
     SELECT
         s.*,
         s.product_revenue + s.freight_revenue AS gmv,
-        s.product_revenue + s.freight_revenue / s.order_count AS aov
+        (s.product_revenue + s.freight_revenue) / s.order_count AS aov
     FROM agg_sales AS s
 ),
 -- )
