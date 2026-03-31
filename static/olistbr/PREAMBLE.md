@@ -31,7 +31,7 @@ An **order** is a basket of items bought at checkout.
 
 - A single order can contain more than one items (products).
 - Products are from sellers.
-- Sellers are from some location.
+- Sellers operate from some location.
 - The seller location is the delivery source.
 
 A row added onto the `orders` table can be thought of as:
@@ -54,6 +54,7 @@ Order transactions have the possible `order_status` values:
 - `unavailable`
 
 We formally define a **sale** to be a realised and price-measurable order.
+It is the conclusion between the transaction of goods for payment.
 
 - A sale is realised when the `order_status` is any of:
   - `approved`,
@@ -65,10 +66,10 @@ We formally define a **sale** to be a realised and price-measurable order.
   - `canceled`,
   - `created`,
   - `unavailable`.
-- An order is price-measurable when the listed `price` is available. (i.e. `WHERE price IS NOT NULL`.)
+- An order is price-measurable when the `price` is listed. (i.e. `WHERE price IS NOT NULL`.)
 
 We are interested in sales that are realised, and measurable.
-An unrealised sale is a sale that is yet to be realised.
+An unrealised sale is a sale that is to be to be realised after some time.
 
 For a better picture:
 
@@ -85,15 +86,18 @@ For a better picture:
 
 Significant dates:
 
-| Type            | Explanation         | Column                       |
-| --------------- | ------------------- | ---------------------------- |
-| Marketing date  | Order placed date   | `order_purchase_timestamp` |
-| Accounting date | Order approved date | `order_approved_at`        |
+| Type            | Explanation               | Column                       |
+| --------------- | ------------------------- | ---------------------------- |
+| Trade date      | Start of transaction      | `order_purchase_timestamp` |
+| Accounting date | Conclusion of transaction | `order_approved_at`        |
 
-We use the marketing date to measure user activity, and the accounting date to measure realised sales.
+We use the trade date to measure user activity, and the accounting date to measure realised sales.
 
-A user who places an order that is later cancelled,
-generates user activity, but does not contribute to a sale, and hence, neither also to revenue.
+The **settlement period** is the time it takes for an unrealised sale to become realised
+(i.e. the duration between the trade date and the accounting date).
+
+A user who places an order that is later cancelled (within the settlement period),
+generates user activity, but does not contribute to a sale, and hence neither also to revenue.
 
 A new order placed (with some initial `order_status`) starts as an unrealised sale,
 and becomes realised exactly when
@@ -111,12 +115,18 @@ The **revenue** is interpreted to be the listed price of a realised sale in the 
 **N.B.**:
 
 - In this particular dataset, `freight_value` always exists with `price`.
-- I.e. if we have `price`, we also have `freight_value`.
-- Any numerical aggregations on realised and price-measurable sales is well-defined since `price` always exists.
+  I.e. if we have `price`, we also have `freight_value`.
+- Any numerical aggregations on realised and price-measurable sales is well-defined since `price` always exists with `freight_value`.
 
 ### KPIS
 
+From the tables:
+
+- Total product revenue is the sum of `price`
+- Total freight revenue is the sum of `freight_value`
+
 In any given time period:
+
 - GMV (Gross Merchandise Value) = (total product revenue) + (total freight revenue)
 - AOV (Average Order Value) = GMV / (total order count)
 

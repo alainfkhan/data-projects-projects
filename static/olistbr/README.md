@@ -6,7 +6,7 @@
 
 # Olist
 
-## Read more from this project
+## Read more
 
 > - [Context](CONTEXT.md) (Business, Brazil)
 > - [Preamble](PREAMBLE.md) (Code, Definitions, Assumptions)
@@ -83,7 +83,7 @@ GMV = (\text{total product revenue}) + (\text{total freight revenue})
 $$
 
 $$
-\therefore AOV = \frac{(\text{total product revenue} ) + (\text{total freight revenue})}{\text{total order count}}
+\Rightarrow AOV = \frac{(\text{total product revenue} ) + (\text{total freight revenue})}{\text{total order count}}
 $$
 
 So:
@@ -111,36 +111,42 @@ A sale is realised whenever the `order_status` of an order transaction is any of
 - `shipped`
 
 A sale is measurable whenever the product `price` is listed.
-It's given that whenever `price` exists, `freight_value` also exists.
+It is given that whenever `price` exists, `freight_value` also exists.
 
-Therefore, from the AOV formula above, the factors that affect AOV:
+From the AOV formula above, factors that increase AOV would be:
 
 - Any increase in total product revenue:
-  - the propensity the `order_status` has at being a value that classifies it as a realised sale (`approved`, `delivered`, ...)
+  - the propensity the `order_status` has at being a value that classifies the order as a realised sale (`approved`, `delivered`, ...)
   - the propensity the `price` has of being listed
 - Any increase in total freight revenue.
 - Any decrease in total order count.
 
 ### Future orders
 
-#### How likely will the next order be a realised sale?
+#### How likely will the next order be a realised sale (after the settlement period)?
 
-98.8%
+Historically, ~98.8% of orders eventually become a realised sale.
+
+Assuming:
+
+- Stationarity: the environment stays the same (operations, sellers, logistics),
+- Independence: orders don't influence other orders,
+- Homogeneity: all orders share the same probability,
+
+a reasonable baseline estimate of a sale would be ~98.8%.
 
 <details>
 
 <summary>View table</summary>
-
-[View query](queries/analysis/report/sales/realised_sale_propensity.sql)
 
 | is_realised_sale | count_order_status | pc      |
 | ---------------- | ------------------ | ------- |
 | 0                | 1239               | 1.246%  |
 | 1                | 98202              | 98.754% |
 
+[View query](queries/analysis/report/sales/realised_sale_propensity.sql)
+
 </details>
-
-
 
 #### Why did AOV decrease this month?
 
@@ -190,14 +196,11 @@ Revenue by business segment (top 10 GMV)
 
 ### Product weight and freight cost correlation
 
-
 Chose significant if `n` > average(`n`)
 
 <details>
 
 <summary>View table</summary>
-
-[View query](queries/analysis/report/_scratch/04_product-analysis/02_weight_vs_freight.sql)
 
 | product_category_name_english | n     | corr_weight_freight |
 | ----------------------------- | ----- | ------------------- |
@@ -220,6 +223,8 @@ Chose significant if `n` > average(`n`)
 | perfumery                     | 3419  | 0.335               |
 | telephony                     | 4545  | 0.116               |
 | watches_gifts                 | 5991  | 0.055               |
+
+[View query](queries/analysis/report/_scratch/04_product-analysis/02_weight_vs_freight.sql)
 
 </details>
 
