@@ -70,9 +70,21 @@ The MTD AOV (for 2018-08) is -4.14%.
 | 2018        | 7            | 6125        | R\$ 1.018.432,00 | R\$ 166,27 | -0.32%       |
 | 2018        | 8            | 5823        | R\$ 928.091,20   | R\$ 159,38 | -4.14%       |
 
+[View query](queries/analysis/report/sales/sales.sql)
+
 </details>
 
-#### What affects AOV?
+#### What increases AOV?
+
+- Any increase in total product revenue:
+  - the propensity the `order_status` has at being a value that classifies the order as a realised sale (`approved`, `delivered`, ...)
+  - the propensity the `price` has of being listed
+- Any increase in total freight revenue.
+- Any decrease in total order count.
+
+<details>
+
+<summary>View proof</summary>
 
 In any given time frame (say a month):
 
@@ -115,13 +127,7 @@ A sale is realised whenever the `order_status` of an order transaction is any of
 A sale is measurable whenever the product `price` is listed.
 It is given that whenever `price` exists, `freight_value` also exists.
 
-From the AOV formula above, factors that increase AOV would be:
-
-- Any increase in total product revenue:
-  - the propensity the `order_status` has at being a value that classifies the order as a realised sale (`approved`, `delivered`, ...)
-  - the propensity the `price` has of being listed
-- Any increase in total freight revenue.
-- Any decrease in total order count.
+</details>
 
 ### Future orders
 
@@ -150,7 +156,7 @@ a reasonable baseline estimate of a sale would be ~98.8%.
 
 </details>
 
-#### Why did AOV decrease this month?
+<!-- #### Why did AOV decrease this month? -->
 
 ### Revenue by product category and business segment
 
@@ -198,7 +204,7 @@ Revenue by business segment (top 10 GMV)
 
 ### Product weight and freight cost correlation
 
-Chose significant if `n` > average(`n`)
+<!-- Chose significant if `n` > average(`n`) -->
 
 <details>
 
@@ -230,8 +236,8 @@ Chose significant if `n` > average(`n`)
 
 </details>
 
-### Average delivery time by customer state
+<!-- ### Average delivery time by customer state
 
-### Seller concentration through time
+### Seller concentration through time -->
 
 ---

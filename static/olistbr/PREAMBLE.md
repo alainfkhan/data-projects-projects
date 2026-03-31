@@ -114,11 +114,11 @@ The **revenue** is interpreted to be the listed price of a realised sale in the 
 
 **N.B.**:
 
-- In this particular dataset, `freight_value` always exists with `price`.
-  I.e. if we have `price`, we also have `freight_value`.
-- Any numerical aggregations on realised and price-measurable sales is well-defined since `price` always exists with `freight_value`.
+- In this particular dataset, `freight_value` always exists with `price`,
+  i.e. if we have `price`, we also have `freight_value`.
+- Any numerical aggregations on realised and price-measurable sales is well-defined since `freight_value` always exists with `price`.
 
-### KPIS
+### KPIs
 
 From the tables:
 
