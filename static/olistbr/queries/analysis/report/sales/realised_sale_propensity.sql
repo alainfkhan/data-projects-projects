@@ -8,7 +8,7 @@ WITH realised_sales_count AS (
         k.is_realised_sale,
         COUNT(o.order_status) AS count_order_status
     FROM sales.fact_orders AS o
-        LEFT JOIN sales.order_status_realised_sales_classification AS k
+        LEFT JOIN sales.dim_order_status_realised_sales_classification AS k
             ON o.order_status = k.order_status
     GROUP BY k.is_realised_sale
 ),

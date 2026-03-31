@@ -1,17 +1,17 @@
 USE olist;
 
 -- sales definition
-IF OBJECT_ID('sales.order_status_realised_sales_classification') IS NOT NULL
+IF OBJECT_ID('sales.dim_order_status_realised_sales_classification') IS NOT NULL
 BEGIN
-    DROP TABLE sales.order_status_realised_sales_classification
+    DROP TABLE sales.dim_order_status_realised_sales_classification
 END
 
-CREATE TABLE sales.order_status_realised_sales_classification (
+CREATE TABLE sales.dim_order_status_realised_sales_classification (
     order_status VARCHAR(20) PRIMARY KEY,
     is_realised_sale BIT
 )
 
-INSERT INTO sales.order_status_realised_sales_classification
+INSERT INTO sales.dim_order_status_realised_sales_classification
 VALUES
     ('approved', 1),
     ('delivered', 1),
