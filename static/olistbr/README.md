@@ -115,7 +115,9 @@ $$
 
 </details>
 
-<!-- #### Gross Merchandise Value (GMV) -->
+#### Gross Merchandise Value (GMV)
+
+![Weekly GMV](img/report/weekly-gmv.png)
 
 ### Future orders
 

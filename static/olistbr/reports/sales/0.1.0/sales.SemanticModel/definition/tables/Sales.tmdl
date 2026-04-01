@@ -344,6 +344,15 @@ table Sales
 
 		annotation UnderlyingDateTimeDataType = Date
 
+	column year_week_key = Sales[year_number] * 100 + Sales[week_number]
+		formatString: 0
+		lineageTag: 8f36eab4-c16a-4c40-9d58-4bfeb55ddae2
+		summarizeBy: sum
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
 	partition Sales = m
 		mode: import
 		source =
