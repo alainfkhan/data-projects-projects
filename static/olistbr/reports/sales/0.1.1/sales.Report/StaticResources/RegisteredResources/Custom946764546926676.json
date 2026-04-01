@@ -1,0 +1,28 @@
+{
+  "name": "Custom",
+  "visualStyles": {
+    "page": {
+      "*": {
+        "outspace": [
+          {
+            "color": {
+              "solid": {
+                "color": "#444444"
+              }
+            }
+          }
+        ],
+        "background": [
+          {
+            "color": {
+              "solid": {
+                "color": "#888888"
+              }
+            },
+            "transparency": 0
+          }
+        ]
+      }
+    }
+  }
+}

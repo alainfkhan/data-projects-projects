@@ -30,7 +30,7 @@ Loosely, a user is a customer, but in this dataset these definitions are kept.
 An **order** is a basket of items bought at checkout.
 
 - A single order can contain more than one items (products).
-- Products are from sellers.
+- Products are sold from sellers.
 - Sellers operate from some location.
 - The seller location is the delivery source.
 
@@ -54,7 +54,6 @@ Order transactions have the possible `order_status` values:
 - `unavailable`
 
 We formally define a **sale** to be a realised and price-measurable order.
-It is the conclusion between the transaction of goods for payment.
 
 - A sale is realised when the `order_status` is any of:
   - `approved`,
@@ -68,7 +67,7 @@ It is the conclusion between the transaction of goods for payment.
   - `unavailable`.
 - An order is price-measurable when the `price` is listed. (i.e. `WHERE price IS NOT NULL`.)
 
-We are interested in sales that are realised, and measurable.
+We are interested in the sales that are realised, and measurable.
 An unrealised sale is a sale that is to be to be realised after some time.
 
 For a better picture:
@@ -86,23 +85,25 @@ For a better picture:
 
 Significant dates:
 
-| Type            | Explanation               | Column                       |
-| --------------- | ------------------------- | ---------------------------- |
-| Trade date      | Start of transaction      | `order_purchase_timestamp` |
-| Accounting date | Conclusion of transaction | `order_approved_at`        |
+| Type            | Explanation                   | Column                       |
+| --------------- | ----------------------------- | ---------------------------- |
+| Order date      | Start of monetary transaction | `order_purchase_timestamp` |
+| Accounting date | End of monetary transaction   | `order_approved_at`        |
 
-We use the trade date to measure user activity, and the accounting date to measure realised sales.
+We use the order date to measure user activity, and the accounting date to measure realised sales.
 
-The **settlement period** is the time it takes for an unrealised sale to become realised
-(i.e. the duration between the trade date and the accounting date).
+The **order-to-cash** time is the time it takes for an unrealised sale to become realised
+(i.e. the duration between the order date and the accounting date).
 
-A user who places an order that is later cancelled (within the settlement period),
+A user who places an order that is later cancelled,
 generates user activity, but does not contribute to a sale, and hence neither also to revenue.
 
 A new order placed (with some initial `order_status`) starts as an unrealised sale,
 and becomes realised exactly when
 the `order_status` changes to a value that classifies it as realised,
 on the date of the financial transaction (accounting date).
+
+The order is registered 
 
 The **revenue** is interpreted to be the listed price of a realised sale in the `orders` table.
 

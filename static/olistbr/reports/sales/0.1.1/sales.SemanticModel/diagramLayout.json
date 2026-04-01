@@ -1,0 +1,146 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 0,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 2278.3133040598486,
+            "y": 351.90914676378372
+          },
+          "nodeIndex": "sales dim_seller_gen_names",
+          "nodeLineageTag": "9b70e326-1eca-473f-994d-6bbae9d5e3ee",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 791.38259070285767,
+            "y": 605.81829352756745
+          },
+          "nodeIndex": "sales dim_sellers",
+          "nodeLineageTag": "01761d8f-6e95-4133-9e4f-63796eab4a16",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 618.38029172458721,
+            "y": 303.32970640762017
+          },
+          "nodeIndex": "sales fact_order_items",
+          "nodeLineageTag": "df680e98-2e7f-4b60-9ba7-1cbb25b12d89",
+          "size": {
+            "height": 248,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 334.18275600840309,
+            "y": 101.86630284788657
+          },
+          "nodeIndex": "sales fact_orders",
+          "nodeLineageTag": "e830d18e-c5aa-48ec-ad14-3d791deae7fb",
+          "size": {
+            "height": 272,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 50,
+            "y": -50
+          },
+          "nodeIndex": "sales dim_customers",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1710.3133040598486,
+            "y": 351.90914676378372
+          },
+          "nodeIndex": "sales dim_order_status_realised_sales_classification",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1994.3133040598486,
+            "y": 351.90914676378372
+          },
+          "nodeIndex": "sales dim_product_category_name_translation",
+          "size": {
+            "height": 128,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 908.31330405984852,
+            "y": 176.00157527120604
+          },
+          "nodeIndex": "sales dim_products",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1142.3133040598486,
+            "y": 265.90914676378372
+          },
+          "nodeIndex": "marketing fact_closed_deals",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 0
+        },
+        {
+          "location": {
+            "x": 1426.3133040598486,
+            "y": 327.90914676378372
+          },
+          "nodeIndex": "marketing fact_marketing_qualified_leads",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 100,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

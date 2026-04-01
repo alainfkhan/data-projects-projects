@@ -1,0 +1,66 @@
+relationship 3dc64adf-1eb1-4f5c-a3a9-7f0703d2a547
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'sales fact_orders'.order_purchase_timestamp
+	toColumn: LocalDateTable_3c53e89f-0fce-4468-bbd4-ee90fd35db5a.Date
+
+relationship 114458a3-8df7-4a7b-a80d-06d016a88c01
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'sales fact_orders'.order_approved_at
+	toColumn: LocalDateTable_eccdd5cb-a023-4878-ad25-e4371d69f8c0.Date
+
+relationship bd533bab-b7ab-4dc5-8bf0-8824a2f18c86
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'sales fact_orders'.order_delivered_carrier_date
+	toColumn: LocalDateTable_3c146b2d-4f42-431c-bbb8-0d74b7bdcff6.Date
+
+relationship 3477ca36-042b-4d22-8f11-4f766475e481
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'sales fact_orders'.order_delivered_customer_date
+	toColumn: LocalDateTable_55e53e73-55c7-4cf9-b5f3-1e2fe4bc1961.Date
+
+relationship bd12a624-a633-492c-946f-6da6bc32d185
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'sales fact_orders'.order_estimated_delivery_date
+	toColumn: LocalDateTable_1261c72e-dd8d-4042-9d5a-66f55a766237.Date
+
+relationship 8bfa868b-9f51-43ac-8e52-1bed0bf6bd34
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'sales fact_order_items'.shipping_limit_date
+	toColumn: LocalDateTable_3ccec4f6-c65c-4ce8-9a07-5e4e1bea5851.Date
+
+relationship a7c3c830-b10d-4e69-972b-ba0d5f8b0e32
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'marketing fact_closed_deals'.won_date
+	toColumn: LocalDateTable_b9b974da-2361-4b45-a0ab-95cb963d1e2e.Date
+
+relationship f5e369ca-d54a-4034-a1e0-9dcc4e39c52c
+	joinOnDateBehavior: datePartOnly
+	fromColumn: 'marketing fact_marketing_qualified_leads'.first_contact_date
+	toColumn: LocalDateTable_d4037378-7b49-4d1e-98c1-7b7fb1c0b96c.Date
+
+relationship 11378d1c-7b5b-49a1-a9eb-fca5d8a9a524
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: 'sales fact_orders'.customer_id
+	toColumn: 'sales dim_customers'.customer_id
+
+	annotation PBI_IsFromSource = FS
+
+relationship 900a3464-2f5a-43a5-887d-1411ec24162e
+	fromColumn: 'sales fact_order_items'.order_id
+	toColumn: 'sales fact_orders'.order_id
+
+	annotation PBI_IsFromSource = FS
+
+relationship a957ab65-9ecb-490c-806c-20e876fd9fdb
+	fromColumn: 'sales fact_order_items'.product_id
+	toColumn: 'sales dim_products'.product_id
+
+	annotation PBI_IsFromSource = FS
+
+relationship 150cd45a-1f6c-4f5e-b13a-1cd66581b1f0
+	fromColumn: 'sales fact_order_items'.seller_id
+	toColumn: 'sales dim_sellers'.seller_id
+
+	annotation PBI_IsFromSource = FS
+

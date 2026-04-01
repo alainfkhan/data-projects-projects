@@ -1,0 +1,36 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBI_ProTooling = ["DevMode"]
+
+annotation PBI_QueryOrder = ["sales dim_order_status_realised_sales_classification","sales fact_orders","sales fact_order_items","sales dim_customers","sales dim_sellers","sales dim_products","sales dim_product_category_name_translation","marketing fact_closed_deals","marketing fact_marketing_qualified_leads","sales dim_seller_gen_names"]
+
+ref table 'sales dim_order_status_realised_sales_classification'
+ref table 'sales fact_orders'
+ref table DateTableTemplate_d138c213-835f-4349-b701-836ad13a5758
+ref table LocalDateTable_3c53e89f-0fce-4468-bbd4-ee90fd35db5a
+ref table LocalDateTable_eccdd5cb-a023-4878-ad25-e4371d69f8c0
+ref table LocalDateTable_3c146b2d-4f42-431c-bbb8-0d74b7bdcff6
+ref table LocalDateTable_55e53e73-55c7-4cf9-b5f3-1e2fe4bc1961
+ref table LocalDateTable_1261c72e-dd8d-4042-9d5a-66f55a766237
+ref table 'sales fact_order_items'
+ref table LocalDateTable_3ccec4f6-c65c-4ce8-9a07-5e4e1bea5851
+ref table 'sales dim_customers'
+ref table 'sales dim_sellers'
+ref table 'sales dim_products'
+ref table 'sales dim_product_category_name_translation'
+ref table 'marketing fact_closed_deals'
+ref table LocalDateTable_b9b974da-2361-4b45-a0ab-95cb963d1e2e
+ref table 'marketing fact_marketing_qualified_leads'
+ref table LocalDateTable_d4037378-7b49-4d1e-98c1-7b7fb1c0b96c
+ref table 'sales dim_seller_gen_names'
+
+ref cultureInfo en-GB
+

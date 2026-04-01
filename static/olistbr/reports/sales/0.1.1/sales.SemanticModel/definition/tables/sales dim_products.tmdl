@@ -1,0 +1,95 @@
+table 'sales dim_products'
+	lineageTag: 610b77d1-e8dd-484c-808d-a3672aa077d4
+
+	column product_id
+		dataType: string
+		lineageTag: 1d1b5486-d724-458e-8ec6-f674d927f679
+		summarizeBy: none
+		sourceColumn: product_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_category_name
+		dataType: string
+		lineageTag: 73f7aec1-6b0a-43c6-9aba-c1414c5c818c
+		summarizeBy: none
+		sourceColumn: product_category_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_name_lenght
+		dataType: int64
+		formatString: 0
+		lineageTag: 1cee1cf6-20bb-4a00-9c2b-295dd5b47d68
+		summarizeBy: none
+		sourceColumn: product_name_lenght
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_description_lenght
+		dataType: int64
+		formatString: 0
+		lineageTag: f96bfa3b-946e-49a1-a929-f7c87553f1f1
+		summarizeBy: none
+		sourceColumn: product_description_lenght
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_photos_qty
+		dataType: int64
+		formatString: 0
+		lineageTag: 2b044b1d-5fc0-4522-be74-f7497e541f99
+		summarizeBy: none
+		sourceColumn: product_photos_qty
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_weight_g
+		dataType: int64
+		formatString: 0
+		lineageTag: 0dbd51d9-1659-403b-8849-ec044bd9a0b2
+		summarizeBy: none
+		sourceColumn: product_weight_g
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_length_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 658a7d49-6f0b-452e-a6a3-4c5afff9f448
+		summarizeBy: none
+		sourceColumn: product_length_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_height_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 074d3aa2-4de7-42c3-94d2-40c87f8f15f6
+		summarizeBy: none
+		sourceColumn: product_height_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	column product_width_cm
+		dataType: int64
+		formatString: 0
+		lineageTag: 092bf1b4-0554-40fe-99a3-006f4f869c09
+		summarizeBy: none
+		sourceColumn: product_width_cm
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'sales dim_products' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    sales_dim_products = Source{[Schema="sales",Item="dim_products"]}[Data]
+				in
+				    sales_dim_products
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

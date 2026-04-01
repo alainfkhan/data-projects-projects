@@ -1,5 +1,6 @@
 
 pallette:
+grey: #888888, #444444
 red: #d61f1f, #ff2424
 yellow: #ffd301
 green: #006b3d, #00b768

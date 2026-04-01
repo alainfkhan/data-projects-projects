@@ -1,0 +1,30 @@
+table 'sales dim_seller_gen_names'
+	lineageTag: 9b70e326-1eca-473f-994d-6bbae9d5e3ee
+
+	column seller_id
+		dataType: string
+		lineageTag: b5dd3e43-72ee-4c7d-b393-1fb317a8d677
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_gen_name
+		dataType: string
+		lineageTag: 9b6ce3d7-2081-463d-ba07-b0f19c2e5002
+		summarizeBy: none
+		sourceColumn: seller_gen_name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'sales dim_seller_gen_names' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    sales_dim_seller_gen_names = Source{[Schema="sales",Item="dim_seller_gen_names"]}[Data]
+				in
+				    sales_dim_seller_gen_names
+
+	annotation PBI_ResultType = Table
+

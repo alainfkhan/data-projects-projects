@@ -25,9 +25,8 @@ Olist ERD (Entity Relationship Diagram):
 - There are two dataset groups:
   - 'Brazilian e-commerce public dataset' (big blue background, left, contains 9 tables)
   - 'Marketing funnel by Olist' (small orange background, bottom right, contains 2 tables)
-- A solid line between two tables represent an active relation,
+- A solid line between any two tables represent an active relation,
   while a dashed line represent an inactive relation.
-- An active relation is a foreign key constraint defined within the Data Definition Language (DDL).
 - For example:
   - There is an active 1-many relation between `dim_sellers` and `fact_order_items`.
   - There is an inactive many-many relation between `dim_sellers` and `fact_geolocation`.
@@ -35,9 +34,9 @@ Olist ERD (Entity Relationship Diagram):
 
 ---
 
-'Today' is [`2018-08-22`](PREAMBLE.md/#main-assumptions).
+### Sales analysis
 
-### Average Order Values (AOV) Analysis
+#### Average Order Values (AOV)
 
 The MTD AOV (for 2018-08) is -4.14%.
 
@@ -74,13 +73,13 @@ The MTD AOV (for 2018-08) is -4.14%.
 
 </details>
 
-#### What increases AOV?
+##### What increases AOV?
 
-- Any increase in total product revenue:
-  - the propensity the `order_status` has at being a value that classifies the order as a realised sale (`approved`, `delivered`, ...)
-  - the propensity the `price` has of being listed
-- Any increase in total freight revenue.
-- Any decrease in total order count.
+- The propensity for the `order_status` to have a value that classifies the transaction as a realised sale.
+- The propensity for the `price` to be listed.
+- Any increase in the total product revenue.
+- Any increase in the total freight revenue.
+- Any decrease in the total order count.
 
 <details>
 
@@ -114,24 +113,13 @@ $$
 \frac{1}{\text{total order count}} \propto AOV
 $$
 
-Revenue is generated whenever a sale is realised and measurable.
-
-A sale is realised whenever the `order_status` of an order transaction is any of:
-
-- `approved`
-- `delivered`
-- `invoiced`
-- `processing`
-- `shipped`
-
-A sale is measurable whenever the product `price` is listed.
-It is given that whenever `price` exists, `freight_value` also exists.
-
 </details>
+
+<!-- #### Gross Merchandise Value (GMV) -->
 
 ### Future orders
 
-#### How likely will the next order be a realised sale (after the settlement period)?
+#### How likely will the next order be a realised sale?
 
 Historically, ~98.8% of orders eventually become a realised sale.
 

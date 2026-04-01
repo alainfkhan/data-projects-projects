@@ -1,0 +1,33 @@
+table 'sales dim_order_status_realised_sales_classification'
+	lineageTag: 9cfb6327-8b32-46bf-81f9-330fb24acc7e
+
+	column order_status
+		dataType: string
+		lineageTag: 5ef0b2d5-4d7d-45d3-ba2d-005b3ec8aaaa
+		summarizeBy: none
+		sourceColumn: order_status
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_realised_sale
+		dataType: boolean
+		formatString: """TRUE"";""TRUE"";""FALSE"""
+		lineageTag: 05f6b6ab-bbe1-42c6-9cd6-7572c4d96a56
+		summarizeBy: none
+		sourceColumn: is_realised_sale
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'sales dim_order_status_realised_sales_classification' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    sales_dim_order_status_realised_sales_classification = Source{[Schema="sales",Item="dim_order_status_realised_sales_classification"]}[Data]
+				in
+				    sales_dim_order_status_realised_sales_classification
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+

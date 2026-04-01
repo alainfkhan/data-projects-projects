@@ -1,0 +1,46 @@
+table 'sales dim_sellers'
+	lineageTag: 01761d8f-6e95-4133-9e4f-63796eab4a16
+
+	column seller_id
+		dataType: string
+		lineageTag: ea0b033a-63fc-4ef4-acd9-92188eeefdbd
+		summarizeBy: none
+		sourceColumn: seller_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_zip_code_prefix
+		dataType: string
+		lineageTag: 148b17ff-88d0-4255-ba49-77f1fe62f1b9
+		summarizeBy: none
+		sourceColumn: seller_zip_code_prefix
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_city
+		dataType: string
+		lineageTag: 671adc56-1088-46b9-80d1-f5ae81e0e53f
+		summarizeBy: none
+		sourceColumn: seller_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column seller_state
+		dataType: string
+		lineageTag: ee096072-968a-4dcd-ab39-7013fd614f6f
+		summarizeBy: none
+		sourceColumn: seller_state
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'sales dim_sellers' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    sales_dim_sellers = Source{[Schema="sales",Item="dim_sellers"]}[Data]
+				in
+				    sales_dim_sellers
+
+	annotation PBI_ResultType = Table
+

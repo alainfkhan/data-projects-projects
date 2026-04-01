@@ -1,0 +1,56 @@
+table 'marketing fact_marketing_qualified_leads'
+	lineageTag: a1892444-c283-468f-bdb1-070f5804cf12
+
+	column mql_id
+		dataType: string
+		lineageTag: e1be0fcb-3039-4644-8990-eff0d72b45a9
+		summarizeBy: none
+		sourceColumn: mql_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_contact_date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: dd799a7d-7014-46c8-adde-9cb3046a240f
+		summarizeBy: none
+		sourceColumn: first_contact_date
+
+		variation Variation
+			isDefault
+			relationship: f5e369ca-d54a-4034-a1e0-9dcc4e39c52c
+			defaultHierarchy: LocalDateTable_d4037378-7b49-4d1e-98c1-7b7fb1c0b96c.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column landing_page_id
+		dataType: string
+		lineageTag: 1304f1d0-cc0b-4aea-92c8-b8ba2bbdd749
+		summarizeBy: none
+		sourceColumn: landing_page_id
+
+		annotation SummarizationSetBy = Automatic
+
+	column origin
+		dataType: string
+		lineageTag: 6709ed14-a0f4-4659-a7e6-934ed0aa24e1
+		summarizeBy: none
+		sourceColumn: origin
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'marketing fact_marketing_qualified_leads' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Database("localhost", "olist"),
+				    marketing_fact_marketing_qualified_leads = Source{[Schema="marketing",Item="fact_marketing_qualified_leads"]}[Data]
+				in
+				    marketing_fact_marketing_qualified_leads
+
+	changedProperty = Name
+
+	annotation PBI_ResultType = Table
+
