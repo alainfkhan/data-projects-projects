@@ -103,8 +103,6 @@ and becomes realised exactly when
 the `order_status` changes to a value that classifies it as realised,
 on the date of the financial transaction (accounting date).
 
-The order is registered 
-
 The **revenue** is interpreted to be the listed price of a realised sale in the `orders` table.
 
 - **Product revenue** is calculated from `price`.
@@ -220,6 +218,7 @@ Suppose we are given a true snapshot of a complete operational database from `20
 Assume the following:
 
 - The definitions defined above are business definitions used within the organisation.
+- Delivery fulfillment begins when the order is approved.
 - Users who have made payments on orders that are not realised sales, are eligible for a **refund** on that order.
 - All refunds are actualised.
 - The dataset timezone follows the official Brasília Time (BRT): UTC-03:00

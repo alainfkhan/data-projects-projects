@@ -1,0 +1,2 @@
+sellers sell to customers, olist manages the transactions
+    assume olist takes a cut of the price

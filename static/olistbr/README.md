@@ -17,14 +17,14 @@
 
 ## Executive summary
 
-Olist ERD (Entity Relationship Diagram):
+Olist crows-foot ERD (Entity Relationship Diagram):
 
 ![Combined project ERD](img/erd.png)
 
 - Shows the relationships between tables.
 - There are two dataset groups:
-  - 'Brazilian e-commerce public dataset' (big blue background, left, contains 9 tables)
-  - 'Marketing funnel by Olist' (small orange background, bottom right, contains 2 tables)
+  - "Brazilian e-commerce public dataset" (big blue background, left, contains 9 tables)
+  - "Marketing funnel by Olist" (small orange background, bottom right, contains 2 tables)
 - A solid line between any two tables represent an active relation,
   while a dashed line represent an inactive relation.
 - For example:
