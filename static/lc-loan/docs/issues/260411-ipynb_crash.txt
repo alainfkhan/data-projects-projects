@@ -1,0 +1,13 @@
+ruff format src
+ruff format notebooks
+
+run notebook cell
+get error (see log)
+ignore error
+analysis: delete variable
+delete cell
+create new cell
+rewrite for analysis
+run cell
+pc crash
+reset pc (hard press on)

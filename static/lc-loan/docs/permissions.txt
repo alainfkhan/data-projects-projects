@@ -1,0 +1,5 @@
+total 632868
+-rw-r--r-- 1 alain 197609 392582231 Apr 11 02:05 accepted_2007_to_2018Q4.csv.gz
+drwxr-xr-x 1 alain 197609         0 Apr 11 02:05 accepted_2007_to_2018q4.csv/
+-rw-r--r-- 1 alain 197609 255470782 Apr 11 02:05 rejected_2007_to_2018Q4.csv.gz
+drwxr-xr-x 1 alain 197609         0 Apr 11 02:05 rejected_2007_to_2018q4.csv/
