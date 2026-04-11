@@ -1,14 +1,15 @@
 name: dpp
 channels:
-  - conda-forge
-  - defaults
+- conda-forge
+- defaults
 dependencies:
-  - python=3.13
-  - conda-lock
-  - icecream
-  - jupyter
-  - pandas
-  - polars
-  - ruff
-  - pip:
-    - sqlfluff
+- python=3.13
+- conda-lock
+- python-duckdb
+- icecream
+- jupyter
+- pandas
+- polars
+- ruff
+- pip:
+  - sqlfluff

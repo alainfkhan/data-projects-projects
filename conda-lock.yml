@@ -13,8 +13,8 @@
 version: 1
 metadata:
   content_hash:
-    win-64: 9de1a4f245d8c0663d99e60dc40b35807cb7e182e761c69e622f9cd3d36af517
-    osx-arm64: 3a8128b32998a55fd3959084b8dbb9a9859f06ee1d5ff56e7029a393f6267d57
+    win-64: 7728c6a352eb13209ed96a0b1a1af41e7c2a8bc5867397a2022e2dc57cce20c5
+    osx-arm64: 43d2b89191703f932dfe1484c43828677f2af949647512615008f6210151d596
   channels:
   - url: conda-forge
     used_env_vars: []
@@ -4250,6 +4250,37 @@ package:
   hash:
     md5: 5b8d21249ff20967101ffa321cab24e8
     sha256: d6a17ece93bbd5139e02d2bd7dbfa80bee1a4261dced63f65f679121686bf664
+  category: main
+  optional: false
+- name: python-duckdb
+  version: 1.5.1
+  manager: conda
+  platform: osx-arm64
+  dependencies:
+    __osx: '>=11.0'
+    libcxx: '>=19'
+    python: '>=3.13,<3.14.0a0'
+    python_abi: 3.13.*
+  url: https://conda.anaconda.org/conda-forge/osx-arm64/python-duckdb-1.5.1-py313h6deaedc_0.conda
+  hash:
+    md5: 4fee47fdeaee2ec1440fd93fbb17eda8
+    sha256: f2d2abe2a0f860b066c0c07ba82eb719b63480bf19f678693a709d113f827f3f
+  category: main
+  optional: false
+- name: python-duckdb
+  version: 1.5.1
+  manager: conda
+  platform: win-64
+  dependencies:
+    python: '>=3.13,<3.14.0a0'
+    python_abi: 3.13.*
+    ucrt: '>=10.0.20348.0'
+    vc: '>=14.3,<15'
+    vc14_runtime: '>=14.44.35208'
+  url: https://conda.anaconda.org/conda-forge/win-64/python-duckdb-1.5.1-py313hfe59770_0.conda
+  hash:
+    md5: 496578be14fac104d513941b814d4975
+    sha256: af45c329e766716d17457a528cd837d74cc48035c2c6be13294dbdd61da7d9f0
   category: main
   optional: false
 - name: python-fastjsonschema
