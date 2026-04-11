@@ -8,6 +8,7 @@ dependencies:
   - icecream
   - jupyter
   - pandas
+  - polars
   - ruff
   - pip:
     - sqlfluff

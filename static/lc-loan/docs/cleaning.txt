@@ -1,0 +1,2 @@
+The dataset is a collection of many smaller tables.
+Downloaded files are dirty, rows contain summary rows.

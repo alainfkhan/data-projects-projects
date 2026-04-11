@@ -1,7 +1,8 @@
 Kaggle automatically unzips files downloaded
 
 This is the structure of the datafiles:
-```
+
+```txt
 data/
     raw/
         accepted_2007_to_2018Q4.csv/
@@ -15,3 +16,4 @@ data/
 ```
 
 All files are git ignored because they exceed 100MB.
+Polars is 7 times faster at reading dataframes than Pandas.
