@@ -13,7 +13,7 @@
 
 # Data Project Projects (DPP)
 
-Data project store. Saved data projects live in this directory inside groups.
+*The is the data project store. Saved data projects live in this directory inside of groups.*
 
 ## Explaining groups
 
