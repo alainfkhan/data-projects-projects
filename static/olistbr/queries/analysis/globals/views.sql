@@ -30,7 +30,7 @@ GO
 -- ==================================================
 -- orders
 -- simple table joins
--- marketing date
+-- date on orders, marketing date
 CREATE OR ALTER VIEW sales.vw_orders AS
 SELECT
     d.*,
@@ -44,7 +44,7 @@ GO
 -- ==================================================
 -- sales
 -- filtered orders to fit sale definition
--- accounting date
+-- date on approvals, accounting date
 CREATE OR ALTER VIEW sales.vw_sales AS
 WITH cte_sales AS (
     SELECT o.*

@@ -1,6 +1,6 @@
 .PHONY: format
 format:
-	sqlfluff format queries/analysis/
+	sqlfluff format queries/analysis/ analysis/time/queries
 # 	sqlfluff format rebuild-db/queries/rebuild-db
 	ruff format .
 
