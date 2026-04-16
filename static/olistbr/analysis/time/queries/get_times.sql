@@ -16,8 +16,10 @@ the datetime of any order created by the user
 df_day_pt
 */
 SELECT
-    CONVERT(TIME, o.order_purchase_timestamp) AS purchase_time
+    CONVERT(TIME, o.order_purchase_timestamp) AS purchase_time,
+    COUNT(*) AS order_count
 FROM sales.vw_orders_practical AS o
+GROUP BY CONVERT(TIME, o.order_purchase_timestamp)
 ORDER BY purchase_time;
 
 -- day_of_week purchase times
@@ -35,8 +37,13 @@ SELECT
     o.day_of_week,
     CONVERT(TIME, o.order_purchase_timestamp) AS purchase_time,
     DATEDIFF(SECOND, o.order_purchase_timestamp, order_approved_at)
-        AS diff_purchase_to_approve_s
+        AS diff_purchase_to_approve_s,
+    COUNT(*) AS order_count
 FROM sales.vw_orders_practical AS o
+GROUP BY
+    o.day_of_week,
+    CONVERT(TIME, o.order_purchase_timestamp),
+    DATEDIFF(SECOND, o.order_purchase_timestamp, order_approved_at)
 ORDER BY
     o.day_of_week,
     purchase_time,
