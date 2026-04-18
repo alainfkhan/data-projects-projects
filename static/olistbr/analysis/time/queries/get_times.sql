@@ -25,13 +25,13 @@ ORDER BY purchase_time;
 -- day_of_week purchase times
 /*
 use find and replace on day_of_week
-df_dow_pt
-df_dom_pt
-df_doy_pt
-df_wn_pt
-df_mn_pt
-df_qn_pt
-df_yn_pt
+df_pt_dow
+df_pt_dom
+df_pt_doy
+df_pt_wn
+df_pt_mn
+df_pt_qn
+df_pt_yn
 */
 SELECT
     o.day_of_week,
@@ -47,4 +47,21 @@ GROUP BY
 ORDER BY
     o.day_of_week,
     purchase_time,
-    diff_purchase_to_approve_s
+    diff_purchase_to_approve_s;
+
+
+-- ==================================================
+
+select
+    o.order_id,
+    op.payment_type,
+    o.order_status,
+    o.order_purchase_timestamp,
+    o.order_approved_at,
+    o.order_delivered_carrier_date,
+    o.order_delivered_customer_date,
+    o.order_estimated_delivery_date
+from sales.vw_orders_practical as o
+left join sales.fact_order_payments as op
+    on o.order_id = op.order_id
+
