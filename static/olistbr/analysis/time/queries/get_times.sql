@@ -52,7 +52,7 @@ ORDER BY
 
 -- ==================================================
 
-select
+SELECT
     o.order_id,
     op.payment_type,
     o.order_status,
@@ -61,7 +61,6 @@ select
     o.order_delivered_carrier_date,
     o.order_delivered_customer_date,
     o.order_estimated_delivery_date
-from sales.vw_orders_practical as o
-left join sales.fact_order_payments as op
-    on o.order_id = op.order_id
-
+FROM sales.vw_orders_practical AS o
+LEFT JOIN sales.fact_order_payments AS op
+    ON o.order_id = op.order_id
