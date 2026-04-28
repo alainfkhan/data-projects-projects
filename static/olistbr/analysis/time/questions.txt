@@ -1,2 +1,9 @@
-around what time in the day do people make orders?
+Q: Around what time in the day do people make orders?
+A:
+People usually start making orders at around 0600.
+There seems to be three sections within the day: 0600-1200, 1200-1800, 1800-0600
+0600-1200:
+- 0600: orders start being placed.
+- 1100: orders peak in this interval.
 
+1200-1800
