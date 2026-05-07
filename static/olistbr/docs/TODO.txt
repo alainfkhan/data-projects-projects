@@ -1,6 +1,7 @@
 TODO:
     [x] add kpis definitions
     [] finish propensity of measurable sale (learning pivot table) (realised_sale_propensity.sql)
+    [] Annual Order Distribution (in weeks) is not normalised. Need to average.
 
     find freight cost vs distance
         
