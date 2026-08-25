@@ -15,3 +15,10 @@ INNER JOIN sys.schemas AS s
 EXEC sp_help 'sales.order_items';
 
 */
+
+use olist;
+go
+
+select *
+from sales.dim_products as s
+where s.product_category_name is null;
